@@ -97,7 +97,7 @@ jobs:
             postgres_image: '15'
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: plugin
 
