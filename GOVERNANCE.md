@@ -2,6 +2,8 @@
 
 Repository maintainers are responsible for releases, security coordination, compatibility decisions, and final merge approval.
 
+This governance applies to Kanban CCEAD (`mod_kanbanccead`) only. It does not assign responsibility for this fork to the original `mod_kanban` maintainer. Attribution and the relationship to the predecessor are recorded in [NOTICE](NOTICE).
+
 ## Decisions
 
 Maintainers evaluate changes against Moodle coding standards, supported-version compatibility, privacy obligations, security, upgrade safety, and documented activity behaviour. A pull request or issue is the normal record for a technical decision.

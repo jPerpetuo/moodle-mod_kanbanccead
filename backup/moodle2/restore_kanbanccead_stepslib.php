@@ -15,14 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Restore steps for mod_kanban
+ * Restore steps for mod_kanbanccead
  *
- * @package     mod_kanban
+ * @package     mod_kanbanccead
  * @copyright   2023-2024 ISB Bayern
  * @author      Stefan Hanauska <stefan.hanauska@csg-in.de>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class restore_kanban_activity_structure_step extends restore_activity_structure_step {
+class restore_kanbanccead_activity_structure_step extends restore_activity_structure_step {
     /**
      * List of elements that can be restored
      *
@@ -31,37 +31,45 @@ class restore_kanban_activity_structure_step extends restore_activity_structure_
      */
     protected function define_structure(): array {
         $paths = [];
-        $paths[] = new restore_path_element('kanban', '/activity/kanban');
+        $paths[] = new restore_path_element('kanbanccead', '/activity/kanbanccead');
         $userinfo = $this->get_setting_value('userinfo');
 
-        $paths[] = new restore_path_element('board', '/activity/kanban/boards/kanban_board');
-        $paths[] = new restore_path_element('column', '/activity/kanban/boards/kanban_board/columns/kanban_column');
-        $paths[] = new restore_path_element('card', '/activity/kanban/boards/kanban_board/columns/kanban_column/cards/kanban_card');
+        $paths[] = new restore_path_element('board', '/activity/kanbanccead/boards/kanbanccead_board');
+        $paths[] = new restore_path_element('column', '/activity/kanbanccead/boards/kanbanccead_board/columns/kanbanccead_column');
+        $paths[] = new restore_path_element(
+            'card',
+            '/activity/kanbanccead/boards/kanbanccead_board/columns/kanbanccead_column/cards/kanbanccead_card'
+        );
 
         if ($userinfo) {
             $paths[] = new restore_path_element(
                 'assignee',
-                '/activity/kanban/boards/kanban_board/columns/kanban_column/cards/kanban_card/assignees/kanban_assignee'
+                '/activity/kanbanccead/boards/kanbanccead_board/columns/kanbanccead_column'
+                    . '/cards/kanbanccead_card/assignees/kanbanccead_assignee'
             );
             $paths[] = new restore_path_element(
                 'discussion_comment',
-                '/activity/kanban/boards/kanban_board/columns/kanban_column/cards/kanban_card/discussions/kanban_discussion_comment'
+                '/activity/kanbanccead/boards/kanbanccead_board/columns/kanbanccead_column'
+                    . '/cards/kanbanccead_card/discussions/kanbanccead_discussion_comment'
             );
-            $paths[] = new restore_path_element('historyitem', '/activity/kanban/boards/kanban_board/historyitems/kanban_history');
+            $paths[] = new restore_path_element(
+                'historyitem',
+                '/activity/kanbanccead/boards/kanbanccead_board/historyitems/kanbanccead_history'
+            );
         }
 
         return $this->prepare_activity_structure($paths);
     }
 
     /**
-     * Restore a kanban record.
+     * Restore a kanbanccead record.
      *
      * @param array|object $data
      * @throws base_step_exception
      * @throws dml_exception
      * @throws restore_step_exception
      */
-    protected function process_kanban($data): void {
+    protected function process_kanbanccead($data): void {
         global $DB;
 
         $data = (object) $data;
@@ -69,7 +77,7 @@ class restore_kanban_activity_structure_step extends restore_activity_structure_
         $data->course = $this->get_courseid();
         $includegroups = (bool)$this->get_setting_value('groups');
         $destinationgroups = [];
-        if (!empty($data->boardmode) && (int)$data->boardmode === \mod_kanban\constants::MOD_KANBAN_BOARDMODE_GROUP) {
+        if (!empty($data->boardmode) && (int)$data->boardmode === \mod_kanbanccead\constants::MOD_KANBANCCEAD_BOARDMODE_GROUP) {
             $destinationgroups = groups_get_all_groups($this->get_courseid(), 0, 0, 'g.id, g.name');
         }
         if (!$includegroups) {
@@ -86,14 +94,14 @@ class restore_kanban_activity_structure_step extends restore_activity_structure_
             }
             $data->boardgroups = implode(',', array_unique($mappedgroupids));
         }
-        if ((int)$data->boardmode === \mod_kanban\constants::MOD_KANBAN_BOARDMODE_GROUP && empty($destinationgroups)) {
-            $data->boardmode = \mod_kanban\constants::MOD_KANBAN_BOARDMODE_SHARED;
+        if ((int)$data->boardmode === \mod_kanbanccead\constants::MOD_KANBANCCEAD_BOARDMODE_GROUP && empty($destinationgroups)) {
+            $data->boardmode = \mod_kanbanccead\constants::MOD_KANBANCCEAD_BOARDMODE_SHARED;
             $data->boardgroups = '';
             $data->boardgroupid = 0;
         }
 
-        $newid = $DB->insert_record('kanban', $data);
-        $this->set_mapping('kanban_id', $oldid, $newid);
+        $newid = $DB->insert_record('kanbanccead', $data);
+        $this->set_mapping('kanbanccead_id', $oldid, $newid);
         $this->apply_activity_instance($newid);
     }
 
@@ -120,10 +128,10 @@ class restore_kanban_activity_structure_step extends restore_activity_structure_
             $data->groupid = 0;
             $data->template = 1;
         }
-        $data->kanban_instance = $this->get_mappingid('kanban_id', $data->kanban_instance);
+        $data->kanbanccead_instance = $this->get_mappingid('kanbanccead_id', $data->kanbanccead_instance);
 
-        $newid = $DB->insert_record('kanban_board', $data);
-        $this->set_mapping('kanban_board_id', $oldid, $newid);
+        $newid = $DB->insert_record('kanbanccead_board', $data);
+        $this->set_mapping('kanbanccead_board_id', $oldid, $newid);
     }
 
     /**
@@ -140,10 +148,10 @@ class restore_kanban_activity_structure_step extends restore_activity_structure_
         $data = (object) $data;
         $oldid = $data->id;
 
-        $data->kanban_board = $this->get_mappingid('kanban_board_id', $data->kanban_board);
+        $data->kanbanccead_board = $this->get_mappingid('kanbanccead_board_id', $data->kanbanccead_board);
 
-        $newid = $DB->insert_record('kanban_column', $data);
-        $this->set_mapping('kanban_column_id', $oldid, $newid);
+        $newid = $DB->insert_record('kanbanccead_column', $data);
+        $this->set_mapping('kanbanccead_column_id', $oldid, $newid);
     }
 
     /**
@@ -165,18 +173,22 @@ class restore_kanban_activity_structure_step extends restore_activity_structure_
             $data->discussion = 0;
         }
 
-        $data->kanban_column = $this->get_mappingid('kanban_column_id', $data->kanban_column);
-        $data->kanban_board = $this->get_mappingid('kanban_board_id', $data->kanban_board);
-        $data->originalid = $this->get_mappingid('kanban_card_id', $data->originalid);
+        $data->kanbanccead_column = $this->get_mappingid('kanbanccead_column_id', $data->kanbanccead_column);
+        $data->kanbanccead_board = $this->get_mappingid('kanbanccead_board_id', $data->kanbanccead_board);
+        $data->originalid = $this->get_mappingid('kanbanccead_card_id', $data->originalid);
         $data->createdby = $this->get_mappingid('user', $data->createdby);
 
         if (empty($data->number)) {
-            $data->number = $DB->get_field('kanban_card', 'MAX(number)', ['kanban_board' => $data->kanban_board]) + 1;
+            $data->number = $DB->get_field(
+                'kanbanccead_card',
+                'MAX(number)',
+                ['kanbanccead_board' => $data->kanbanccead_board]
+            ) + 1;
         }
 
-        $newid = $DB->insert_record('kanban_card', $data);
-        $this->set_mapping('kanban_card_id', $oldid, $newid, true);
-        $this->add_related_files('mod_kanban', 'attachments', 'kanban_card_id', null, $oldid);
+        $newid = $DB->insert_record('kanbanccead_card', $data);
+        $this->set_mapping('kanbanccead_card_id', $oldid, $newid, true);
+        $this->add_related_files('mod_kanbanccead', 'attachments', 'kanbanccead_card_id', null, $oldid);
     }
 
     /**
@@ -193,9 +205,9 @@ class restore_kanban_activity_structure_step extends restore_activity_structure_
         $data = (object) $data;
 
         $data->userid = $this->get_mappingid('user', $data->userid);
-        $data->kanban_card = $this->get_mappingid('kanban_card_id', $data->kanban_card);
+        $data->kanbanccead_card = $this->get_mappingid('kanbanccead_card_id', $data->kanbanccead_card);
 
-        $DB->insert_record('kanban_assignee', $data);
+        $DB->insert_record('kanbanccead_assignee', $data);
     }
 
     /**
@@ -212,12 +224,12 @@ class restore_kanban_activity_structure_step extends restore_activity_structure_
         $data = (object) $data;
 
         $data->userid = $this->get_mappingid('user', $data->userid);
-        $data->kanban_card = $this->get_mappingid('kanban_card_id', $data->kanban_card);
-        $data->kanban_column = $this->get_mappingid('kanban_column_id', $data->kanban_column);
-        $data->kanban_board = $this->get_mappingid('kanban_board_id', $data->kanban_board);
+        $data->kanbanccead_card = $this->get_mappingid('kanbanccead_card_id', $data->kanbanccead_card);
+        $data->kanbanccead_column = $this->get_mappingid('kanbanccead_column_id', $data->kanbanccead_column);
+        $data->kanbanccead_board = $this->get_mappingid('kanbanccead_board_id', $data->kanbanccead_board);
         $data->affected_userid = $this->get_mappingid('user', $data->affected_userid);
 
-        $DB->insert_record('kanban_history', $data);
+        $DB->insert_record('kanbanccead_history', $data);
     }
 
     /**
@@ -234,9 +246,9 @@ class restore_kanban_activity_structure_step extends restore_activity_structure_
         $data = (object) $data;
 
         $data->userid = $this->get_mappingid('user', $data->userid);
-        $data->kanban_card = $this->get_mappingid('kanban_card_id', $data->kanban_card);
+        $data->kanbanccead_card = $this->get_mappingid('kanbanccead_card_id', $data->kanbanccead_card);
 
-        $DB->insert_record('kanban_discussion_comment', $data);
+        $DB->insert_record('kanbanccead_discussion_comment', $data);
     }
 
     /**
@@ -244,27 +256,27 @@ class restore_kanban_activity_structure_step extends restore_activity_structure_
      */
     protected function after_execute(): void {
         global $DB;
-        $this->add_related_files('mod_kanban', 'intro', null);
+        $this->add_related_files('mod_kanbanccead', 'intro', null);
 
-        $kanbanboards = $DB->get_records('kanban_board', ['kanban_instance' => $this->task->get_activityid()]);
+        $kanbancceadboards = $DB->get_records('kanbanccead_board', ['kanbanccead_instance' => $this->task->get_activityid()]);
 
-        foreach ($kanbanboards as $board) {
+        foreach ($kanbancceadboards as $board) {
             if ($board->sequence == '') {
                 continue;
             }
             $seq = explode(',', $board->sequence);
             foreach ($seq as $key => $columnid) {
-                $seq[$key] = $this->get_mappingid('kanban_column_id', $columnid);
+                $seq[$key] = $this->get_mappingid('kanbanccead_column_id', $columnid);
             }
-            $DB->update_record('kanban_board', ['id' => $board->id, 'sequence' => join(',', $seq)]);
-            mod_kanban\helper::update_cached_board($board->id);
+            $DB->update_record('kanbanccead_board', ['id' => $board->id, 'sequence' => join(',', $seq)]);
+            mod_kanbanccead\helper::update_cached_board($board->id);
 
-            $kanbancolumns = $DB->get_records('kanban_column', ['kanban_board' => $board->id]);
+            $kanbancceadcolumns = $DB->get_records('kanbanccead_column', ['kanbanccead_board' => $board->id]);
 
-            foreach ($kanbancolumns as $column) {
+            foreach ($kanbancceadcolumns as $column) {
                 if (!$this->get_setting_value('userinfo')) {
                     // Card IDs are not restored without user data.
-                    $DB->set_field('kanban_column', 'sequence', '', ['id' => $column->id]);
+                    $DB->set_field('kanbanccead_column', 'sequence', '', ['id' => $column->id]);
                     continue;
                 }
                 if ($column->sequence == '') {
@@ -272,9 +284,9 @@ class restore_kanban_activity_structure_step extends restore_activity_structure_
                 }
                 $seqcard = explode(',', $column->sequence);
                 foreach ($seqcard as $cardkey => $cardid) {
-                    $seqcard[$cardkey] = $this->get_mappingid('kanban_card_id', $cardid);
+                    $seqcard[$cardkey] = $this->get_mappingid('kanbanccead_card_id', $cardid);
                 }
-                $DB->update_record('kanban_column', ['id' => $column->id, 'sequence' => join(',', $seqcard)]);
+                $DB->update_record('kanbanccead_column', ['id' => $column->id, 'sequence' => join(',', $seqcard)]);
             }
         }
     }

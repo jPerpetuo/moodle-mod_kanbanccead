@@ -14,29 +14,29 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- *  Component representing a card in a kanban board.
+ *  Component representing a card in a kanbanccead board.
  *
- * @module     mod_kanban/card
+ * @module     mod_kanbanccead/card
  * @copyright  2024 ISB Bayern
  * @author     Stefan Hanauska <stefan.hanauska@csg-in.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 import {DragDrop} from 'core/reactive';
-import selectors from 'mod_kanban/selectors';
-import exporter from 'mod_kanban/exporter';
+import selectors from 'mod_kanbanccead/selectors';
+import exporter from 'mod_kanbanccead/exporter';
 import {alert, exception as displayException, saveCancel} from 'core/notification';
 import ModalForm from 'core_form/modalform';
 import ModalEvents from 'core/modal_events';
 import * as Str from 'core/str';
 import {get_string as getString} from 'core/str';
 import Templates from 'core/templates';
-import KanbanComponent from 'mod_kanban/kanbancomponent';
+import KanbanCceadComponent from 'mod_kanbanccead/kanbancceadcomponent';
 import Log from 'core/log';
 
 /**
- * Component representing a card in a kanban board.
+ * Component representing a card in a kanbanccead board.
  */
-export default class extends KanbanComponent {
+export default class extends KanbanCceadComponent {
     /**
      * For relative time helper.
      */
@@ -66,7 +66,7 @@ export default class extends KanbanComponent {
      */
     create() {
         this.id = this.element.dataset.id;
-        this.element.__modKanbanCardComponent = this;
+        this.element.__modKanbanCceadCardComponent = this;
     }
 
     /**
@@ -203,14 +203,14 @@ export default class extends KanbanComponent {
     _showMoveModal() {
         let data = exporter.exportStateForTemplate(this.reactive.state);
         data.cardid = this.id;
-        data.kanbancolumn = this.reactive.state.cards.get(this.id).kanban_column;
+        data.kanbancceadcolumn = this.reactive.state.cards.get(this.id).kanbanccead_column;
         Str.get_strings([
-            {key: 'movecard', component: 'mod_kanban'},
+            {key: 'movecard', component: 'mod_kanbanccead'},
             {key: 'move', component: 'core'},
         ]).then((strings) => {
             return saveCancel(
                 strings[0],
-                Templates.render('mod_kanban/movemodal', data),
+                Templates.render('mod_kanbanccead/movemodal', data),
                 strings[1],
                 () => {
                     let column = document.querySelector(selectors.MOVECARDCOLUMN + `[data-id="${this.id}"]`).value;
@@ -236,7 +236,7 @@ export default class extends KanbanComponent {
 
         alert(
             title,
-            Templates.render('mod_kanban/descriptionmodal', data),
+            Templates.render('mod_kanbanccead/descriptionmodal', data),
             getString('close', 'form')
         ).then((modal) => {
             modal.modal[0].addEventListener(ModalEvents.bodyRendered, () => {
@@ -265,8 +265,8 @@ export default class extends KanbanComponent {
      */
     _pushCardConfirm(event) {
         Str.get_strings([
-            {key: 'pushcard', component: 'mod_kanban'},
-            {key: 'pushcardconfirm', component: 'mod_kanban'},
+            {key: 'pushcard', component: 'mod_kanbanccead'},
+            {key: 'pushcardconfirm', component: 'mod_kanbanccead'},
             {key: 'copy', component: 'core'},
         ]).then((strings) => {
             return saveCancel(
@@ -286,8 +286,8 @@ export default class extends KanbanComponent {
      */
     _removeConfirm(event) {
         Str.get_strings([
-            {key: 'deletecard', component: 'mod_kanban'},
-            {key: 'deletecardconfirm', component: 'mod_kanban'},
+            {key: 'deletecard', component: 'mod_kanbanccead'},
+            {key: 'deletecardconfirm', component: 'mod_kanbanccead'},
             {key: 'delete', component: 'core'},
         ]).then((strings) => {
             return saveCancel(
@@ -307,8 +307,8 @@ export default class extends KanbanComponent {
      */
     _removeMessageConfirm(event) {
         Str.get_strings([
-            {key: 'deletemessage', component: 'mod_kanban'},
-            {key: 'deletemessageconfirm', component: 'mod_kanban'},
+            {key: 'deletemessage', component: 'mod_kanbanccead'},
+            {key: 'deletemessageconfirm', component: 'mod_kanbanccead'},
             {key: 'delete', component: 'core'},
         ]).then((strings) => {
             return saveCancel(
@@ -353,7 +353,7 @@ export default class extends KanbanComponent {
      * Dispatch event to update the discussion data.
      */
     _updateDiscussion() {
-        this.getElement(selectors.DISCUSSIONMODAL).classList.add('mod_kanban_loading');
+        this.getElement(selectors.DISCUSSIONMODAL).classList.add('mod_kanbanccead_loading');
         this.reactive.dispatch('getDiscussionUpdates', this.id);
     }
 
@@ -364,9 +364,9 @@ export default class extends KanbanComponent {
         let data = {
             discussions: exporter.exportDiscussion(this.reactive.state, this.id)
         };
-        Templates.renderForPromise('mod_kanban/discussionmessages', data).then(({html}) => {
+        Templates.renderForPromise('mod_kanbanccead/discussionmessages', data).then(({html}) => {
             this.getElement(selectors.DISCUSSION, this.id).innerHTML = html;
-            this.getElement(selectors.DISCUSSIONMODAL, this.id).classList.remove('mod_kanban_loading');
+            this.getElement(selectors.DISCUSSIONMODAL, this.id).classList.remove('mod_kanbanccead_loading');
             let el = this.getElement(selectors.DISCUSSIONMESSAGES);
             // Scroll down to latest message.
             el.scrollTop = el.scrollHeight;
@@ -387,7 +387,7 @@ export default class extends KanbanComponent {
      * Dispatch event to update the history data.
      */
     _updateHistory() {
-        this.getElement(selectors.HISTORYMODAL).classList.add('mod_kanban_loading');
+        this.getElement(selectors.HISTORYMODAL).classList.add('mod_kanbanccead_loading');
         this.reactive.dispatch('getHistoryUpdates', this.id);
     }
 
@@ -398,9 +398,9 @@ export default class extends KanbanComponent {
         let data = {
             historyitems: exporter.exportHistory(this.reactive.state, this.id)
         };
-        Templates.renderForPromise('mod_kanban/historyitems', data).then(({html}) => {
+        Templates.renderForPromise('mod_kanbanccead/historyitems', data).then(({html}) => {
             this.getElement(selectors.HISTORY, this.id).innerHTML = html;
-            this.getElement(selectors.HISTORYMODAL).classList.remove('mod_kanban_loading');
+            this.getElement(selectors.HISTORYMODAL).classList.remove('mod_kanbanccead_loading');
             // Scroll down to latest history item.
             let el = this.getElement(selectors.HISTORYITEMS);
             el.scrollTop = el.scrollHeight;
@@ -450,16 +450,16 @@ export default class extends KanbanComponent {
     // This method coordinates several independent card updates from one event.
     // eslint-disable-next-line complexity
     async _cardUpdated({element}) {
-        if (this.getElement().querySelector('.mod_kanban_card_title_editor')) {
+        if (this.getElement().querySelector('.mod_kanbanccead_card_title_editor')) {
             return;
         }
         const card = this.getElement();
         // Card was moved to another column. Move the element to new card (right position is handled by column component).
-        if (card.dataset.columnid != element.kanban_column) {
-            const col = document.querySelector(selectors.COLUMNINNER + '[data-id="' + element.kanban_column + '"]');
+        if (card.dataset.columnid != element.kanbanccead_column) {
+            const col = document.querySelector(selectors.COLUMNINNER + '[data-id="' + element.kanbanccead_column + '"]');
             col.appendChild(card);
-            this.getElement(selectors.ADDCARD, this.id).setAttribute('data-columnid', element.kanban_column);
-            card.setAttribute('data-columnid', element.kanban_column);
+            this.getElement(selectors.ADDCARD, this.id).setAttribute('data-columnid', element.kanbanccead_column);
+            card.setAttribute('data-columnid', element.kanbanccead_column);
         }
         const assignees = this.getElement(selectors.ASSIGNEES, this.id);
         const assignedUsers = this.getElements(selectors.ASSIGNEDUSER, this.id);
@@ -477,14 +477,14 @@ export default class extends KanbanComponent {
                     }
                 });
             }
-            this.toggleClass(element.assignees.length == 0, 'mod_kanban_unassigned');
+            this.toggleClass(element.assignees.length == 0, 'mod_kanbanccead_unassigned');
             // Add new assignees.
             if (element.assignees.length > 0) {
                 additional.forEach(async user => {
                     let userdata = this.reactive.state.users.get(user);
                     let data = Object.assign({cardid: element.id}, userdata);
                     data = Object.assign(data, exporter.exportCapabilities(this.reactive.state));
-                    Templates.renderForPromise('mod_kanban/user', data).then(({html, js}) => {
+                    Templates.renderForPromise('mod_kanbanccead/user', data).then(({html, js}) => {
                         Templates.appendNodeContents(assignees, html, js);
                         this._renderAssigneeSummary();
                         return true;
@@ -493,7 +493,7 @@ export default class extends KanbanComponent {
             }
             this._renderAssigneeSummary();
         }
-        const assigneesRow = this.getElement().querySelector('.mod_kanban_card_assignees_row');
+        const assigneesRow = this.getElement().querySelector('.mod_kanbanccead_card_assignees_row');
         if (assigneesRow) {
             const hasassignees = element.assignees !== undefined ?
                 element.assignees.length > 0 :
@@ -501,11 +501,11 @@ export default class extends KanbanComponent {
             assigneesRow.classList.toggle('has-assignees', hasassignees);
         }
         if (element.selfassigned !== undefined) {
-            this.toggleClass(element.selfassigned, 'mod_kanban_selfassigned');
+            this.toggleClass(element.selfassigned, 'mod_kanbanccead_selfassigned');
         }
         // Set card completion state.
         if (element.completed !== undefined) {
-            this.toggleClass(element.completed == 1, 'mod_kanban_closed');
+            this.toggleClass(element.completed == 1, 'mod_kanbanccead_closed');
         }
         if (element.completedat !== undefined) {
             this.getElement().setAttribute('data-completedat', element.completedat);
@@ -547,9 +547,9 @@ export default class extends KanbanComponent {
         this.getElement(selectors.DISCUSSIONMODALTITLE).textContent = incomingtitleplain;
     }
         const hasstyleupdate = element.options !== undefined || element.background !== undefined;
-        const currenthasdescription = this.getElement().classList.contains('mod_kanban_hasdescription');
-        const currenthasattachment = this.getElement().classList.contains('mod_kanban_hasattachment');
-        const currenthasdiscussion = this.getElement().classList.contains('mod_kanban_hasdiscussion');
+        const currenthasdescription = this.getElement().classList.contains('mod_kanbanccead_hasdescription');
+        const currenthasattachment = this.getElement().classList.contains('mod_kanbanccead_hasattachment');
+        const currenthasdiscussion = this.getElement().classList.contains('mod_kanbanccead_hasdiscussion');
 
         if (element.hasdescription !== undefined) {
             const nexthasdescription = Boolean(element.hasdescription);
@@ -557,7 +557,7 @@ export default class extends KanbanComponent {
                 currenthasdescription &&
                 !nexthasdescription;
             if (!preservetransientdescriptiondrop) {
-                this.toggleClass(nexthasdescription, 'mod_kanban_hasdescription');
+                this.toggleClass(nexthasdescription, 'mod_kanbanccead_hasdescription');
             }
         }
         if (element.hasattachment !== undefined) {
@@ -566,7 +566,7 @@ export default class extends KanbanComponent {
                 currenthasattachment &&
                 !nexthasattachment;
             if (!preservetransientattachmentdrop) {
-                this.toggleClass(nexthasattachment, 'mod_kanban_hasattachment');
+                this.toggleClass(nexthasattachment, 'mod_kanbanccead_hasattachment');
             }
         }
         // Update due date.
@@ -580,7 +580,7 @@ export default class extends KanbanComponent {
                 currenthasdiscussion &&
                 !nexthasdiscussion;
             if (!preservetransientdiscussiondrop) {
-                this.toggleClass(nexthasdiscussion, 'mod_kanban_hasdiscussion');
+                this.toggleClass(nexthasdiscussion, 'mod_kanbanccead_hasdiscussion');
             }
         }
         // Only option for now is background color.
@@ -598,16 +598,16 @@ export default class extends KanbanComponent {
         } else if (element.background !== undefined) {
             this.getElement().setAttribute('style', 'background-color: ' + element.background);
         }
-        const metaRow = this.getElement().querySelector('.mod_kanban_card_meta_row');
+        const metaRow = this.getElement().querySelector('.mod_kanbanccead_card_meta_row');
         if (metaRow) {
             const duedate = Number(this.getElement(selectors.DUEDATE).dataset.date);
             metaRow.classList.toggle(
                 'has-meta',
                 duedate > 0 ||
-                this.getElement().classList.contains('mod_kanban_closed') ||
-                this.getElement().classList.contains('mod_kanban_hasdiscussion') ||
-                this.getElement().classList.contains('mod_kanban_hasdescription') ||
-                this.getElement().classList.contains('mod_kanban_hasattachment')
+                this.getElement().classList.contains('mod_kanbanccead_closed') ||
+                this.getElement().classList.contains('mod_kanbanccead_hasdiscussion') ||
+                this.getElement().classList.contains('mod_kanbanccead_hasdescription') ||
+                this.getElement().classList.contains('mod_kanbanccead_hasattachment')
             );
         }
         this._syncFooterLayoutState();
@@ -713,7 +713,7 @@ export default class extends KanbanComponent {
             this.getElement(selectors.INPLACEEDITABLE).removeAttribute('data-inplaceeditable');
         }
 
-        this.toggleClass(state.cards.get(this.id).canedit, 'mod_kanban_canedit');
+        this.toggleClass(state.cards.get(this.id).canedit, 'mod_kanbanccead_canedit');
     }
 
     /**
@@ -765,37 +765,38 @@ export default class extends KanbanComponent {
         if (!container) {
             return;
         }
-        container.classList.remove('mod_kanban_assignees_enhanced');
-        container.querySelectorAll('.mod_kanban_assignee_summary').forEach((node) => node.remove());
+        container.classList.remove('mod_kanbanccead_assignees_enhanced');
+        container.querySelectorAll('.mod_kanbanccead_assignee_summary').forEach((node) => node.remove());
         const assignees = Array.from(container.querySelectorAll(selectors.ASSIGNEDUSER));
-        this.getElement().classList.toggle('mod_kanban_assignees_multi', assignees.length > 1);
-        this.getElement().classList.toggle('mod_kanban_assignees_has_summary', assignees.length > 2);
-        assignees.forEach((node) => node.classList.remove('mod_kanban_assigned_user_hidden'));
+        this.getElement().classList.toggle('mod_kanbanccead_assignees_multi', assignees.length > 1);
+        this.getElement().classList.toggle('mod_kanbanccead_assignees_has_summary', assignees.length > 2);
+        assignees.forEach((node) => node.classList.remove('mod_kanbanccead_assigned_user_hidden'));
         if (assignees.length <= 2) {
-            container.classList.add('mod_kanban_assignees_enhanced');
+            container.classList.add('mod_kanbanccead_assignees_enhanced');
             return;
         }
 
         const hidden = assignees.slice(2);
-        hidden.forEach((node) => node.classList.add('mod_kanban_assigned_user_hidden'));
+        hidden.forEach((node) => node.classList.add('mod_kanbanccead_assigned_user_hidden'));
 
         const hiddennames = hidden
-            .map((node) => node.getAttribute('title') || node.querySelector('.mod_kanban_assigned_user_name')?.textContent || '')
+            .map((node) => node.getAttribute('title') ||
+                node.querySelector('.mod_kanbanccead_assigned_user_name')?.textContent || '')
             .map((name) => name.trim())
             .filter((name) => name.length > 0);
 
         const rawlabel = (container.dataset.moreLabel || '').trim();
         const morelabel = (!rawlabel || rawlabel.startsWith('[[') || rawlabel.toLowerCase() === 'and more') ? 'e mais' : rawlabel;
         const summary = document.createElement('div');
-        summary.className = 'mod_kanban_assigned_user mod_kanban_assignee_summary';
+        summary.className = 'mod_kanbanccead_assigned_user mod_kanbanccead_assignee_summary';
         summary.setAttribute('tabindex', '0');
 
         const icon = document.createElement('span');
-        icon.className = 'mod_kanban_assigned_user_icon';
+        icon.className = 'mod_kanbanccead_assigned_user_icon';
         icon.innerHTML = '<i class="icon fa fa-user fa-fw" aria-hidden="true"></i>';
 
         const name = document.createElement('span');
-        name.className = 'mod_kanban_assigned_user_name';
+        name.className = 'mod_kanbanccead_assigned_user_name';
         name.textContent = `${morelabel} ${hidden.length}`;
 
         summary.appendChild(icon);
@@ -804,7 +805,7 @@ export default class extends KanbanComponent {
             summary.setAttribute('title', hiddennames.join('\n'));
         }
         container.appendChild(summary);
-        container.classList.add('mod_kanban_assignees_enhanced');
+        container.classList.add('mod_kanbanccead_assignees_enhanced');
     }
 
     /**
@@ -815,16 +816,16 @@ export default class extends KanbanComponent {
         if (!card) {
             return;
         }
-        const assigneesrow = card.querySelector('.mod_kanban_card_assignees_row');
-        const metarow = card.querySelector('.mod_kanban_card_meta_row');
+        const assigneesrow = card.querySelector('.mod_kanbanccead_card_assignees_row');
+        const metarow = card.querySelector('.mod_kanbanccead_card_meta_row');
         if (!assigneesrow || !metarow) {
             return;
         }
         const hasassignees = assigneesrow.classList.contains('has-assignees');
         const hasmeta = metarow.classList.contains('has-meta');
-        const hasduedate = card.classList.contains('mod_kanban_hasduedate');
-        const isclosed = card.classList.contains('mod_kanban_closed');
-        card.classList.toggle('mod_kanban_footer_compact', !isclosed && !hasduedate && hasassignees && hasmeta);
+        const hasduedate = card.classList.contains('mod_kanbanccead_hasduedate');
+        const isclosed = card.classList.contains('mod_kanbanccead_closed');
+        card.classList.toggle('mod_kanbanccead_footer_compact', !isclosed && !hasduedate && hasassignees && hasmeta);
     }
 
     /**
@@ -835,7 +836,7 @@ export default class extends KanbanComponent {
         event.preventDefault();
 
         const modalForm = new ModalForm({
-            formClass: "mod_kanban\\form\\edit_card_form",
+            formClass: "mod_kanbanccead\\form\\edit_card_form",
             args: {
                 id: this.id,
                 boardid: this.boardid,
@@ -843,7 +844,7 @@ export default class extends KanbanComponent {
                 groupid: this.groupid,
                 userid: this.userid
             },
-            modalConfig: {title: getString('editcard', 'mod_kanban')},
+            modalConfig: {title: getString('editcard', 'mod_kanbanccead')},
             returnFocus: this.getElement(),
         });
         this.addEventListener(modalForm, modalForm.events.FORM_SUBMITTED, this._updateCard);
@@ -929,7 +930,7 @@ export default class extends KanbanComponent {
             return;
         }
         const fallback = indicator.dataset.completedFallback || 'Completed';
-        if (!card.classList.contains('mod_kanban_closed')) {
+        if (!card.classList.contains('mod_kanbanccead_closed')) {
             indicator.setAttribute('title', fallback);
             return;
         }
@@ -977,18 +978,18 @@ export default class extends KanbanComponent {
     _dueDateFormat() {
         const element = this.getElement(selectors.DUEDATE);
         const card = this.getElement();
-        let text = element.querySelector('.mod_kanban_duedate_text');
+        let text = element.querySelector('.mod_kanbanccead_duedate_text');
         const duedate = element.dataset.date * 1000;
 
         if (duedate > 0) {
-            card.classList.add('mod_kanban_hasduedate');
+            card.classList.add('mod_kanbanccead_hasduedate');
             const overdue = duedate < new Date().getTime();
             if (!text) {
-                element.innerHTML = '<span class="mod_kanban_duedate_icon"></span>' +
-                    '<span class="mod_kanban_duedate_text"></span>';
-                text = element.querySelector('.mod_kanban_duedate_text');
+                element.innerHTML = '<span class="mod_kanbanccead_duedate_icon"></span>' +
+                    '<span class="mod_kanbanccead_duedate_text"></span>';
+                text = element.querySelector('.mod_kanbanccead_duedate_text');
             }
-            const icon = element.querySelector('.mod_kanban_duedate_icon');
+            const icon = element.querySelector('.mod_kanbanccead_duedate_icon');
             if (icon) {
                 icon.innerHTML = overdue
                     ? '<i class="icon fa fa-exclamation-circle fa-fw" aria-hidden="true"></i>'
@@ -1001,12 +1002,12 @@ export default class extends KanbanComponent {
             }
             element.setAttribute('title', this.formatDueDateTooltip(duedate));
             if (overdue) {
-                element.classList.add('mod_kanban_overdue');
+                element.classList.add('mod_kanbanccead_overdue');
             } else {
-                element.classList.remove('mod_kanban_overdue');
+                element.classList.remove('mod_kanbanccead_overdue');
             }
         } else {
-            card.classList.remove('mod_kanban_hasduedate');
+            card.classList.remove('mod_kanbanccead_hasduedate');
             element.innerHTML = '';
         }
     }

@@ -15,30 +15,30 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Tests for the mod_kanban privacy provider.
+ * Tests for the mod_kanbanccead privacy provider.
  *
- * @package    mod_kanban
+ * @package    mod_kanbanccead
  * @copyright  2026 CCEAD PUC-Rio
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_kanban\privacy;
+namespace mod_kanbanccead\privacy;
 
 use core_privacy\local\request\approved_userlist;
 use core_privacy\local\request\userlist;
 use core_privacy\local\request\writer;
 use core_privacy\tests\request\approved_contextlist;
-use mod_kanban\boardmanager;
-use mod_kanban\helper;
+use mod_kanbanccead\boardmanager;
+use mod_kanbanccead\helper;
 
 /**
- * Tests for the mod_kanban privacy provider.
+ * Tests for the mod_kanbanccead privacy provider.
  *
- * @covers \mod_kanban\privacy\provider
+ * @covers \mod_kanbanccead\privacy\provider
  */
 final class provider_test extends \core_privacy\tests\provider_testcase {
     /** @var \stdClass Kanban instance. */
-    private $kanban;
+    private $kanbanccead;
     /** @var \context_module Module context. */
     private $context;
     /** @var \stdClass User whose data is deleted. */
@@ -67,20 +67,20 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         parent::setUp();
         $this->resetAfterTest(true);
         $course = $this->getDataGenerator()->create_course();
-        $this->kanban = $this->getDataGenerator()->create_module('kanban', ['course' => $course->id]);
-        $cm = get_coursemodule_from_instance('kanban', $this->kanban->id, $course->id, false, MUST_EXIST);
+        $this->kanbanccead = $this->getDataGenerator()->create_module('kanbanccead', ['course' => $course->id]);
+        $cm = get_coursemodule_from_instance('kanbanccead', $this->kanbanccead->id, $course->id, false, MUST_EXIST);
         $this->context = \context_module::instance($cm->id);
         $this->targetuser = $this->getDataGenerator()->create_user();
         $this->otheruser = $this->getDataGenerator()->create_user();
 
-        $this->sharedboard = $DB->get_record('kanban_board', [
-            'kanban_instance' => $this->kanban->id,
+        $this->sharedboard = $DB->get_record('kanbanccead_board', [
+            'kanbanccead_instance' => $this->kanbanccead->id,
             'userid' => 0,
             'groupid' => 0,
             'template' => 0,
         ], '*', MUST_EXIST);
-        $columnid = $DB->get_field('kanban_column', 'id', [
-            'kanban_board' => $this->sharedboard->id,
+        $columnid = $DB->get_field('kanbanccead_column', 'id', [
+            'kanbanccead_board' => $this->sharedboard->id,
         ], IGNORE_MULTIPLE);
         $this->sharedcard = $this->create_card(
             $this->sharedboard->id,
@@ -89,22 +89,22 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
             'Shared card'
         );
 
-        $DB->insert_record('kanban_assignee', [
-            'kanban_card' => $this->sharedcard->id,
+        $DB->insert_record('kanbanccead_assignee', [
+            'kanbanccead_card' => $this->sharedcard->id,
             'userid' => $this->targetuser->id,
         ]);
-        $DB->insert_record('kanban_assignee', [
-            'kanban_card' => $this->sharedcard->id,
+        $DB->insert_record('kanbanccead_assignee', [
+            'kanbanccead_card' => $this->sharedcard->id,
             'userid' => $this->otheruser->id,
         ]);
-        $DB->insert_record('kanban_discussion_comment', [
-            'kanban_card' => $this->sharedcard->id,
+        $DB->insert_record('kanbanccead_discussion_comment', [
+            'kanbanccead_card' => $this->sharedcard->id,
             'userid' => $this->targetuser->id,
             'content' => 'Target comment',
             'timecreated' => time(),
         ]);
-        $DB->insert_record('kanban_discussion_comment', [
-            'kanban_card' => $this->sharedcard->id,
+        $DB->insert_record('kanbanccead_discussion_comment', [
+            'kanbanccead_card' => $this->sharedcard->id,
             'userid' => $this->otheruser->id,
             'content' => 'Other comment',
             'timecreated' => time(),
@@ -114,8 +114,8 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
 
         $manager = new boardmanager($cm->id);
         $this->personalboardid = $manager->get_or_create_board($this->targetuser->id);
-        $personalcolumnid = $DB->get_field('kanban_column', 'id', [
-            'kanban_board' => $this->personalboardid,
+        $personalcolumnid = $DB->get_field('kanbanccead_column', 'id', [
+            'kanbanccead_board' => $this->personalboardid,
         ], IGNORE_MULTIPLE);
         $personalcard = $this->create_card(
             $this->personalboardid,
@@ -124,15 +124,15 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
             'Personal card'
         );
         $this->personalcardid = $personalcard->id;
-        $DB->insert_record('kanban_discussion_comment', [
-            'kanban_card' => $personalcard->id,
+        $DB->insert_record('kanbanccead_discussion_comment', [
+            'kanbanccead_card' => $personalcard->id,
             'userid' => $this->otheruser->id,
             'content' => 'Personal board comment',
             'timecreated' => time(),
         ]);
         get_file_storage()->create_file_from_string([
             'contextid' => $this->context->id,
-            'component' => 'mod_kanban',
+            'component' => 'mod_kanbanccead',
             'filearea' => 'attachments',
             'itemid' => $personalcard->id,
             'filepath' => '/',
@@ -140,7 +140,7 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         ], 'Personal attachment');
 
         helper::add_or_update_calendar_event(
-            $this->kanban,
+            $this->kanbanccead,
             $this->sharedcard,
             [$this->targetuser->id, $this->otheruser->id]
         );
@@ -159,10 +159,10 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         global $DB;
 
         $now = time();
-        $id = $DB->insert_record('kanban_card', [
+        $id = $DB->insert_record('kanbanccead_card', [
             'title' => $title,
-            'kanban_column' => $columnid,
-            'kanban_board' => $boardid,
+            'kanbanccead_column' => $columnid,
+            'kanbanccead_board' => $boardid,
             'options' => '{}',
             'duedate' => $now + HOURSECS,
             'reminderdate' => null,
@@ -182,7 +182,7 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
             'repeat_newduedate' => 0,
             'number' => random_int(1, 1000000),
         ]);
-        return $DB->get_record('kanban_card', ['id' => $id], '*', MUST_EXIST);
+        return $DB->get_record('kanbanccead_card', ['id' => $id], '*', MUST_EXIST);
     }
 
     /**
@@ -195,11 +195,11 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
     private function create_history(int $userid, int $affecteduserid): int {
         global $DB;
 
-        return $DB->insert_record('kanban_history', [
+        return $DB->insert_record('kanbanccead_history', [
             'userid' => $userid,
-            'kanban_board' => $this->sharedboard->id,
-            'kanban_column' => $this->sharedcard->kanban_column,
-            'kanban_card' => $this->sharedcard->id,
+            'kanbanccead_board' => $this->sharedboard->id,
+            'kanbanccead_column' => $this->sharedcard->kanbanccead_column,
+            'kanbanccead_card' => $this->sharedcard->id,
             'action' => 'privacy_test',
             'parameters' => '{}',
             'affected_userid' => $affecteduserid,
@@ -223,29 +223,29 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
 
         $card = $this->create_card(
             $this->sharedboard->id,
-            $this->sharedcard->kanban_column,
+            $this->sharedcard->kanbanccead_column,
             $creator->id,
             'Relations card'
         );
-        $DB->insert_record('kanban_assignee', ['kanban_card' => $card->id, 'userid' => $assignee->id]);
-        $DB->insert_record('kanban_discussion_comment', [
-            'kanban_card' => $card->id,
+        $DB->insert_record('kanbanccead_assignee', ['kanbanccead_card' => $card->id, 'userid' => $assignee->id]);
+        $DB->insert_record('kanbanccead_discussion_comment', [
+            'kanbanccead_card' => $card->id,
             'userid' => $commenter->id,
             'content' => 'Relations comment',
             'timecreated' => time(),
         ]);
-        $DB->insert_record('kanban_history', [
+        $DB->insert_record('kanbanccead_history', [
             'userid' => $actor->id,
-            'kanban_board' => $this->sharedboard->id,
-            'kanban_column' => $card->kanban_column,
-            'kanban_card' => $card->id,
+            'kanbanccead_board' => $this->sharedboard->id,
+            'kanbanccead_column' => $card->kanbanccead_column,
+            'kanbanccead_card' => $card->id,
             'action' => 'relations_test',
             'parameters' => '{}',
             'affected_userid' => $affected->id,
             'type' => 0,
             'timestamp' => time(),
         ]);
-        $manager = new boardmanager($this->kanban->cmid);
+        $manager = new boardmanager($this->kanbanccead->cmid);
         $manager->get_or_create_board($personalowner->id);
 
         foreach ([$creator, $assignee, $commenter, $actor, $affected, $personalowner] as $user) {
@@ -261,24 +261,24 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
     public function test_get_users_in_context(): void {
         global $DB;
 
-        $this->assertTrue($DB->record_exists('kanban_board', [
+        $this->assertTrue($DB->record_exists('kanbanccead_board', [
             'id' => $this->personalboardid,
             'userid' => $this->targetuser->id,
         ]));
-        $this->assertTrue($DB->record_exists('kanban_card', [
+        $this->assertTrue($DB->record_exists('kanbanccead_card', [
             'id' => $this->sharedcard->id,
             'createdby' => $this->targetuser->id,
         ]));
-        $this->assertTrue($DB->record_exists('kanban_assignee', [
-            'kanban_card' => $this->sharedcard->id,
+        $this->assertTrue($DB->record_exists('kanbanccead_assignee', [
+            'kanbanccead_card' => $this->sharedcard->id,
             'userid' => $this->targetuser->id,
         ]));
-        $this->assertTrue($DB->record_exists('kanban_discussion_comment', [
-            'kanban_card' => $this->sharedcard->id,
+        $this->assertTrue($DB->record_exists('kanbanccead_discussion_comment', [
+            'kanbanccead_card' => $this->sharedcard->id,
             'userid' => $this->targetuser->id,
         ]));
 
-        $userlist = new userlist($this->context, 'mod_kanban');
+        $userlist = new userlist($this->context, 'mod_kanbanccead');
         provider::get_users_in_context($userlist);
         $userids = array_map('intval', $userlist->get_userids());
         $message = 'Discovered user IDs: ' . implode(', ', $userids);
@@ -292,7 +292,7 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
      * Export must produce all categories without SQL errors or overwrites.
      */
     public function test_export_user_data(): void {
-        $this->export_context_data_for_user($this->targetuser->id, $this->context, 'mod_kanban');
+        $this->export_context_data_for_user($this->targetuser->id, $this->context, 'mod_kanbanccead');
         $writer = writer::with_context($this->context);
 
         $this->assertTrue($writer->has_any_data());
@@ -309,7 +309,7 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
     public function test_delete_data_for_user(): void {
         $approved = new approved_contextlist(
             \core_user::get_user($this->targetuser->id),
-            'mod_kanban',
+            'mod_kanbanccead',
             [$this->context->id]
         );
         provider::delete_data_for_user($approved);
@@ -320,7 +320,7 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
      * Batch deletion must use the same safe semantics as single-user deletion.
      */
     public function test_delete_data_for_users(): void {
-        $approved = new approved_userlist($this->context, 'mod_kanban', [$this->targetuser->id]);
+        $approved = new approved_userlist($this->context, 'mod_kanbanccead', [$this->targetuser->id]);
         provider::delete_data_for_users($approved);
         $this->assert_target_user_deleted();
     }
@@ -331,29 +331,29 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
     public function test_delete_data_for_all_users_in_context(): void {
         global $DB;
 
-        $otherkanban = $this->getDataGenerator()->create_module('kanban', ['course' => $this->kanban->course]);
-        $otherboard = $DB->get_record('kanban_board', [
-            'kanban_instance' => $otherkanban->id,
+        $otherkanbanccead = $this->getDataGenerator()->create_module('kanbanccead', ['course' => $this->kanbanccead->course]);
+        $otherboard = $DB->get_record('kanbanccead_board', [
+            'kanbanccead_instance' => $otherkanbanccead->id,
             'userid' => 0,
             'groupid' => 0,
             'template' => 0,
         ], '*', MUST_EXIST);
-        $othercolumnid = $DB->get_field('kanban_column', 'id', [
-            'kanban_board' => $otherboard->id,
+        $othercolumnid = $DB->get_field('kanbanccead_column', 'id', [
+            'kanbanccead_board' => $otherboard->id,
         ], IGNORE_MULTIPLE);
         $othercard = $this->create_card($otherboard->id, $othercolumnid, $this->otheruser->id, 'Other context');
 
         provider::delete_data_for_all_users_in_context($this->context);
 
-        $this->assertEquals(0, $DB->count_records('kanban_card', [
-            'kanban_board' => $this->sharedboard->id,
+        $this->assertEquals(0, $DB->count_records('kanbanccead_card', [
+            'kanbanccead_board' => $this->sharedboard->id,
         ]));
-        $this->assertEquals(0, $DB->count_records('kanban_board', [
-            'kanban_instance' => $this->kanban->id,
+        $this->assertEquals(0, $DB->count_records('kanbanccead_board', [
+            'kanbanccead_instance' => $this->kanbanccead->id,
             'template' => 0,
         ]));
-        $this->assertTrue($DB->record_exists('kanban_card', ['id' => $othercard->id]));
-        $this->assertTrue($DB->record_exists('kanban_board', ['id' => $otherboard->id]));
+        $this->assertTrue($DB->record_exists('kanbanccead_card', ['id' => $othercard->id]));
+        $this->assertTrue($DB->record_exists('kanbanccead_board', ['id' => $otherboard->id]));
     }
 
     /**
@@ -362,50 +362,50 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
     private function assert_target_user_deleted(): void {
         global $DB;
 
-        $sharedcard = $DB->get_record('kanban_card', ['id' => $this->sharedcard->id], '*', MUST_EXIST);
+        $sharedcard = $DB->get_record('kanbanccead_card', ['id' => $this->sharedcard->id], '*', MUST_EXIST);
         $this->assertEquals(0, $sharedcard->createdby);
-        $this->assertFalse($DB->record_exists('kanban_assignee', [
-            'kanban_card' => $this->sharedcard->id,
+        $this->assertFalse($DB->record_exists('kanbanccead_assignee', [
+            'kanbanccead_card' => $this->sharedcard->id,
             'userid' => $this->targetuser->id,
         ]));
-        $this->assertTrue($DB->record_exists('kanban_assignee', [
-            'kanban_card' => $this->sharedcard->id,
+        $this->assertTrue($DB->record_exists('kanbanccead_assignee', [
+            'kanbanccead_card' => $this->sharedcard->id,
             'userid' => $this->otheruser->id,
         ]));
-        $this->assertFalse($DB->record_exists('kanban_discussion_comment', [
-            'kanban_card' => $this->sharedcard->id,
+        $this->assertFalse($DB->record_exists('kanbanccead_discussion_comment', [
+            'kanbanccead_card' => $this->sharedcard->id,
             'userid' => $this->targetuser->id,
         ]));
-        $this->assertTrue($DB->record_exists('kanban_discussion_comment', [
-            'kanban_card' => $this->sharedcard->id,
+        $this->assertTrue($DB->record_exists('kanbanccead_discussion_comment', [
+            'kanbanccead_card' => $this->sharedcard->id,
             'userid' => $this->otheruser->id,
         ]));
-        $this->assertFalse($DB->record_exists('kanban_history', ['id' => $this->targethistoryid]));
+        $this->assertFalse($DB->record_exists('kanbanccead_history', ['id' => $this->targethistoryid]));
         $affectedhistory = $DB->get_record(
-            'kanban_history',
+            'kanbanccead_history',
             ['id' => $this->affectedhistoryid],
             '*',
             MUST_EXIST
         );
         $this->assertEquals(0, $affectedhistory->affected_userid);
-        $this->assertFalse($DB->record_exists('kanban_board', ['id' => $this->personalboardid]));
-        $this->assertFalse($DB->record_exists('kanban_card', ['id' => $this->personalcardid]));
+        $this->assertFalse($DB->record_exists('kanbanccead_board', ['id' => $this->personalboardid]));
+        $this->assertFalse($DB->record_exists('kanbanccead_card', ['id' => $this->personalcardid]));
         $this->assertFalse(get_file_storage()->file_exists(
             $this->context->id,
-            'mod_kanban',
+            'mod_kanbanccead',
             'attachments',
             $this->personalcardid,
             '/',
             'personal.txt'
         ));
         $this->assertEquals(0, $DB->count_records('event', [
-            'modulename' => 'kanban',
-            'instance' => $this->kanban->id,
+            'modulename' => 'kanbanccead',
+            'instance' => $this->kanbanccead->id,
             'userid' => $this->targetuser->id,
         ]));
         $this->assertGreaterThan(0, $DB->count_records('event', [
-            'modulename' => 'kanban',
-            'instance' => $this->kanban->id,
+            'modulename' => 'kanbanccead',
+            'instance' => $this->kanbanccead->id,
             'userid' => $this->otheruser->id,
         ]));
     }

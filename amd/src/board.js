@@ -1,16 +1,16 @@
 import {DragDrop} from 'core/reactive';
-import selectors from 'mod_kanban/selectors';
-import capabilities from 'mod_kanban/capabilities';
-import exporter from 'mod_kanban/exporter';
-import KanbanComponent from 'mod_kanban/kanbancomponent';
+import selectors from 'mod_kanbanccead/selectors';
+import capabilities from 'mod_kanbanccead/capabilities';
+import exporter from 'mod_kanbanccead/exporter';
+import KanbanCceadComponent from 'mod_kanbanccead/kanbancceadcomponent';
 import Log from 'core/log';
 import {saveCancel} from 'core/notification';
 import * as Str from 'core/str';
 
 /**
- * Component representing a kanban board.
+ * Component representing a kanbanccead board.
  */
-export default class extends KanbanComponent {
+export default class extends KanbanCceadComponent {
     LOCKED_COLUMNS = 1;
     LOCKED_COMPLETE = 2;
     _liveupdateTimer = null;
@@ -21,7 +21,7 @@ export default class extends KanbanComponent {
     /**
      * Init component
      * @param {HTMLElement} target Element to attach the component to
-     * @returns {KanbanComponent}
+     * @returns {KanbanCceadComponent}
      */
     static init(target) {
         let element = document.getElementById(target);
@@ -125,7 +125,7 @@ export default class extends KanbanComponent {
             };
             document.addEventListener('visibilitychange', this._liveupdateVisibilityHandler);
         }
-        this.toggleClass('ontouchstart' in document.documentElement, 'mod_kanban_touch');
+        this.toggleClass('ontouchstart' in document.documentElement, 'mod_kanbanccead_touch');
         this._updateScrollButtons();
     }
 
@@ -134,7 +134,7 @@ export default class extends KanbanComponent {
      */
     _reload() {
         window.location.replace(
-            M.cfg.wwwroot + '/mod/kanban/view.php?id=' + this.reactive.state.common.id +
+            M.cfg.wwwroot + '/mod/kanbanccead/view.php?id=' + this.reactive.state.common.id +
             '&userid=' + this.reactive.state.common.userid);
     }
 
@@ -145,7 +145,7 @@ export default class extends KanbanComponent {
      * @returns {string}
      */
     _getBoardActionUrl(action, confirmoverwrite = false) {
-        return `${M.cfg.wwwroot}/mod/kanban/board_action.php?id=${this.reactive.state.common.id}` +
+        return `${M.cfg.wwwroot}/mod/kanbanccead/board_action.php?id=${this.reactive.state.common.id}` +
             `&boardid=${this.reactive.state.board.id}&action=${encodeURIComponent(action)}` +
             `&sesskey=${encodeURIComponent(M.cfg.sesskey)}${confirmoverwrite ? '&confirmoverwrite=1' : ''}`;
     }
@@ -209,8 +209,8 @@ export default class extends KanbanComponent {
      * @param {*} param0
      */
     async _commonUpdated({element}) {
-        this.toggleClass(element.template != 0, 'mod_kanban_hastemplate');
-        this.toggleClass(element.updatefails > 0, 'mod_kanban_updatefails');
+        this.toggleClass(element.template != 0, 'mod_kanbanccead_hastemplate');
+        this.toggleClass(element.updatefails > 0, 'mod_kanbanccead_updatefails');
     }
 
     /**
@@ -233,8 +233,8 @@ export default class extends KanbanComponent {
      */
     _saveTemplateConfirm() {
         Str.get_strings([
-            {key: 'saveastemplate', component: 'mod_kanban'},
-            {key: 'saveastemplateconfirm', component: 'mod_kanban'},
+            {key: 'saveastemplate', component: 'mod_kanbanccead'},
+            {key: 'saveastemplateconfirm', component: 'mod_kanbanccead'},
             {key: 'save', component: 'core'},
         ]).then((strings) => {
             return saveCancel(
@@ -253,9 +253,9 @@ export default class extends KanbanComponent {
      */
     _applyTemplateToBoardConfirm() {
         Str.get_strings([
-            {key: 'applytemplatetothisboard', component: 'mod_kanban'},
-            {key: 'applytemplatetothisboardconfirm', component: 'mod_kanban'},
-            {key: 'applytemplateaction', component: 'mod_kanban'},
+            {key: 'applytemplatetothisboard', component: 'mod_kanbanccead'},
+            {key: 'applytemplatetothisboardconfirm', component: 'mod_kanbanccead'},
+            {key: 'applytemplateaction', component: 'mod_kanbanccead'},
         ]).then((strings) => {
             return saveCancel(
                 strings[0],
@@ -273,9 +273,9 @@ export default class extends KanbanComponent {
      */
     _applyTemplateToAllGroupBoardsConfirm() {
         Str.get_strings([
-            {key: 'applytemplatetoallgroupboards', component: 'mod_kanban'},
-            {key: 'applytemplatetoallgroupboardsconfirm', component: 'mod_kanban'},
-            {key: 'applytemplateaction', component: 'mod_kanban'},
+            {key: 'applytemplatetoallgroupboards', component: 'mod_kanbanccead'},
+            {key: 'applytemplatetoallgroupboardsconfirm', component: 'mod_kanbanccead'},
+            {key: 'applytemplateaction', component: 'mod_kanbanccead'},
         ]).then((strings) => {
             return saveCancel(
                 strings[0],
@@ -293,8 +293,8 @@ export default class extends KanbanComponent {
      */
     _deleteConfirm() {
         Str.get_strings([
-            {key: 'deleteboard', component: 'mod_kanban'},
-            {key: 'deleteboardconfirm', component: 'mod_kanban'},
+            {key: 'deleteboard', component: 'mod_kanbanccead'},
+            {key: 'deleteboardconfirm', component: 'mod_kanbanccead'},
             {key: 'delete', component: 'core'},
         ]).then((strings) => {
             return saveCancel(
@@ -326,7 +326,7 @@ export default class extends KanbanComponent {
             // Remove all columns from frontend that are no longer present in the database.
             [...colcontainer.children]
                 .forEach((node) => {
-                    if (node.classList.contains('mod_kanban_column') && !sequence.includes(node.dataset.id)) {
+                    if (node.classList.contains('mod_kanbanccead_column') && !sequence.includes(node.dataset.id)) {
                         colcontainer.removeChild(node);
                     }
                 });
@@ -336,8 +336,8 @@ export default class extends KanbanComponent {
                 .forEach(node => colcontainer.appendChild(node));
         }
         // Set CSS classes to show/hide action menu items.
-        this.toggleClass(element.locked, 'mod_kanban_board_locked_columns');
-        this.toggleClass(element.hastemplate, 'mod_kanban_hastemplate');
+        this.toggleClass(element.locked, 'mod_kanbanccead_board_locked_columns');
+        this.toggleClass(element.hastemplate, 'mod_kanbanccead_hastemplate');
         this._updateScrollButtons();
     }
 
@@ -355,7 +355,7 @@ export default class extends KanbanComponent {
         let placeholder = document.createElement('li');
         placeholder.setAttribute('data-id', data.id);
         this.getElement(selectors.COLUMNCONTAINER).appendChild(placeholder);
-        const newcomponent = await this.renderComponent(placeholder, 'mod_kanban/column', data);
+        const newcomponent = await this.renderComponent(placeholder, 'mod_kanbanccead/column', data);
         const newelement = newcomponent.getElement();
         this.getElement(selectors.COLUMNCONTAINER).replaceChild(newelement, placeholder);
         // Make sure that the new column is recognized for the scroll buttons.
@@ -408,14 +408,14 @@ export default class extends KanbanComponent {
      * Show some visual hints to the user.
      */
     showDropZone() {
-        this.getElement(selectors.ADDCOLUMNCONTAINER).classList.add('mod_kanban_insert');
+        this.getElement(selectors.ADDCOLUMNCONTAINER).classList.add('mod_kanbanccead_insert');
     }
 
     /**
      * Remove visual hints to the user.
      */
     hideDropZone() {
-        this.getElement(selectors.ADDCOLUMNCONTAINER).classList.remove('mod_kanban_insert');
+        this.getElement(selectors.ADDCOLUMNCONTAINER).classList.remove('mod_kanbanccead_insert');
     }
 
     /**

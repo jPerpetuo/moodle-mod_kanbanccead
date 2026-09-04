@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * mod_kanban db upgrades.
+ * mod_kanbanccead db upgrades.
  *
- * @package    mod_kanban
+ * @package    mod_kanbanccead
  * @copyright  2023-2024 ISB Bayern
  * @author     Stefan Hanauska
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -28,14 +28,14 @@
  *
  * @param int $oldversion Version number the plugin is being upgraded from.
  */
-function xmldb_kanban_upgrade($oldversion) {
+function xmldb_kanbanccead_upgrade($oldversion) {
     global $DB;
 
     $dbman = $DB->get_manager();
 
     if ($oldversion < 2024121602) {
-        // Define field repeat_enable to be added to kanban_card.
-        $table = new xmldb_table('kanban_card');
+        // Define field repeat_enable to be added to kanbanccead_card.
+        $table = new xmldb_table('kanbanccead_card');
         $field = new xmldb_field('repeat_enable', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0', 'timemodified');
 
         // Conditionally launch add field repeat_enable.
@@ -83,12 +83,12 @@ function xmldb_kanban_upgrade($oldversion) {
         }
 
         // Kanban savepoint reached.
-        upgrade_mod_savepoint(true, 2024121602, 'kanban');
+        upgrade_mod_savepoint(true, 2024121602, 'kanbanccead');
     }
 
     if ($oldversion < 2025020301) {
-        // Define field usenumbers to be added to kanban.
-        $table = new xmldb_table('kanban');
+        // Define field usenumbers to be added to kanbanccead.
+        $table = new xmldb_table('kanbanccead');
         $field = new xmldb_field('usenumbers', XMLDB_TYPE_INTEGER, '2', null, null, null, '0', 'history');
 
         // Conditionally launch add field id.
@@ -96,7 +96,7 @@ function xmldb_kanban_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // Define field linknumbers to be added to table kanban.
+        // Define field linknumbers to be added to table kanbanccead.
         $field = new xmldb_field('linknumbers', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0', 'usenumbers');
 
         // Conditionally launch add field linknumbers.
@@ -104,8 +104,8 @@ function xmldb_kanban_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // Define field number to be added to table kanban_card.
-        $table = new xmldb_table('kanban_card');
+        // Define field number to be added to table kanbanccead_card.
+        $table = new xmldb_table('kanbanccead_card');
         $field = new xmldb_field('number', XMLDB_TYPE_INTEGER, '10', null, null, null, '0', 'timemodified');
 
         // Conditionally launch add field id.
@@ -116,25 +116,25 @@ function xmldb_kanban_upgrade($oldversion) {
         // Set numbers for all cards.
         $board = 0;
         $nextnumber = 0;
-        $cards = $DB->get_recordset('kanban_card', ['number' => 0], 'kanban_board ASC, timecreated ASC');
+        $cards = $DB->get_recordset('kanbanccead_card', ['number' => 0], 'kanbanccead_board ASC, timecreated ASC');
         foreach ($cards as $card) {
-            if ($card->kanban_board != $board) {
-                $board = $card->kanban_board;
-                $nextnumber = $DB->get_field('kanban_card', 'MAX(number)', ['kanban_board' => $board]) + 1;
+            if ($card->kanbanccead_board != $board) {
+                $board = $card->kanbanccead_board;
+                $nextnumber = $DB->get_field('kanbanccead_card', 'MAX(number)', ['kanbanccead_board' => $board]) + 1;
             } else {
                 $nextnumber++;
             }
-            $DB->set_field('kanban_card', 'number', $nextnumber, ['id' => $card->id]);
+            $DB->set_field('kanbanccead_card', 'number', $nextnumber, ['id' => $card->id]);
         }
         $cards->close();
 
         // Kanban savepoint reached.
-        upgrade_mod_savepoint(true, 2025020301, 'kanban');
+        upgrade_mod_savepoint(true, 2025020301, 'kanbanccead');
     }
 
     if ($oldversion < 2026050701) {
-        // Define field boardmode to be added to kanban.
-        $table = new xmldb_table('kanban');
+        // Define field boardmode to be added to kanbanccead.
+        $table = new xmldb_table('kanbanccead');
         $field = new xmldb_field('boardmode', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0', 'introformat');
 
         // Conditionally launch add field boardmode.
@@ -143,12 +143,12 @@ function xmldb_kanban_upgrade($oldversion) {
         }
 
         // Kanban savepoint reached.
-        upgrade_mod_savepoint(true, 2026050701, 'kanban');
+        upgrade_mod_savepoint(true, 2026050701, 'kanbanccead');
     }
 
     if ($oldversion < 2026050702) {
-        // Define field boardgroupid to be added to kanban.
-        $table = new xmldb_table('kanban');
+        // Define field boardgroupid to be added to kanbanccead.
+        $table = new xmldb_table('kanbanccead');
         $field = new xmldb_field('boardgroupid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'boardmode');
 
         // Conditionally launch add field boardgroupid.
@@ -157,12 +157,12 @@ function xmldb_kanban_upgrade($oldversion) {
         }
 
         // Kanban savepoint reached.
-        upgrade_mod_savepoint(true, 2026050702, 'kanban');
+        upgrade_mod_savepoint(true, 2026050702, 'kanbanccead');
     }
 
     if ($oldversion < 2026051502) {
-        // Define field boardgroups to be added to kanban.
-        $table = new xmldb_table('kanban');
+        // Define field boardgroups to be added to kanbanccead.
+        $table = new xmldb_table('kanbanccead');
         $field = new xmldb_field('boardgroups', XMLDB_TYPE_TEXT, null, null, null, null, null, 'boardgroupid');
 
         // Conditionally launch add field boardgroups.
@@ -171,7 +171,7 @@ function xmldb_kanban_upgrade($oldversion) {
         }
 
         // Kanban savepoint reached.
-        upgrade_mod_savepoint(true, 2026051502, 'kanban');
+        upgrade_mod_savepoint(true, 2026051502, 'kanbanccead');
     }
 
     return true;

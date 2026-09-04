@@ -14,23 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-use mod_kanban\constants;
+use mod_kanbanccead\constants;
 
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/course/moodleform_mod.php');
 
 /**
- * Editing form for mod_kanban
+ * Editing form for mod_kanbanccead
  *
- * @package     mod_kanban
+ * @package     mod_kanbanccead
  * @copyright   2023-2024 ISB Bayern
  * @author      Stefan Hanauska <stefan.hanauska@csg-in.de>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mod_kanban_mod_form extends moodleform_mod {
+class mod_kanbanccead_mod_form extends moodleform_mod {
     /**
-     * Defines the editing form for mod_kanban
+     * Defines the editing form for mod_kanbanccead
      *
      * @return void
      */
@@ -40,10 +40,10 @@ class mod_kanban_mod_form extends moodleform_mod {
 
         $mform->addElement('header', 'generalhdr', get_string('general'));
 
-        $mform->addElement('text', 'name', get_string('name', 'kanban'), ['size' => '64']);
+        $mform->addElement('text', 'name', get_string('name', 'kanbanccead'), ['size' => '64']);
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'client');
-        $mform->addHelpButton('name', 'name', 'kanban');
+        $mform->addHelpButton('name', 'name', 'kanbanccead');
 
         $this->standard_intro_elements(get_string('description'));
 
@@ -54,31 +54,31 @@ class mod_kanban_mod_form extends moodleform_mod {
         }
 
         $userboards = [
-            constants::MOD_KANBAN_NOUSERBOARDS => get_string('nouserboards', 'kanban'),
-            constants::MOD_KANBAN_USERBOARDS_ENABLED => get_string('userboardsenabled', 'kanban'),
-            constants::MOD_KANBAN_USERBOARDS_ONLY => get_string('userboardsonly', 'kanban'),
+            constants::MOD_KANBANCCEAD_NOUSERBOARDS => get_string('nouserboards', 'kanbanccead'),
+            constants::MOD_KANBANCCEAD_USERBOARDS_ENABLED => get_string('userboardsenabled', 'kanbanccead'),
+            constants::MOD_KANBANCCEAD_USERBOARDS_ONLY => get_string('userboardsonly', 'kanbanccead'),
         ];
-        $mform->addElement('select', 'userboards', get_string('userboards', 'kanban'), $userboards);
-        $mform->addHelpButton('userboards', 'userboards', 'mod_kanban');
+        $mform->addElement('select', 'userboards', get_string('userboards', 'kanbanccead'), $userboards);
+        $mform->addHelpButton('userboards', 'userboards', 'mod_kanbanccead');
 
         $boardmodes = [
-            constants::MOD_KANBAN_BOARDMODE_GROUP => get_string('boardmodegroup', 'kanban'),
-            constants::MOD_KANBAN_BOARDMODE_SHARED => get_string('boardmodeshared', 'kanban'),
+            constants::MOD_KANBANCCEAD_BOARDMODE_GROUP => get_string('boardmodegroup', 'kanbanccead'),
+            constants::MOD_KANBANCCEAD_BOARDMODE_SHARED => get_string('boardmodeshared', 'kanbanccead'),
         ];
-        $mform->addElement('select', 'boardmode', get_string('boardmode', 'kanban'), $boardmodes);
-        $mform->setDefault('boardmode', constants::MOD_KANBAN_BOARDMODE_GROUP);
-        $mform->addHelpButton('boardmode', 'boardmode', 'kanban');
+        $mform->addElement('select', 'boardmode', get_string('boardmode', 'kanbanccead'), $boardmodes);
+        $mform->setDefault('boardmode', constants::MOD_KANBANCCEAD_BOARDMODE_GROUP);
+        $mform->addHelpButton('boardmode', 'boardmode', 'kanbanccead');
 
-        $mform->addElement('advcheckbox', 'usenumbers', get_string('usenumbers', 'mod_kanban'));
-        $mform->addHelpButton('usenumbers', 'usenumbers', 'mod_kanban');
+        $mform->addElement('advcheckbox', 'usenumbers', get_string('usenumbers', 'mod_kanbanccead'));
+        $mform->addHelpButton('usenumbers', 'usenumbers', 'mod_kanbanccead');
         $mform->setDefault('usenumbers', 1);
 
         $mform->addElement('hidden', 'linknumbers', 1);
         $mform->setDefault('linknumbers', 1);
         $mform->setType('linknumbers', PARAM_INT);
 
-        $mform->addElement('advcheckbox', 'history', get_string('enablehistory', 'mod_kanban'));
-        $mform->addHelpButton('history', 'enablehistory', 'mod_kanban');
+        $mform->addElement('advcheckbox', 'history', get_string('enablehistory', 'mod_kanbanccead'));
+        $mform->addHelpButton('history', 'enablehistory', 'mod_kanbanccead');
         $mform->setDefault('history', 1);
 
         $selectedgroupids = $this->get_initial_board_group_ids($groups);
@@ -95,12 +95,12 @@ class mod_kanban_mod_form extends moodleform_mod {
 
         $mform->addElement('header', 'groups', get_string('groups', 'group'));
         $mform->setExpanded('groups', true);
-        $mform->addElement('html', '<div id="kanban-boardgroups-selector">');
+        $mform->addElement('html', '<div id="kanbanccead-boardgroups-selector">');
         if (!empty($groups)) {
             $mform->addElement('html', '
                 <div class="fcontainer clearfix">
-                    <div class="fitemtitle mod_kanban_boardgroups_description">' .
-                        get_string('boardgroupsdescription', 'kanban') . '</div>
+                    <div class="fitemtitle mod_kanbanccead_boardgroups_description">' .
+                        get_string('boardgroupsdescription', 'kanbanccead') . '</div>
                     <div class="fitem fitem_fselect">
                         <div class="felement fselect">
                             <div class="tablecontainer">
@@ -108,9 +108,9 @@ class mod_kanban_mod_form extends moodleform_mod {
                                     <tr class="row">
                                         <td style="vertical-align: top" class="col-5">
                                             <label for="id_selectedBoardGroups" class="font-weight-bold d-block">' .
-                                                get_string('boardgroupsselected', 'kanban') . '</label>
+                                                get_string('boardgroupsselected', 'kanbanccead') . '</label>
                                             <div class="small text-muted mb-2">' .
-                                                get_string('boardgroupsselected_help', 'kanban') . '</div>
+                                                get_string('boardgroupsselected_help', 'kanbanccead') . '</div>
                                             <select class="col-12" id="id_selectedBoardGroups" ' .
                                                 'name="selectedboardgroups[]" multiple size="10" ' .
                                                 'style="width: 100%; min-width: 20rem;" ondblclick="' .
@@ -125,19 +125,19 @@ class mod_kanban_mod_form extends moodleform_mod {
                                             <button id="addBoardGroupButton" type="button" class="btn btn-secondary mt-1' .
                                                 '" onclick="' .
                                                 s($moveavailabletoselected) . '">' .
-                                                get_string('boardgroupsadd', 'kanban') . '</button>
+                                                get_string('boardgroupsadd', 'kanbanccead') . '</button>
                                             <div>
                                                 <button id="removeBoardGroupButton" type="button" class="btn btn-secondary mt-1' .
                                                     '" onclick="' .
                                                     s($moveselectedtoavailable) . '">' .
-                                                    get_string('boardgroupsremove', 'kanban') . '</button>
+                                                    get_string('boardgroupsremove', 'kanbanccead') . '</button>
                                             </div>
                                         </td>
                                         <td style="vertical-align: top" class="col-5">
                                             <label for="availableboardgroups" class="font-weight-bold d-block">' .
-                                                get_string('boardgroupsavailable', 'kanban') . '</label>
+                                                get_string('boardgroupsavailable', 'kanbanccead') . '</label>
                                             <div class="small text-muted mb-2">' .
-                                                get_string('boardgroupsavailable_help', 'kanban') . '</div>
+                                                get_string('boardgroupsavailable_help', 'kanbanccead') . '</div>
                                             <select class="col-12" id="availableboardgroups" ' .
                                                 'name="availableboardgroups[]" multiple size="10" ' .
                                                 'style="width: 100%; min-width: 20rem;" ondblclick="' .
@@ -157,7 +157,10 @@ class mod_kanban_mod_form extends moodleform_mod {
                     </div>
                 </div>');
         } else {
-            $mform->addElement('html', '<div class="alert alert-info">' . get_string('boardgroupsnogroups', 'kanban') . '</div>');
+            $mform->addElement(
+                'html',
+                '<div class="alert alert-info">' . get_string('boardgroupsnogroups', 'kanbanccead') . '</div>'
+            );
         }
         $mform->addElement('hidden', 'boardgroups', $serializedselectedgroups);
         $mform->setType('boardgroups', PARAM_SEQUENCE);
@@ -166,11 +169,11 @@ class mod_kanban_mod_form extends moodleform_mod {
         $mform->addElement('hidden', 'boardgroupid', $primarygroupid);
         $mform->setType('boardgroupid', PARAM_INT);
         $mform->addElement('html', '</div>');
-        $mform->hideIf('groups', 'boardmode', 'neq', constants::MOD_KANBAN_BOARDMODE_GROUP);
-        $PAGE->requires->js_call_amd('mod_kanban/boardgroupsetting', 'init', [
+        $mform->hideIf('groups', 'boardmode', 'neq', constants::MOD_KANBANCCEAD_BOARDMODE_GROUP);
+        $PAGE->requires->js_call_amd('mod_kanbanccead/boardgroupsetting', 'init', [
             'boardmodefieldid' => 'id_boardmode',
-            'containerid' => 'kanban-boardgroups-selector',
-            'groupmodevalue' => constants::MOD_KANBAN_BOARDMODE_GROUP,
+            'containerid' => 'kanbanccead-boardgroups-selector',
+            'groupmodevalue' => constants::MOD_KANBANCCEAD_BOARDMODE_GROUP,
         ]);
 
         $this->standard_coursemodule_elements();
@@ -256,7 +259,7 @@ class mod_kanban_mod_form extends moodleform_mod {
 
         $errors = parent::validation($data, $files);
 
-        if ((int)($data['boardmode'] ?? 0) !== constants::MOD_KANBAN_BOARDMODE_GROUP) {
+        if ((int)($data['boardmode'] ?? 0) !== constants::MOD_KANBANCCEAD_BOARDMODE_GROUP) {
             return $errors;
         }
 
@@ -278,7 +281,7 @@ class mod_kanban_mod_form extends moodleform_mod {
         });
 
         if (empty($groups)) {
-            $errors['boardmode'] = get_string('boardgroupsnogroupsgroupmodeerror', 'kanban');
+            $errors['boardmode'] = get_string('boardgroupsnogroupsgroupmodeerror', 'kanbanccead');
             return $errors;
         }
 
@@ -302,7 +305,7 @@ class mod_kanban_mod_form extends moodleform_mod {
         }
 
         if ($boardgroups === '') {
-            $errors['boardmode'] = get_string('boardgroupsrequired', 'kanban');
+            $errors['boardmode'] = get_string('boardgroupsrequired', 'kanbanccead');
         }
 
         return $errors;
@@ -322,7 +325,7 @@ class mod_kanban_mod_form extends moodleform_mod {
     }
 
     /**
-     * Adds the custom completion rules for mod_kanban
+     * Adds the custom completion rules for mod_kanbanccead
      *
      * @return array
      */
@@ -335,7 +338,7 @@ class mod_kanban_mod_form extends moodleform_mod {
         $mform->addElement(
             'text',
             $completioncreate,
-            get_string('completioncreate', 'kanban'),
+            get_string('completioncreate', 'kanbanccead'),
             ['size' => 3]
         );
         $mform->setType($completioncreate, PARAM_INT);
@@ -343,7 +346,7 @@ class mod_kanban_mod_form extends moodleform_mod {
         $mform->addElement(
             'text',
             $completioncomplete,
-            get_string('completioncomplete', 'kanban'),
+            get_string('completioncomplete', 'kanbanccead'),
             ['size' => 3]
         );
         $mform->setType($completioncomplete, PARAM_INT);

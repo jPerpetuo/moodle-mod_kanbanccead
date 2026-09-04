@@ -1,4 +1,4 @@
-﻿{{!
+{{!
     This file is part of Moodle - https://moodle.org/
 
     Moodle is free software: you can redistribute it and/or modify
@@ -15,14 +15,14 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template mod_kanban/card
+    @template mod_kanbanccead/card
 
-    Template for a card in the kanban board.
+    Template for a card in the kanbanccead board.
 
     Example context (json):
     {
         "id": 4,
-        "kanban_column": 1,
+        "kanbanccead_column": 1,
         "title": "Task",
         "hasassignees": false,
         "completed": true,
@@ -31,77 +31,77 @@
         "number": 12
     }
 }}
-<li style="{{#background}}background-color: {{background}}{{/background}}" class="mod_kanban_card card{{#completed}} mod_kanban_closed{{/completed}} {{^hasassignees}}mod_kanban_unassigned{{/hasassignees}} {{#hasdescription}}mod_kanban_hasdescription{{/hasdescription}} {{#hasattachment}}mod_kanban_hasattachment{{/hasattachment}} {{#hasdiscussion}}mod_kanban_hasdiscussion{{/hasdiscussion}} {{#selfassigned}}mod_kanban_selfassigned{{/selfassigned}} {{#discussion}}mod_kanban_hasdiscussion{{/discussion}} {{#canedit}}mod_kanban_canedit{{/canedit}}" id="mod_kanban_card-{{id}}" data-id="{{id}}" data-columnid="{{kanban_column}}" data-number="{{number}}" data-completedat="{{completedat}}">
-    <div class="card-body mod_kanban_card_body">
-            <div class="mod_kanban_card_top">
-            <div class="mod_kanban_card_title card-title">
-                <span class="mod_kanban_card_number">#{{number}}</span>
-                <span class="inplaceeditable inplaceeditable-text"{{#canedit}} {{^completed}}data-inplaceeditable="1" {{/completed}}data-component="mod_kanban" data-itemtype="card" data-itemid="{{id}}"
+<li style="{{#background}}background-color: {{background}}{{/background}}" class="mod_kanbanccead_card card{{#completed}} mod_kanbanccead_closed{{/completed}} {{^hasassignees}}mod_kanbanccead_unassigned{{/hasassignees}} {{#hasdescription}}mod_kanbanccead_hasdescription{{/hasdescription}} {{#hasattachment}}mod_kanbanccead_hasattachment{{/hasattachment}} {{#hasdiscussion}}mod_kanbanccead_hasdiscussion{{/hasdiscussion}} {{#selfassigned}}mod_kanbanccead_selfassigned{{/selfassigned}} {{#discussion}}mod_kanbanccead_hasdiscussion{{/discussion}} {{#canedit}}mod_kanbanccead_canedit{{/canedit}}" id="mod_kanbanccead_card-{{id}}" data-id="{{id}}" data-columnid="{{kanbanccead_column}}" data-number="{{number}}" data-completedat="{{completedat}}">
+    <div class="card-body mod_kanbanccead_card_body">
+            <div class="mod_kanbanccead_card_top">
+            <div class="mod_kanbanccead_card_title card-title">
+                <span class="mod_kanbanccead_card_number">#{{number}}</span>
+                <span class="inplaceeditable inplaceeditable-text"{{#canedit}} {{^completed}}data-inplaceeditable="1" {{/completed}}data-component="mod_kanbanccead" data-itemtype="card" data-itemid="{{id}}"
                 data-value="{{{title}}}" data-type="text"{{/canedit}}>
                     <a class="quickeditlink aalink"{{#canedit}} data-inplaceeditablelink="1"{{/canedit}}>
                         {{{title}}}
                     </a>
                 </span>
             </div>
-            {{>mod_kanban/actionmenucard}}
+            {{>mod_kanbanccead/actionmenucard}}
         </div>
-        <div class="mod_kanban_card_footer">
-            <div class="mod_kanban_card_assignees_row{{#hasassignees}} has-assignees{{/hasassignees}}">
-                <div class="mod_kanban_assignees" data-id="{{id}}" data-more-label="{{#str}} andmore, mod_kanban {{/str}}">
+        <div class="mod_kanbanccead_card_footer">
+            <div class="mod_kanbanccead_card_assignees_row{{#hasassignees}} has-assignees{{/hasassignees}}">
+                <div class="mod_kanbanccead_assignees" data-id="{{id}}" data-more-label="{{#str}} andmore, mod_kanbanccead {{/str}}">
                     {{#hasassignees}}
                         {{#assignees}}
-                            {{>mod_kanban/user}}
+                            {{>mod_kanbanccead/user}}
                         {{/assignees}}
                     {{/hasassignees}}
                 </div>
             </div>
-            <div class="mod_kanban_card_meta_row{{#completed}} has-meta{{/completed}}{{#duedate}} has-meta{{/duedate}}{{#hasdiscussion}} has-meta{{/hasdiscussion}}{{#discussion}} has-meta{{/discussion}}{{#hasdescription}} has-meta{{/hasdescription}}{{#hasattachment}} has-meta{{/hasattachment}}">
-                <div class="mod_kanban_duedate" data-date="{{duedate}}"{{#duedate}} title="{{#str}} due, mod_kanban {{/str}}: {{#userdate}} {{duedate}}, {{#str}} strftimedate, core_langconfig {{/str}} {{/userdate}}"{{/duedate}}>
+            <div class="mod_kanbanccead_card_meta_row{{#completed}} has-meta{{/completed}}{{#duedate}} has-meta{{/duedate}}{{#hasdiscussion}} has-meta{{/hasdiscussion}}{{#discussion}} has-meta{{/discussion}}{{#hasdescription}} has-meta{{/hasdescription}}{{#hasattachment}} has-meta{{/hasattachment}}">
+                <div class="mod_kanbanccead_duedate" data-date="{{duedate}}"{{#duedate}} title="{{#str}} due, mod_kanbanccead {{/str}}: {{#userdate}} {{duedate}}, {{#str}} strftimedate, core_langconfig {{/str}} {{/userdate}}"{{/duedate}}>
                     {{#duedate}}
-                        <span class="mod_kanban_duedate_icon"><i class="icon fa-regular fa-calendar-days fa-fw" aria-hidden="true"></i></span>
-                        <span class="mod_kanban_duedate_text">{{#userdate}} {{duedate}}, {{#str}} strftimedate, core_langconfig {{/str}} {{/userdate}}</span>
+                        <span class="mod_kanbanccead_duedate_icon"><i class="icon fa-regular fa-calendar-days fa-fw" aria-hidden="true"></i></span>
+                        <span class="mod_kanbanccead_duedate_text">{{#userdate}} {{duedate}}, {{#str}} strftimedate, core_langconfig {{/str}} {{/userdate}}</span>
                     {{/duedate}}
                 </div>
-                <div class="mod_kanban_description">
-                    <button class="mod_kanban_discussion_trigger btn btn-icon icon-no-margin p-0" data-bs-toggle="modal" data-toggle="modal" data-bs-target="#mod_kanban_discussion_modal_{{id}}" data-target="#mod_kanban_discussion_modal_{{id}}">
-                    {{#pix}} t/messages, core, {{#str}} showdiscussion, mod_kanban {{/str}} {{/pix}}
+                <div class="mod_kanbanccead_description">
+                    <button class="mod_kanbanccead_discussion_trigger btn btn-icon icon-no-margin p-0" data-bs-toggle="modal" data-toggle="modal" data-bs-target="#mod_kanbanccead_discussion_modal_{{id}}" data-target="#mod_kanbanccead_discussion_modal_{{id}}">
+                    {{#pix}} t/messages, core, {{#str}} showdiscussion, mod_kanbanccead {{/str}} {{/pix}}
                     </button>
-                    <button class="mod_kanban_detail_trigger btn btn-icon icon-no-margin p-0">
-                    {{#pix}} e/file-text, core, {{#str}} showdescription, mod_kanban {{/str}} {{/pix}}
+                    <button class="mod_kanbanccead_detail_trigger btn btn-icon icon-no-margin p-0">
+                    {{#pix}} e/file-text, core, {{#str}} showdescription, mod_kanbanccead {{/str}} {{/pix}}
                     </button>
-                    <span class="mod_kanban_card_completion_indicator" title="{{#str}} completed, core {{/str}}" data-completed-label="{{#str}} completedon, mod_kanban {{/str}}" data-completed-fallback="{{#str}} completed, core {{/str}}" data-planned-label="{{#str}} plannedfor, mod_kanban {{/str}}">
+                    <span class="mod_kanbanccead_card_completion_indicator" title="{{#str}} completed, core {{/str}}" data-completed-label="{{#str}} completedon, mod_kanbanccead {{/str}}" data-completed-fallback="{{#str}} completed, core {{/str}}" data-planned-label="{{#str}} plannedfor, mod_kanbanccead {{/str}}">
                         <i class="fa fa-check fa-fw" aria-hidden="true"></i>
                     </span>
                 </div>
             </div>
-            <div class="mod_kanban_tags">
+            <div class="mod_kanbanccead_tags">
             </div>
         </div>
-        {{>mod_kanban/discussionmodal}}
-        {{>mod_kanban/historymodal}}
+        {{>mod_kanbanccead/discussionmodal}}
+        {{>mod_kanbanccead/historymodal}}
     </div>
-    {{>mod_kanban/addcard}}
+    {{>mod_kanbanccead/addcard}}
 </li>
 
 {{#js}}
 require(['core/inplace_editable']);
-require(['mod_kanban/card'], function(component) {
-    component.init('mod_kanban_card-{{id}}');
+require(['mod_kanbanccead/card'], function(component) {
+    component.init('mod_kanbanccead_card-{{id}}');
 });
 require(['core/ajax', 'core/notification'], function(Ajax, Notification) {
-    const card = document.getElementById('mod_kanban_card-{{id}}');
+    const card = document.getElementById('mod_kanbanccead_card-{{id}}');
     if (!card) {
         return;
     }
 
-    const inplace = card.querySelector('.mod_kanban_card_title .inplaceeditable');
+    const inplace = card.querySelector('.mod_kanbanccead_card_title .inplaceeditable');
     const editlink = inplace ? inplace.querySelector('[data-inplaceeditablelink]') : null;
     if (!inplace || !editlink) {
         return;
     }
 
     let issaving = false;
-    card.__modKanbanTitleSaveSeq = card.__modKanbanTitleSaveSeq || 0;
+    card.__modKanbanCceadTitleSaveSeq = card.__modKanbanCceadTitleSaveSeq || 0;
 
     const decodeHtmlEntities = function(value) {
         const textarea = document.createElement('textarea');
@@ -113,7 +113,7 @@ require(['core/ajax', 'core/notification'], function(Ajax, Notification) {
         const safevalue = displayvalue || '';
         inplace.setAttribute('data-value', decodeHtmlEntities(safevalue));
         inplace.innerHTML = '<a class="quickeditlink aalink" data-inplaceeditablelink="1">' + safevalue + '</a>';
-        const discussiontitle = card.querySelector('.mod_kanban_discussion_modal .modal-title');
+        const discussiontitle = card.querySelector('.mod_kanbanccead_discussion_modal .modal-title');
         if (discussiontitle) {
             discussiontitle.textContent = decodeHtmlEntities(safevalue);
         }
@@ -133,8 +133,8 @@ require(['core/ajax', 'core/notification'], function(Ajax, Notification) {
     };
 
     const markTitlePending = function(expectedplainvalue) {
-        card.__modKanbanTitleSaveSeq += 1;
-        const seq = card.__modKanbanTitleSaveSeq;
+        card.__modKanbanCceadTitleSaveSeq += 1;
+        const seq = card.__modKanbanCceadTitleSaveSeq;
         const lockvalue = expectedplainvalue || '';
         card.dataset.titleSavePending = '1';
         card.dataset.titleSaveExpected = lockvalue;
@@ -164,7 +164,7 @@ require(['core/ajax', 'core/notification'], function(Ajax, Notification) {
         Ajax.call([{
             methodname: 'core_update_inplace_editable',
             args: {
-                component: 'mod_kanban',
+                component: 'mod_kanbanccead',
                 itemtype: 'card',
                 itemid: '{{id}}',
                 value: newvalue,
@@ -206,7 +206,7 @@ require(['core/ajax', 'core/notification'], function(Ajax, Notification) {
         card.setAttribute('data-inplace-in-draggable', 'true');
 
         const textarea = document.createElement('textarea');
-        textarea.className = 'form-control ignoredirty mod_kanban_card_title_editor';
+        textarea.className = 'form-control ignoredirty mod_kanbanccead_card_title_editor';
         textarea.rows = 4;
         textarea.value = currentvalue;
         textarea.setAttribute('aria-label', 'Editar titulo do cartao');
@@ -237,7 +237,7 @@ require(['core/ajax', 'core/notification'], function(Ajax, Notification) {
             }
             handled = true;
             detachOutsideHandlers();
-            const savedvalue = textarea.value.trim() === '' ? '{{#str}} newcard, mod_kanban {{/str}}' : textarea.value;
+            const savedvalue = textarea.value.trim() === '' ? '{{#str}} newcard, mod_kanbanccead {{/str}}' : textarea.value;
             const saveseq = markTitlePending(savedvalue);
             closeEditor(savedvalue, true);
             saveTitle(savedvalue, saveseq);
@@ -287,21 +287,21 @@ require(['core/ajax', 'core/notification'], function(Ajax, Notification) {
 });
 
 require([], function() {
-    const card = document.getElementById('mod_kanban_card-{{id}}');
+    const card = document.getElementById('mod_kanbanccead_card-{{id}}');
     if (!card) {
         return;
     }
 
-    const summaryclass = 'mod_kanban_assignee_summary';
-    const hiddenclass = 'mod_kanban_assigned_user_hidden';
-    const readyclass = 'mod_kanban_assignees_enhanced';
+    const summaryclass = 'mod_kanbanccead_assignee_summary';
+    const hiddenclass = 'mod_kanbanccead_assigned_user_hidden';
+    const readyclass = 'mod_kanbanccead_assignees_enhanced';
 
     const renderSummary = function() {
-        const container = card.querySelector('.mod_kanban_assignees');
-        if (!container || container.__modKanbanSummaryRendering) {
+        const container = card.querySelector('.mod_kanbanccead_assignees');
+        if (!container || container.__modKanbanCceadSummaryRendering) {
             return;
         }
-        container.__modKanbanSummaryRendering = true;
+        container.__modKanbanCceadSummaryRendering = true;
 
         try {
             container.classList.remove(readyclass);
@@ -309,11 +309,11 @@ require([], function() {
                 node.remove();
             });
 
-            const assignees = Array.from(container.querySelectorAll('.mod_kanban_assigned_user')).filter(function(node) {
+            const assignees = Array.from(container.querySelectorAll('.mod_kanbanccead_assigned_user')).filter(function(node) {
                 return !node.classList.contains(summaryclass);
             });
-            card.classList.toggle('mod_kanban_assignees_multi', assignees.length > 1);
-            card.classList.toggle('mod_kanban_assignees_has_summary', assignees.length > 2);
+            card.classList.toggle('mod_kanbanccead_assignees_multi', assignees.length > 1);
+            card.classList.toggle('mod_kanbanccead_assignees_has_summary', assignees.length > 2);
             assignees.forEach(function(node) {
                 node.classList.remove(hiddenclass);
             });
@@ -334,7 +334,7 @@ require([], function() {
                 const morelabel = (!rawlabel || rawlabel.startsWith('[[') || rawlabel.toLowerCase() === 'and more') ? 'e mais' : rawlabel;
 
                 const summary = document.createElement('div');
-                summary.className = 'mod_kanban_assigned_user ' + summaryclass;
+                summary.className = 'mod_kanbanccead_assigned_user ' + summaryclass;
                 summary.setAttribute('tabindex', '0');
 
                 if (hiddennames.length > 0) {
@@ -342,11 +342,11 @@ require([], function() {
                 }
 
                 const icon = document.createElement('span');
-                icon.className = 'mod_kanban_assigned_user_icon';
+                icon.className = 'mod_kanbanccead_assigned_user_icon';
                 icon.innerHTML = '<i class="icon fa fa-user fa-fw" aria-hidden="true"></i>';
 
                 const text = document.createElement('span');
-                text.className = 'mod_kanban_assigned_user_name';
+                text.className = 'mod_kanbanccead_assigned_user_name';
                 text.textContent = morelabel + ' ' + hidden.length;
 
                 summary.appendChild(icon);
@@ -355,19 +355,19 @@ require([], function() {
             }
         } finally {
             container.classList.add(readyclass);
-            container.__modKanbanSummaryRendering = false;
+            container.__modKanbanCceadSummaryRendering = false;
         }
     };
 
     const scheduleRender = function() {
-        if (card.__modKanbanAssigneeSummaryTimer) {
-            clearTimeout(card.__modKanbanAssigneeSummaryTimer);
+        if (card.__modKanbanCceadAssigneeSummaryTimer) {
+            clearTimeout(card.__modKanbanCceadAssigneeSummaryTimer);
         }
-        card.__modKanbanAssigneeSummaryTimer = setTimeout(renderSummary, 0);
+        card.__modKanbanCceadAssigneeSummaryTimer = setTimeout(renderSummary, 0);
     };
 
     renderSummary();
-    const assigneecontainer = card.querySelector('.mod_kanban_assignees');
+    const assigneecontainer = card.querySelector('.mod_kanbanccead_assignees');
     if (assigneecontainer) {
         const observer = new MutationObserver(function() {
             scheduleRender();
@@ -378,15 +378,15 @@ require([], function() {
             attributes: true,
             attributeFilter: ['class', 'title']
         });
-        card.__modKanbanAssigneeSummaryObserver = observer;
+        card.__modKanbanCceadAssigneeSummaryObserver = observer;
     }
 });
 
 require([], function() {
-    if (window.__modKanbanCardMenuControllerInitialized) {
+    if (window.__modKanbanCceadCardMenuControllerInitialized) {
         return;
     }
-    window.__modKanbanCardMenuControllerInitialized = true;
+    window.__modKanbanCceadCardMenuControllerInitialized = true;
 
     const state = {
         openmenu: null,
@@ -411,7 +411,7 @@ require([], function() {
         state.openmenu.style.display = '';
         state.openmenu.style.transform = '';
         state.openmenu.style.marginTop = '';
-        state.openactionmenu.classList.remove('mod_kanban_action_menu_open');
+        state.openactionmenu.classList.remove('mod_kanbanccead_action_menu_open');
         state.opentrigger.setAttribute('aria-expanded', 'false');
         state.openmenu = null;
         state.opentrigger = null;
@@ -450,7 +450,7 @@ require([], function() {
         menu.style.left = `${left}px`;
         menu.style.top = `${top}px`;
         menu.style.visibility = 'visible';
-        actionmenu.classList.add('mod_kanban_action_menu_open');
+        actionmenu.classList.add('mod_kanbanccead_action_menu_open');
         trigger.setAttribute('aria-expanded', 'true');
         state.openmenu = menu;
         state.opentrigger = trigger;
@@ -458,7 +458,7 @@ require([], function() {
     };
 
     const toggleMenu = function(trigger) {
-        const actionmenu = trigger.closest('.mod_kanban_action_menu');
+        const actionmenu = trigger.closest('.mod_kanbanccead_action_menu');
         const menu = actionmenu ? actionmenu.querySelector('.dropdown-menu') : null;
         if (!actionmenu || !menu) {
             return;
@@ -474,7 +474,7 @@ require([], function() {
     };
 
     const handleDocumentClick = function(event) {
-        const trigger = event.target.closest('.mod_kanban_card .mod_kanban_action_menu_trigger');
+        const trigger = event.target.closest('.mod_kanbanccead_card .mod_kanbanccead_action_menu_trigger');
         if (trigger) {
             event.preventDefault();
             event.stopPropagation();

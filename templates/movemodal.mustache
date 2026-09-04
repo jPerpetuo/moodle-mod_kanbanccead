@@ -15,14 +15,14 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template mod_kanban/movemodal
+    @template mod_kanbanccead/movemodal
 }}
 <div class="row">
     <div class="col-3">
-        <label for="mod_kanban_move_card_column">{{#str}} column, mod_kanban {{/str}}</label>
+        <label for="mod_kanbanccead_move_card_column">{{#str}} column, mod_kanbanccead {{/str}}</label>
     </div>
     <div class="col-9">
-        <select data-id="{{cardid}}" data-initial-value="{{kanbancolumn}}" class="mod_kanban_move_card_column custom-select" id="mod_kanban_move_card_column">
+        <select data-id="{{cardid}}" data-initial-value="{{kanbancceadcolumn}}" class="mod_kanbanccead_move_card_column custom-select" id="mod_kanbanccead_move_card_column">
             {{#columns}}
             <option value="{{id}}">{{title}}</option>
             {{/columns}}
@@ -31,25 +31,25 @@
 </div>
 <div class="row">
     <div class="col-3">
-        <label for="mod_kanban_move_card_aftercard">{{#str}} moveaftercard, mod_kanban {{/str}}</label>
+        <label for="mod_kanbanccead_move_card_aftercard">{{#str}} moveaftercard, mod_kanbanccead {{/str}}</label>
     </div>
     <div class="col-9">
-        <select data-id="{{cardid}}" data-initial-value="{{cardid}}" class="mod_kanban_move_card_aftercard custom-select" id="mod_kanban_move_card_aftercard">
+        <select data-id="{{cardid}}" data-initial-value="{{cardid}}" class="mod_kanbanccead_move_card_aftercard custom-select" id="mod_kanbanccead_move_card_aftercard">
             {{#columns}}
-                <option value="0" data-columnid="{{id}}">{{#str}} topofcolumn, mod_kanban {{/str}}</option>
+                <option value="0" data-columnid="{{id}}">{{#str}} topofcolumn, mod_kanbanccead {{/str}}</option>
                 {{#cards}}
-                <option value="{{id}}" data-columnid="{{kanbancolumn}}">{{title}}</option>
+                <option value="{{id}}" data-columnid="{{kanbancceadcolumn}}">{{title}}</option>
                 {{/cards}}
             {{/columns}}
         </select>
-        <select data-id="{{cardid}}" data-initial-value="{{cardid}}" class="mod_kanban_move_card_options hidden">
+        <select data-id="{{cardid}}" data-initial-value="{{cardid}}" class="mod_kanbanccead_move_card_options hidden">
         </select>
     </div>
 </div>
 {{#js}}
     function updateCards(el) {
-        let select = document.querySelector('.mod_kanban_move_card_aftercard[data-id="{{cardid}}"]');
-        let select2 = document.querySelector('.mod_kanban_move_card_options');
+        let select = document.querySelector('.mod_kanbanccead_move_card_aftercard[data-id="{{cardid}}"]');
+        let select2 = document.querySelector('.mod_kanbanccead_move_card_options');
         let column = parseInt(el.value);
         Array.from(select.children).forEach((n) => {
             if (parseInt(n.dataset.columnid) != column) {
@@ -62,9 +62,9 @@
             }
         });
     }
-    document.querySelector('.mod_kanban_move_card_column[data-id="{{cardid}}"]').addEventListener('change', (e) => {
-        let target = e.target.closest('.mod_kanban_move_card_column');
+    document.querySelector('.mod_kanbanccead_move_card_column[data-id="{{cardid}}"]').addEventListener('change', (e) => {
+        let target = e.target.closest('.mod_kanbanccead_move_card_column');
         updateCards(target);
     });
-    updateCards(document.querySelector('.mod_kanban_move_card_column[data-id="{{cardid}}"]'));
+    updateCards(document.querySelector('.mod_kanbanccead_move_card_column[data-id="{{cardid}}"]'));
 {{/js}}

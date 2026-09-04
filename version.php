@@ -15,16 +15,16 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Version information for mod_kanban
+ * Version information for mod_kanbanccead
  *
- * @package     mod_kanban
+ * @package     mod_kanbanccead
  * @copyright   2023-2025 ISB Bayern
  * @author      Stefan Hanauska <stefan.hanauska@csg-in.de>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'mod_kanban';
+$plugin->component = 'mod_kanbanccead';
 $plugin->release = '0.4.0-beta';
 $plugin->version = 2026090100;
 $plugin->requires = 2022112800;

@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-The declared support range is maintained in [version.php](../version.php). The current release is `0.4.0-beta`; check that file rather than this document before changing compatibility claims.
+The declared support range is maintained in [version.php](../version.php). See the [development status](../README.md#development-status-and-declared-compatibility) before installing or making compatibility claims.
 
 ## Source layout
 
@@ -13,6 +13,8 @@ The declared support range is maintained in [version.php](../version.php). The c
 * `backup/moodle2/`: Moodle backup and restore support.
 * `tests/`: PHPUnit tests and test generators.
 
+The source component is `mod_kanbanccead`. Generated files in `amd/build/` are compiled from `amd/src/` with that component identity. Rebuild them whenever JavaScript source changes, and remove obsolete generated module names as part of the build review.
+
 ## Local preflight
 
 Run a local static preflight before pushing. At minimum, run PHP syntax checks, `git diff --check`, and Moodle CodeSniffer. This is a fast gate; it does not replace integration tests.
@@ -22,7 +24,9 @@ Run a local static preflight before pushing. At minimum, run PHP syntax checks, 
 GitHub Actions workflows are stored in [.github/workflows](../.github/workflows):
 
 * `moodle-preflight.yml`: fast static validation for pull requests and manual runs.
-* `moodle-ci.yml`: matrix validation across supported Moodle releases and MariaDB/PostgreSQL, including static checks, AMD build, PHPUnit, and Behat.
+* `moodle-ci.yml`: manually dispatched matrix validation for Moodle 4.4, 4.5, 5.0, 5.1, 5.2 and main on MariaDB/PostgreSQL, including static checks, AMD build, PHPUnit, and Behat.
+
+The declared minimum in `version.php` is older than the earliest branch in this matrix. Coverage for that minimum remains to be established, or the declared support range must be revised before release. Do not infer full declared-range coverage from this matrix.
 
 The matrix is intentionally broader than the development server. A change that works locally can still fail because of database portability, Moodle API changes, generated AMD output, or browser-level behaviour.
 
@@ -39,4 +43,3 @@ The matrix is intentionally broader than the development server. A change that w
 ## Coding guidance
 
 Use Moodle APIs for contexts, capabilities, parameters, database access, strings, files, and output. Treat external function declarations and their runtime authorization as separate safeguards. Keep PostgreSQL portability in mind: do not compare text/blob fields in condition arrays where Moodle's DML layer forbids it.
-

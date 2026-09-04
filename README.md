@@ -1,12 +1,18 @@
-# Kanban activity for Moodle
+# Kanban CCEAD activity for Moodle
 
-Kanban is a Moodle activity module for project and learning-process management inside a course. It provides shared, group, personal, and template boards with columns, cards, assignments, due dates, notifications, history, and activity-completion rules.
+Kanban CCEAD is a Moodle activity module for project and learning-process management inside a course. It provides shared, group, personal, and template boards with columns, cards, assignments, due dates, notifications, history, and activity-completion rules.
 
-This repository is a maintained derivative of the original [`mod_kanban` project](https://github.com/bycs-lp/moodle-mod_kanban). It preserves the `mod_kanban` Moodle component name, upstream copyright notices, and the GNU GPL v3 or later licence. It is intended to replace the original module in an existing Moodle installation. It cannot be installed alongside another plugin using the same component name.
+This fork uses the independent Moodle component `mod_kanbanccead`, declared in [version.php](version.php). Its origin, authorship and licence are recorded in [NOTICE](NOTICE).
 
-## Supported Moodle versions
+It is designed for installation alongside `mod_kanban`, using a separate plugin directory and plugin-owned tables. Coexistence still requires staging validation. It does not replace or automatically migrate activities from the original module.
 
-The current beta release is `0.4.0-beta`. The declared compatibility range is Moodle 4.1 through Moodle 5.2.
+## Development status and declared compatibility
+
+This renamed variant is not ready for production use. Its JavaScript has been rebuilt, but installation, coexistence and integration tests remain pending. Passing CI results from the predecessor do not validate this component.
+
+[version.php](version.php) retains the inherited `0.4.0-beta` label and declares Moodle 4.1 through 5.2. Those declarations are not evidence of a published or tested release of `mod_kanbanccead`.
+
+The planned repository name is `moodle-mod_kanbanccead` under the `jPerpetuo` GitHub account. Publication and the final clone URL are pending; use no predecessor repository as a substitute.
 
 JavaScript is required. The activity uses Moodle reactive components and has no non-JavaScript fallback.
 
@@ -25,9 +31,11 @@ See [Configuration and board flows](docs/flows.md) for the functional reference.
 
 ## Installation
 
+The procedures below describe the intended installation layout. They have not yet been validated for this renamed variant. Use them only after a tested package or source revision is available.
+
 ### Install from a ZIP file
 
-1. Download the release ZIP.
+1. Obtain a tested release ZIP for `mod_kanbanccead` containing a top-level `kanbanccead/` directory.
 2. In Moodle, go to **Site administration > Plugins > Install plugins**.
 3. Upload the ZIP and complete the validation and installation process.
 4. Go to **Site administration > Notifications** if Moodle asks to complete the upgrade.
@@ -37,51 +45,50 @@ See [Configuration and board flows](docs/flows.md) for the functional reference.
 Place this repository at:
 
 ```
-{moodle-dirroot}/mod/kanban
+{moodle-dirroot}/mod/kanbanccead
 ```
 
 Then complete the Moodle upgrade through **Site administration > Notifications** or:
 
 ```bash
-php admin/cli/upgrade.php
+php {moodle-dirroot}/admin/cli/upgrade.php
 ```
 
 ### Install from Git
 
-From the Moodle `mod` directory, clone this repository into a directory named `kanban`:
+After publication, replace `CONFIRMED_REPOSITORY_URL` with the clone URL confirmed by the Kanban CCEAD maintainer. From the Moodle `mod` directory, clone into `kanbanccead`:
 
 ```bash
 cd {moodle-dirroot}/mod
-git clone https://github.com/jPerpetuo/moodle-mod_kanban-ccead.git kanban
+git clone CONFIRMED_REPOSITORY_URL kanbanccead
 ```
 
 Then complete the Moodle upgrade through **Site administration > Notifications** or:
 
 ```bash
-php admin/cli/upgrade.php
+php {moodle-dirroot}/admin/cli/upgrade.php
 ```
 
 ### Update a Git installation
 
-Use this only when the plugin directory has no local changes. Check the status, fetch the current branch, and run the Moodle upgrade:
+Use this only for an existing `mod_kanbanccead` Git installation with no local changes and a tested update on `origin/main`. Follow the backup requirements in [Release and operations](docs/release.md) first. Stop if the status is not clean.
 
 ```bash
-cd {moodle-dirroot}/mod/kanban
+cd {moodle-dirroot}/mod/kanbanccead
 git status --short
 git pull --ff-only origin main
 php {moodle-dirroot}/admin/cli/upgrade.php
 ```
 
-Do not install this fork alongside the original `mod_kanban` plugin. Both use the same Moodle component and directory. For an existing installation, follow the replacement procedure below rather than cloning a second copy.
+Here, `{moodle-dirroot}` means the directory containing Moodle's `config.php` and `mod/`, which can be the `public/` directory in a split layout. Substitute the actual path before running commands.
 
-## Upgrading from the original module
+## Existing installations of the original module
 
-This fork is designed to replace the original module in place.
+Keep the original `mod/kanban` directory and its data intact. Install this component separately in `mod/kanbanccead` after validation.
 
-1. Back up the database, `moodledata`, and the existing `mod/kanban` directory.
-2. Replace the existing `mod/kanban` code with the release files from this repository.
-3. Run Moodle's upgrade process.
-4. Purge caches and validate the affected activity flows in a staging site before production deployment.
+The schema in [db/install.xml](db/install.xml) uses `kanbanccead`-prefixed tables. Existing boards and cards in `mod_kanban` remain with that component. Both plugins still use Moodle's shared courses, users and groups.
+
+No cross-component migration or backup conversion is provided. Do not rename existing database tables or treat a `mod_kanban` backup as a `mod_kanbanccead` backup. See [Backup, restore, and import](docs/backup-restore.md).
 
 For the complete release and rollback procedure, see [Release and operations](docs/release.md).
 
@@ -106,7 +113,7 @@ The documentation index is available in [docs/README.md](docs/README.md).
 
 ## Development and testing
 
-The repository includes automated checks for supported Moodle versions and database engines. Before submitting changes, run the local preflight and the relevant Moodle tests.
+The repository includes workflow definitions for static checks and Moodle integration tests. Their presence does not establish compatibility. Before submitting changes, run the local preflight and the relevant Moodle tests.
 
 See [Development and testing](docs/development.md) for commands, test coverage, and the GitHub Actions matrix.
 

@@ -17,18 +17,18 @@
 /**
  * Constant class
  *
- * @package    mod_kanban
+ * @package    mod_kanbanccead
  * @copyright   2023-2024 ISB Bayern
  * @author     Stefan Hanauska
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_kanban;
+namespace mod_kanbanccead;
 
 /**
  * Constant class
  *
- * @package    mod_kanban
+ * @package    mod_kanbanccead
  * @copyright   2023-2024 ISB Bayern
  * @author     Stefan Hanauska
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -37,115 +37,115 @@ class constants {
     /**
      * Type constant for editing permissions.
      */
-    public const MOD_KANBAN_EDIT = 1;
+    public const MOD_KANBANCCEAD_EDIT = 1;
     /**
      * Type constant for viewing permissions.
      */
-    public const MOD_KANBAN_VIEW = 2;
+    public const MOD_KANBANCCEAD_VIEW = 2;
     /**
      * Mapping of the type constants to capabilities.
      */
-    public const MOD_KANBAN_CAPABILITY = [
-        self::MOD_KANBAN_EDIT => 'mod/kanban:editallboards',
-        self::MOD_KANBAN_VIEW => 'mod/kanban:viewallboards',
+    public const MOD_KANBANCCEAD_CAPABILITY = [
+        self::MOD_KANBANCCEAD_EDIT => 'mod/kanbanccead:editallboards',
+        self::MOD_KANBANCCEAD_VIEW => 'mod/kanbanccead:viewallboards',
     ];
     /**
      * Board mode: one shared board for the activity.
      */
-    public const MOD_KANBAN_BOARDMODE_SHARED = 0;
+    public const MOD_KANBANCCEAD_BOARDMODE_SHARED = 0;
     /**
      * Board mode: one board per group.
      */
-    public const MOD_KANBAN_BOARDMODE_GROUP = 1;
+    public const MOD_KANBANCCEAD_BOARDMODE_GROUP = 1;
     /**
      * Mapping of board modes to strings.
      */
-    public const MOD_KANBAN_BOARDMODE = [
-        self::MOD_KANBAN_BOARDMODE_SHARED => 'shared',
-        self::MOD_KANBAN_BOARDMODE_GROUP => 'group',
+    public const MOD_KANBANCCEAD_BOARDMODE = [
+        self::MOD_KANBANCCEAD_BOARDMODE_SHARED => 'shared',
+        self::MOD_KANBANCCEAD_BOARDMODE_GROUP => 'group',
     ];
     /**
      * Setting: User boards disabled
      */
-    public const MOD_KANBAN_NOUSERBOARDS = 0;
+    public const MOD_KANBANCCEAD_NOUSERBOARDS = 0;
     /**
      * Setting: User boards and course board
      */
-    public const MOD_KANBAN_USERBOARDS_ENABLED = 1;
+    public const MOD_KANBANCCEAD_USERBOARDS_ENABLED = 1;
     /**
      * Setting: User boards only
      */
-    public const MOD_KANBAN_USERBOARDS_ONLY = 2;
+    public const MOD_KANBANCCEAD_USERBOARDS_ONLY = 2;
     /**
      * Item type board
      */
-    public const MOD_KANBAN_BOARD = 0;
+    public const MOD_KANBANCCEAD_BOARD = 0;
     /**
      * Item type column
      */
-    public const MOD_KANBAN_COLUMN = 1;
+    public const MOD_KANBANCCEAD_COLUMN = 1;
     /**
      * Item type card
      */
-    public const MOD_KANBAN_CARD = 2;
+    public const MOD_KANBANCCEAD_CARD = 2;
     /**
      * Item type discussion
      */
-    public const MOD_KANBAN_DISCUSSION = 3;
+    public const MOD_KANBANCCEAD_DISCUSSION = 3;
     /**
      * Item type history
      */
-    public const MOD_KANBAN_HISTORY = 4;
+    public const MOD_KANBANCCEAD_HISTORY = 4;
     /**
      * Mapping of item types to strings
      */
-    public const MOD_KANBAN_TYPES = [
-        self::MOD_KANBAN_BOARD => 'board',
-        self::MOD_KANBAN_COLUMN => 'column',
-        self::MOD_KANBAN_CARD => 'card',
-        self::MOD_KANBAN_DISCUSSION => 'discussion',
-        self::MOD_KANBAN_HISTORY => 'history',
+    public const MOD_KANBANCCEAD_TYPES = [
+        self::MOD_KANBANCCEAD_BOARD => 'board',
+        self::MOD_KANBANCCEAD_COLUMN => 'column',
+        self::MOD_KANBANCCEAD_CARD => 'card',
+        self::MOD_KANBANCCEAD_DISCUSSION => 'discussion',
+        self::MOD_KANBANCCEAD_HISTORY => 'history',
     ];
     /**
      * Repeat interval type: hours
      */
-    public const MOD_KANBAN_REPEAT_HOURS = 2;
+    public const MOD_KANBANCCEAD_REPEAT_HOURS = 2;
     /**
      * Repeat interval type: days
      */
-    public const MOD_KANBAN_REPEAT_DAYS = 3;
+    public const MOD_KANBANCCEAD_REPEAT_DAYS = 3;
     /**
      * Repeat interval type: weeks
      */
-    public const MOD_KANBAN_REPEAT_WEEKS = 4;
+    public const MOD_KANBANCCEAD_REPEAT_WEEKS = 4;
     /**
      * Repeat interval type: months
      */
-    public const MOD_KANBAN_REPEAT_MONTHS = 5;
+    public const MOD_KANBANCCEAD_REPEAT_MONTHS = 5;
     /**
      * Repeat interval type: years
      */
-    public const MOD_KANBAN_REPEAT_YEARS = 6;
+    public const MOD_KANBANCCEAD_REPEAT_YEARS = 6;
     /**
      * Mapping of repeat interval types to strings
      */
-    public const MOD_KANBAN_REPEAT_INTERVAL_TYPE = [
-        self::MOD_KANBAN_REPEAT_HOURS => 'hour',
-        self::MOD_KANBAN_REPEAT_DAYS => 'day',
-        self::MOD_KANBAN_REPEAT_WEEKS => 'week',
-        self::MOD_KANBAN_REPEAT_MONTHS => 'month',
-        self::MOD_KANBAN_REPEAT_YEARS => 'year',
+    public const MOD_KANBANCCEAD_REPEAT_INTERVAL_TYPE = [
+        self::MOD_KANBANCCEAD_REPEAT_HOURS => 'hour',
+        self::MOD_KANBANCCEAD_REPEAT_DAYS => 'day',
+        self::MOD_KANBANCCEAD_REPEAT_WEEKS => 'week',
+        self::MOD_KANBANCCEAD_REPEAT_MONTHS => 'month',
+        self::MOD_KANBANCCEAD_REPEAT_YEARS => 'year',
     ];
     /**
      * Repeat new due date: no new due date
      */
-    public const MOD_KANBAN_REPEAT_NONEWDUEDATE = 0;
+    public const MOD_KANBANCCEAD_REPEAT_NONEWDUEDATE = 0;
     /**
      * Repeat new due date: after due date
      */
-    public const MOD_KANBAN_REPEAT_NEWDUEDATE_AFTERDUE = 1;
+    public const MOD_KANBANCCEAD_REPEAT_NEWDUEDATE_AFTERDUE = 1;
     /**
      * Repeat new due date: after completion
      */
-    public const MOD_KANBAN_REPEAT_NEWDUEDATE_AFTERCOMPLETION = 2;
+    public const MOD_KANBANCCEAD_REPEAT_NEWDUEDATE_AFTERCOMPLETION = 2;
 }

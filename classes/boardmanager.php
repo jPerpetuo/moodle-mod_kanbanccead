@@ -17,13 +17,13 @@
 /**
  * Class to handle updating the board
  *
- * @package    mod_kanban
+ * @package    mod_kanbanccead
  * @copyright  2023-2025 ISB Bayern
  * @author     Stefan Hanauska
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_kanban;
+namespace mod_kanbanccead;
 
 use cm_info;
 use context_module;
@@ -36,7 +36,7 @@ use stdClass;
 /**
  * Class to handle updating the board. It also sends notifications, but does not check permissions.
  *
- * @package    mod_kanban
+ * @package    mod_kanbanccead
  * @copyright  2023-2024 ISB Bayern
  * @author     Stefan Hanauska
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -45,8 +45,8 @@ class boardmanager {
     /** @var int Course module id */
     private int $cmid;
 
-    /** @var stdClass The kanban instance record. */
-    private stdClass $kanban;
+    /** @var stdClass The kanbanccead instance record. */
+    private stdClass $kanbanccead;
 
     /** @var stdClass The current board */
     private stdClass $board;
@@ -79,7 +79,7 @@ class boardmanager {
     }
 
     /**
-     * Load a kanban instance
+     * Load a kanbanccead instance
      *
      * @param int $instance Instance id
      * @param bool $dontloadcm Don't load course module data - only needed at instance creation time
@@ -87,9 +87,9 @@ class boardmanager {
      */
     public function load_instance(int $instance, bool $dontloadcm = false): void {
         global $DB;
-        $this->kanban = $DB->get_record('kanban', ['id' => $instance], '*', MUST_EXIST);
+        $this->kanbanccead = $DB->get_record('kanbanccead', ['id' => $instance], '*', MUST_EXIST);
         if (!$dontloadcm) {
-             [$this->course, $this->cminfo] = get_course_and_cm_from_instance($this->kanban->id, 'kanban');
+             [$this->course, $this->cminfo] = get_course_and_cm_from_instance($this->kanbanccead->id, 'kanbanccead');
             $this->cmid = $this->cminfo->id;
         }
     }
@@ -103,7 +103,7 @@ class boardmanager {
     public function load_board(int $id): void {
         $this->board = helper::get_cached_board($id);
         if (empty($this->cminfo)) {
-            $this->load_instance($this->board->kanban_instance);
+            $this->load_instance($this->board->kanbanccead_instance);
         }
     }
 
@@ -133,8 +133,8 @@ class boardmanager {
     public function get_template_board_id(): int {
         global $DB;
         $result = $DB->get_records(
-            'kanban_board',
-            ['kanban_instance' => $this->kanban->id, 'template' => 1],
+            'kanbanccead_board',
+            ['kanbanccead_instance' => $this->kanbanccead->id, 'template' => 1],
             'timemodified DESC',
             'id',
             0,
@@ -142,7 +142,14 @@ class boardmanager {
         );
         if (!$result) {
             // Is there a system-wide template?
-            $result = $DB->get_records('kanban_board', ['kanban_instance' => 0, 'template' => 1], 'timemodified DESC', 'id', 0, 1);
+            $result = $DB->get_records(
+                'kanbanccead_board',
+                ['kanbanccead_instance' => 0, 'template' => 1],
+                'timemodified DESC',
+                'id',
+                0,
+                1
+            );
         }
         if (!$result) {
             return 0;
@@ -211,7 +218,7 @@ class boardmanager {
             $templateid = $this->get_template_board_id();
         }
         if (empty($templateid)) {
-            throw new moodle_exception('notemplateavailable', 'mod_kanban');
+            throw new moodle_exception('notemplateavailable', 'mod_kanbanccead');
         }
 
         $template = helper::get_cached_board($templateid);
@@ -220,22 +227,22 @@ class boardmanager {
             return;
         }
         if (!$confirmoverwrite && $this->board_has_cards($targetboardid)) {
-            throw new moodle_exception('templateoverwriteconfirmationrequired', 'mod_kanban');
+            throw new moodle_exception('templateoverwriteconfirmationrequired', 'mod_kanbanccead');
         }
 
         $this->clear_board_contents($targetboardid);
-        $columns = $DB->get_records('kanban_column', ['kanban_board' => $template->id]);
+        $columns = $DB->get_records('kanbanccead_column', ['kanbanccead_board' => $template->id]);
         $newcolumns = [];
         $now = time();
         foreach ($columns as $column) {
             $newcolumns[$column->id] = clone $column;
             $newcolumns[$column->id]->title = clean_param($column->title, PARAM_TEXT);
-            $newcolumns[$column->id]->kanban_board = $targetboardid;
+            $newcolumns[$column->id]->kanbanccead_board = $targetboardid;
             $newcolumns[$column->id]->timecreated = $now;
             $newcolumns[$column->id]->timemodified = $now;
             $newcolumns[$column->id]->sequence = '';
             unset($newcolumns[$column->id]->id);
-            $newcolumns[$column->id]->id = $DB->insert_record('kanban_column', $newcolumns[$column->id]);
+            $newcolumns[$column->id]->id = $DB->insert_record('kanbanccead_column', $newcolumns[$column->id]);
         }
 
         $boardupdate = [
@@ -244,10 +251,10 @@ class boardmanager {
             'locked' => $template->locked,
             'timemodified' => $now,
         ];
-        $DB->update_record('kanban_board', $boardupdate);
+        $DB->update_record('kanbanccead_board', $boardupdate);
         helper::update_cached_board($targetboardid);
-        helper::update_cached_timestamp($targetboardid, constants::MOD_KANBAN_COLUMN, $now);
-        helper::update_cached_timestamp($targetboardid, constants::MOD_KANBAN_CARD, $now);
+        helper::update_cached_timestamp($targetboardid, constants::MOD_KANBANCCEAD_COLUMN, $now);
+        helper::update_cached_timestamp($targetboardid, constants::MOD_KANBANCCEAD_CARD, $now);
         $this->load_board($targetboardid);
     }
 
@@ -266,21 +273,21 @@ class boardmanager {
             $templateid = $this->get_template_board_id();
         }
         if (empty($templateid)) {
-            throw new moodle_exception('notemplateavailable', 'mod_kanban');
+            throw new moodle_exception('notemplateavailable', 'mod_kanbanccead');
         }
         $groups = $this->get_available_board_groups();
         if (empty($groups)) {
-            throw new moodle_exception('nogroupavailable', 'mod_kanban');
+            throw new moodle_exception('nogroupavailable', 'mod_kanbanccead');
         }
         foreach ($groups as $group) {
-            $board = $DB->get_record('kanban_board', [
-                'kanban_instance' => $this->kanban->id,
+            $board = $DB->get_record('kanbanccead_board', [
+                'kanbanccead_instance' => $this->kanbanccead->id,
                 'userid' => 0,
                 'groupid' => (int)$group->id,
                 'template' => 0,
             ]);
             if (!$confirmoverwrite && $board && $this->board_has_cards((int)$board->id)) {
-                throw new moodle_exception('templateoverwriteconfirmationrequired', 'mod_kanban');
+                throw new moodle_exception('templateoverwriteconfirmationrequired', 'mod_kanbanccead');
             }
         }
         foreach ($groups as $group) {
@@ -302,27 +309,27 @@ class boardmanager {
         $now = time();
         $template = (array)$sourceboard;
         unset($template['id']);
-        $template['kanban_instance'] = $this->kanban->id;
+        $template['kanbanccead_instance'] = $this->kanbanccead->id;
         $template['sequence'] = '';
         $template['userid'] = 0;
         $template['groupid'] = 0;
         $template['template'] = 1;
         $template['timecreated'] = $now;
         $template['timemodified'] = $now;
-        $templateid = $DB->insert_record('kanban_board', $template);
-        $columns = $DB->get_records('kanban_column', ['kanban_board' => $sourceboardid]);
+        $templateid = $DB->insert_record('kanbanccead_board', $template);
+        $columns = $DB->get_records('kanbanccead_column', ['kanbanccead_board' => $sourceboardid]);
         $newcolumns = [];
         foreach ($columns as $column) {
             $newcolumns[$column->id] = clone $column;
             $newcolumns[$column->id]->title = clean_param($column->title, PARAM_TEXT);
-            $newcolumns[$column->id]->kanban_board = $templateid;
+            $newcolumns[$column->id]->kanbanccead_board = $templateid;
             $newcolumns[$column->id]->sequence = '';
             $newcolumns[$column->id]->timecreated = $now;
             $newcolumns[$column->id]->timemodified = $now;
             unset($newcolumns[$column->id]->id);
-            $newcolumns[$column->id]->id = $DB->insert_record('kanban_column', $newcolumns[$column->id]);
+            $newcolumns[$column->id]->id = $DB->insert_record('kanbanccead_column', $newcolumns[$column->id]);
         }
-        $DB->update_record('kanban_board', [
+        $DB->update_record('kanbanccead_board', [
             'id' => $templateid,
             'sequence' => helper::sequence_replace($sourceboard->sequence, $newcolumns),
         ]);
@@ -338,7 +345,7 @@ class boardmanager {
      */
     private function board_has_cards(int $boardid): bool {
         global $DB;
-        return $DB->record_exists('kanban_card', ['kanban_board' => $boardid]);
+        return $DB->record_exists('kanbanccead_card', ['kanbanccead_board' => $boardid]);
     }
     /**
      * Creates a board for the whole course.
@@ -359,12 +366,12 @@ class boardmanager {
     public function get_or_create_board(int $userid = 0, int $groupid = 0): int {
         global $DB;
         $conditions = [
-            'kanban_instance' => $this->kanban->id,
+            'kanbanccead_instance' => $this->kanbanccead->id,
             'userid' => $userid,
             'groupid' => $groupid,
             'template' => 0,
         ];
-        $board = $DB->get_record('kanban_board', $conditions, 'id');
+        $board = $DB->get_record('kanbanccead_board', $conditions, 'id');
         if ($board) {
             return $board->id;
         }
@@ -385,7 +392,7 @@ class boardmanager {
      * @return int Id of the board.
      */
     public function get_or_create_board_for_mode(int $boardmode, int $groupid = 0): int {
-        if ($boardmode == constants::MOD_KANBAN_BOARDMODE_GROUP) {
+        if ($boardmode == constants::MOD_KANBANCCEAD_BOARDMODE_GROUP) {
             return $this->get_or_create_board(0, $groupid);
         }
         return $this->get_or_create_board();
@@ -399,7 +406,7 @@ class boardmanager {
      * @return array<int>
      */
     public function get_configured_board_group_ids(): array {
-        $serialized = trim((string)($this->kanban->boardgroups ?? ''));
+        $serialized = trim((string)($this->kanbanccead->boardgroups ?? ''));
         if ($serialized === '') {
             return [];
         }
@@ -424,7 +431,7 @@ class boardmanager {
         if (!empty($groupids)) {
             return (int)reset($groupids);
         }
-        return (int)($this->kanban->boardgroupid ?? 0);
+        return (int)($this->kanbanccead->boardgroupid ?? 0);
     }
 
     /**
@@ -448,7 +455,7 @@ class boardmanager {
             $items[] = [
                 'id' => (int)$group->id,
                 'label' => format_string($group->name),
-                'url' => (new moodle_url('/mod/kanban/view.php', [
+                'url' => (new moodle_url('/mod/kanbanccead/view.php', [
                     'id' => $this->cmid,
                     'groupid' => $group->id,
                 ]))->out(false),
@@ -488,10 +495,10 @@ class boardmanager {
         $items = [];
         $seen = [];
         $context = \context_module::instance($this->cmid);
-        $canaccessotherboards = has_capability('mod/kanban:viewallboards', $context) ||
-            has_capability('mod/kanban:editallboards', $context);
-        $hidecourseboard = (int)($this->kanban->boardmode ?? constants::MOD_KANBAN_BOARDMODE_SHARED) ===
-            constants::MOD_KANBAN_BOARDMODE_GROUP;
+        $canaccessotherboards = has_capability('mod/kanbanccead:viewallboards', $context) ||
+            has_capability('mod/kanbanccead:editallboards', $context);
+        $hidecourseboard = (int)($this->kanbanccead->boardmode ?? constants::MOD_KANBANCCEAD_BOARDMODE_SHARED) ===
+            constants::MOD_KANBANCCEAD_BOARDMODE_GROUP;
         $addboard = function (int $boardid) use (&$items, &$seen, $canaccessotherboards): void {
             if (empty($boardid) || isset($seen[$boardid])) {
                 return;
@@ -511,7 +518,7 @@ class boardmanager {
                 'id' => (int)$board->id,
                 'label' => $this->get_board_selector_label($board),
                 'icon' => $this->get_board_selector_icon($board),
-                'url' => (new moodle_url('/mod/kanban/view.php', [
+                'url' => (new moodle_url('/mod/kanbanccead/view.php', [
                     'id' => $this->cmid,
                     'boardid' => $board->id,
                 ]))->out(false),
@@ -528,7 +535,7 @@ class boardmanager {
                 'id' => (int)$groupid,
                 'label' => format_string($groupname),
                 'icon' => 'i/group',
-                'url' => (new moodle_url('/mod/kanban/view.php', [
+                'url' => (new moodle_url('/mod/kanbanccead/view.php', [
                     'id' => $this->cmid,
                     'groupid' => $groupid,
                 ]))->out(false),
@@ -584,8 +591,8 @@ class boardmanager {
     public function get_available_board_groups(): array {
         $groups = [];
         $context = context_module::instance($this->cmid);
-        $canaccessotherboards = has_capability('mod/kanban:viewallboards', $context) ||
-            has_capability('mod/kanban:editallboards', $context);
+        $canaccessotherboards = has_capability('mod/kanbanccead:viewallboards', $context) ||
+            has_capability('mod/kanbanccead:editallboards', $context);
 
         if ($canaccessotherboards && !empty($this->course->id)) {
             $groupingid = (int)($this->cminfo->groupingid ?? 0);
@@ -614,7 +621,7 @@ class boardmanager {
         global $USER;
 
         if (!empty($board->template)) {
-            return get_string('template', 'mod_kanban');
+            return get_string('template', 'mod_kanbanccead');
         }
         if (!empty($board->groupid)) {
             return groups_get_group_name((int)$board->groupid);
@@ -622,11 +629,11 @@ class boardmanager {
         if (!empty($board->userid)) {
             $user = core_user::get_user((int)$board->userid);
             if ($user && $user->id === $USER->id) {
-                return get_string('myuserboard', 'mod_kanban');
+                return get_string('myuserboard', 'mod_kanbanccead');
             }
-            return get_string('userboard', 'mod_kanban', fullname($user));
+            return get_string('userboard', 'mod_kanbanccead', fullname($user));
         }
-        return get_string('courseboard', 'mod_kanban');
+        return get_string('courseboard', 'mod_kanbanccead');
     }
 
     /**
@@ -658,7 +665,7 @@ class boardmanager {
         if (empty($templateid)) {
             $templateid = $this->get_template_board_id();
         }
-        // Template can still not exist (if kanban instance has none). Use default template.
+        // Template can still not exist (if kanbanccead instance has none). Use default template.
         if (empty($templateid)) {
             $boarddata = [
                 'sequence' => '',
@@ -667,38 +674,38 @@ class boardmanager {
                 'template' => 0,
                 'timecreated' => time(),
                 'timemodified' => time(),
-                'kanban_instance' => $this->kanban->id,
+                'kanbanccead_instance' => $this->kanbanccead->id,
             ];
             // Replace / append data.
             $boarddata = array_merge($boarddata, $data);
-            $boardid = $DB->insert_record('kanban_board', $boarddata);
+            $boardid = $DB->insert_record('kanbanccead_board', $boarddata);
             $columns = [
-                get_string('todo', 'kanban') => '{}',
-                get_string('doing', 'kanban') => '{}',
-                get_string('done', 'kanban') => '{"autoclose": true}',
+                get_string('todo', 'kanbanccead') => '{}',
+                get_string('doing', 'kanbanccead') => '{}',
+                get_string('done', 'kanbanccead') => '{"autoclose": true}',
             ];
             $columnids = [];
             foreach ($columns as $columnname => $options) {
-                $columnids[] = $DB->insert_record('kanban_column', [
+                $columnids[] = $DB->insert_record('kanbanccead_column', [
                     'title' => clean_param($columnname, PARAM_TEXT),
                     'sequence' => '',
-                    'kanban_board' => $boardid,
+                    'kanbanccead_board' => $boardid,
                     'options' => $options,
                     'timecreated' => time(),
                     'timemodified' => time(),
                 ]);
             }
-            $DB->update_record('kanban_board', ['id' => $boardid, 'sequence' => join(',', $columnids)]);
+            $DB->update_record('kanbanccead_board', ['id' => $boardid, 'sequence' => join(',', $columnids)]);
             helper::update_cached_board($boardid);
             return $boardid;
         } else {
             $template = helper::get_cached_board($templateid);
 
             // If it is a site wide template, we need system context to copy files.
-            if ($template->kanban_instance == 0) {
+            if ($template->kanbanccead_instance == 0) {
                 $context = context_system::instance();
             } else {
-                $context = context_module::instance($this->cmid, 'kanban');
+                $context = context_module::instance($this->cmid, 'kanbanccead');
             }
 
             $newboard = (array) $template;
@@ -712,31 +719,31 @@ class boardmanager {
 
             $newboard = array_merge($newboard, $data);
 
-            $newboard['id'] = $DB->insert_record('kanban_board', $newboard);
-            $columns = $DB->get_records('kanban_column', ['kanban_board' => $template->id]);
-            $cards = $DB->get_records('kanban_card', ['kanban_board' => $template->id]);
+            $newboard['id'] = $DB->insert_record('kanbanccead_board', $newboard);
+            $columns = $DB->get_records('kanbanccead_column', ['kanbanccead_board' => $template->id]);
+            $cards = $DB->get_records('kanbanccead_card', ['kanbanccead_board' => $template->id]);
             $newcolumn = [];
             $newcard = [];
             foreach ($columns as $column) {
                 $column->title = clean_param($column->title, PARAM_TEXT);
                 $newcolumn[$column->id] = clone $column;
-                $newcolumn[$column->id]->kanban_board = $newboard['id'];
+                $newcolumn[$column->id]->kanbanccead_board = $newboard['id'];
                 $newcolumn[$column->id]->timecreated = time();
                 $newcolumn[$column->id]->timemodified = time();
                 unset($newcolumn[$column->id]->id);
-                $newcolumn[$column->id]->id = $DB->insert_record('kanban_column', $newcolumn[$column->id]);
+                $newcolumn[$column->id]->id = $DB->insert_record('kanbanccead_column', $newcolumn[$column->id]);
             }
             foreach ($cards as $card) {
                 $newcard[$card->id] = clone $card;
-                $newcard[$card->id]->kanban_board = $newboard['id'];
+                $newcard[$card->id]->kanbanccead_board = $newboard['id'];
                 $newcard[$card->id]->timecreated = time();
                 $newcard[$card->id]->timemodified = time();
-                $newcard[$card->id]->kanban_column = $newcolumn[$card->kanban_column]->id;
+                $newcard[$card->id]->kanbanccead_column = $newcolumn[$card->kanbanccead_column]->id;
                 $newcard[$card->id]->originalid = $card->id;
                 unset($newcard[$card->id]->id);
                 // Remove user id of original creator.
                 unset($newcard[$card->id]->createdby);
-                $newcard[$card->id]->id = $DB->insert_record('kanban_card', $newcard[$card->id]);
+                $newcard[$card->id]->id = $DB->insert_record('kanbanccead_card', $newcard[$card->id]);
                 // Copy attachment files.
                 if ($context) {
                     $this->copy_attachment_files($context->id, $card->id, $newcard[$card->id]->id);
@@ -744,11 +751,11 @@ class boardmanager {
             }
 
             $newboard['sequence'] = helper::sequence_replace($newboard['sequence'], $newcolumn);
-            $DB->update_record('kanban_board', $newboard);
+            $DB->update_record('kanbanccead_board', $newboard);
             helper::update_cached_board($newboard['id']);
             foreach ($newcolumn as $col) {
                 $col->sequence = helper::sequence_replace($col->sequence, $newcard);
-                $DB->update_record('kanban_column', $col);
+                $DB->update_record('kanbanccead_column', $col);
             }
             return $newboard['id'];
         }
@@ -765,15 +772,15 @@ class boardmanager {
         global $DB;
 
         $templateids = $DB->get_fieldset_select(
-            'kanban_board',
+            'kanbanccead_board',
             'id',
-            'kanban_instance = :instance AND template = :template',
-            ['instance' => $this->kanban->id, 'template' => 1]
+            'kanbanccead_instance = :instance AND template = :template',
+            ['instance' => $this->kanbanccead->id, 'template' => 1]
         );
 
         foreach ($templateids as $templateid) {
             $this->clear_board_contents((int)$templateid);
-            $DB->delete_records('kanban_board', ['id' => $templateid]);
+            $DB->delete_records('kanbanccead_board', ['id' => $templateid]);
             helper::invalidate_cached_board((int)$templateid);
         }
     }
@@ -787,15 +794,15 @@ class boardmanager {
     private function clear_board_contents(int $boardid): void {
         global $DB;
 
-        $cardids = $DB->get_fieldset_select('kanban_card', 'id', 'kanban_board = :id', ['id' => $boardid]);
+        $cardids = $DB->get_fieldset_select('kanbanccead_card', 'id', 'kanbanccead_board = :id', ['id' => $boardid]);
         if (!empty($cardids)) {
             $this->delete_cards($cardids, false);
         }
 
-        $DB->delete_records('kanban_history', ['kanban_board' => $boardid]);
-        $DB->delete_records('kanban_column', ['kanban_board' => $boardid]);
-        $DB->delete_records('kanban_card', ['kanban_board' => $boardid]);
-        $DB->update_record('kanban_board', [
+        $DB->delete_records('kanbanccead_history', ['kanbanccead_board' => $boardid]);
+        $DB->delete_records('kanbanccead_column', ['kanbanccead_board' => $boardid]);
+        $DB->delete_records('kanbanccead_card', ['kanbanccead_board' => $boardid]);
+        $DB->update_record('kanbanccead_board', [
             'id' => $boardid,
             'sequence' => '',
             'timemodified' => time(),
@@ -814,13 +821,13 @@ class boardmanager {
         try {
             $transaction = $DB->start_delegated_transaction();
             // Cards need to be read to identify files, assignees and discussions.
-            $cardids = $DB->get_fieldset_select('kanban_card', 'id', 'kanban_board = :id', ['id' => $id]);
+            $cardids = $DB->get_fieldset_select('kanbanccead_card', 'id', 'kanbanccead_board = :id', ['id' => $id]);
             $this->delete_cards($cardids);
 
-            $DB->delete_records('kanban_history', ['kanban_board' => $id]);
-            $DB->delete_records('kanban_column', ['kanban_board' => $id]);
-            $DB->delete_records('kanban_card', ['kanban_board' => $id]);
-            $DB->delete_records('kanban_board', ['id' => $id]);
+            $DB->delete_records('kanbanccead_history', ['kanbanccead_board' => $id]);
+            $DB->delete_records('kanbanccead_column', ['kanbanccead_board' => $id]);
+            $DB->delete_records('kanbanccead_card', ['kanbanccead_board' => $id]);
+            $DB->delete_records('kanbanccead_board', ['id' => $id]);
             $transaction->allow_commit();
         } catch (\Exception $e) {
             $transaction->rollback($e);
@@ -856,27 +863,27 @@ class boardmanager {
         $fs = get_file_storage();
         try {
             $transaction = $DB->start_delegated_transaction();
-            $DB->delete_records('kanban_discussion_comment', ['kanban_card' => $cardid]);
-            $DB->delete_records('kanban_assignee', ['kanban_card' => $cardid]);
+            $DB->delete_records('kanbanccead_discussion_comment', ['kanbanccead_card' => $cardid]);
+            $DB->delete_records('kanbanccead_assignee', ['kanbanccead_card' => $cardid]);
             $context = context_module::instance($this->cmid, IGNORE_MISSING);
-            $fs->delete_area_files($context->id, 'mod_kanban', 'attachments', $cardid);
+            $fs->delete_area_files($context->id, 'mod_kanbanccead', 'attachments', $cardid);
             $card = $this->get_card($cardid);
             if ($updatecolumn) {
-                $column = $DB->get_record('kanban_column', ['id' => $card->kanban_column]);
+                $column = $DB->get_record('kanbanccead_column', ['id' => $card->kanbanccead_column]);
                 $update = [
                     'id' => $column->id,
                     'timemodified' => time(),
                     'sequence' => helper::sequence_remove($column->sequence, $cardid),
                 ];
-                $DB->update_record('kanban_column', $update);
+                $DB->update_record('kanbanccead_column', $update);
                 $this->formatter->put('columns', $update);
-                helper::update_cached_timestamp($card->kanban_board, constants::MOD_KANBAN_COLUMN);
+                helper::update_cached_timestamp($card->kanbanccead_board, constants::MOD_KANBANCCEAD_COLUMN);
             }
-            $DB->delete_records('kanban_card', ['id' => $cardid]);
-            helper::remove_calendar_event($this->kanban, (object) ['id' => $cardid]);
+            $DB->delete_records('kanbanccead_card', ['id' => $cardid]);
+            helper::remove_calendar_event($this->kanbanccead, (object) ['id' => $cardid]);
             // As long as history is only attached to cards, it will be deleted here.
             // ToDo if this will be changed: Replace the following line with history writer (deletion of card).
-            $DB->delete_records('kanban_history', ['kanban_card' => $cardid]);
+            $DB->delete_records('kanbanccead_history', ['kanbanccead_card' => $cardid]);
             $transaction->allow_commit();
         } catch (\Exception $e) {
             $transaction->rollback($e);
@@ -893,16 +900,16 @@ class boardmanager {
      */
     public function delete_column(int $id, bool $updateboard = true): void {
         global $DB;
-        $cardids = $DB->get_fieldset_select('kanban_card', 'id', 'kanban_column = :id', ['id' => $id]);
+        $cardids = $DB->get_fieldset_select('kanbanccead_card', 'id', 'kanbanccead_column = :id', ['id' => $id]);
         try {
             $transaction = $DB->start_delegated_transaction();
             $this->delete_cards($cardids, false);
-            $DB->delete_records('kanban_column', ['id' => $id]);
+            $DB->delete_records('kanbanccead_column', ['id' => $id]);
             $this->formatter->delete('columns', ['id' => $id]);
             if ($updateboard) {
                 $this->board->sequence = helper::sequence_remove($this->board->sequence, $id);
                 $update = ['id' => $this->board->id, 'sequence' => $this->board->sequence, 'timemodified' => time()];
-                $DB->update_record('kanban_board', $update);
+                $DB->update_record('kanbanccead_board', $update);
                 helper::update_cached_board($update['id']);
                 $this->formatter->put('board', $update);
             }
@@ -923,12 +930,12 @@ class boardmanager {
         global $DB;
         if (empty($this->board->locked)) {
             $defaults = [
-                'title' => get_string('newcolumn', 'mod_kanban'),
+                'title' => get_string('newcolumn', 'mod_kanbanccead'),
                 'options' => '{}',
                 'locked' => 0,
             ];
             $defaultsfixed = [
-                'kanban_board' => $this->board->id,
+                'kanbanccead_board' => $this->board->id,
                 'timecreated' => time(),
                 'timemodified' => time(),
                 'sequence' => '',
@@ -939,8 +946,13 @@ class boardmanager {
             $data['title'] = clean_param($data['title'], PARAM_TEXT);
             try {
                 $transaction = $DB->start_delegated_transaction();
-                $columnids = $DB->get_fieldset_select('kanban_column', 'id', 'kanban_board = :id', ['id' => $this->board->id]);
-                $data['id'] = $DB->insert_record('kanban_column', $data);
+                $columnids = $DB->get_fieldset_select(
+                    'kanbanccead_column',
+                    'id',
+                    'kanbanccead_board = :id',
+                    ['id' => $this->board->id]
+                );
+                $data['id'] = $DB->insert_record('kanbanccead_column', $data);
 
                 $this->board->sequence = helper::heal_missing_columns($this->board->sequence, $columnids);
 
@@ -950,7 +962,7 @@ class boardmanager {
                     'sequence' => helper::sequence_add_after($this->board->sequence, $aftercol, $data['id']),
                     'timemodified' => time(),
                 ];
-                $DB->update_record('kanban_board', $update);
+                $DB->update_record('kanbanccead_board', $update);
                 $transaction->allow_commit();
             } catch (\Exception $e) {
                 $transaction->rollback($e);
@@ -975,14 +987,14 @@ class boardmanager {
     public function add_card(int $columnid, int $aftercard = 0, array $data = []): int {
         global $DB, $USER;
         $defaults = [
-            'title' => get_string('newcard', 'mod_kanban'),
+            'title' => get_string('newcard', 'mod_kanbanccead'),
             'options' => '{}',
             'description' => '',
             'createdby' => $USER->id,
         ];
         $defaultsfixed = [
-            'kanban_board' => $this->board->id,
-            'kanban_column' => $columnid,
+            'kanbanccead_board' => $this->board->id,
+            'kanbanccead_column' => $columnid,
             'timecreated' => time(),
             'timemodified' => time(),
             'sequence' => '',
@@ -991,7 +1003,7 @@ class boardmanager {
 
         $data['number'] = self::get_next_card_number();
 
-        $column = $DB->get_record('kanban_column', ['id' => $columnid]);
+        $column = $DB->get_record('kanbanccead_column', ['id' => $columnid]);
         $iscompletioncolumn = false;
         if ($column) {
             $iscompletioncolumn = $this->is_completion_column($column);
@@ -1000,7 +1012,7 @@ class boardmanager {
             $data['completed'] = 1;
         }
 
-        $data['id'] = $DB->insert_record('kanban_card', $data);
+        $data['id'] = $DB->insert_record('kanbanccead_card', $data);
         $data['assignees'] = [];
         if ($iscompletioncolumn) {
             $data['completedat'] = $data['timemodified'];
@@ -1016,7 +1028,7 @@ class boardmanager {
                 'sequence' => helper::sequence_add_after($column->sequence, $aftercard, $data['id']),
                 'timemodified' => time(),
             ];
-            $DB->update_record('kanban_column', $update);
+            $DB->update_record('kanbanccead_column', $update);
             $transaction->allow_commit();
         } catch (\Exception $e) {
             $transaction->rollback($e);
@@ -1028,9 +1040,9 @@ class boardmanager {
 
         $this->formatter->put('cards', $data);
         $this->formatter->put('columns', $update);
-        $this->write_history('added', constants::MOD_KANBAN_CARD, $data, $columnid, $data['id']);
-        helper::update_cached_timestamp($this->board->id, constants::MOD_KANBAN_COLUMN, $update['timemodified']);
-        helper::update_cached_timestamp($this->board->id, constants::MOD_KANBAN_CARD, $update['timemodified']);
+        $this->write_history('added', constants::MOD_KANBANCCEAD_CARD, $data, $columnid, $data['id']);
+        helper::update_cached_timestamp($this->board->id, constants::MOD_KANBANCCEAD_COLUMN, $update['timemodified']);
+        helper::update_cached_timestamp($this->board->id, constants::MOD_KANBANCCEAD_CARD, $update['timemodified']);
 
         $this->update_completion([$USER->id]);
 
@@ -1048,16 +1060,21 @@ class boardmanager {
         global $DB;
         try {
             $transaction = $DB->start_delegated_transaction();
-            $column = $DB->get_record('kanban_column', ['id' => $columnid]);
+            $column = $DB->get_record('kanbanccead_column', ['id' => $columnid]);
             if (!$this->board->locked && !$column->locked) {
-                $columnids = $DB->get_fieldset_select('kanban_column', 'id', 'kanban_board = :id', ['id' => $this->board->id]);
+                $columnids = $DB->get_fieldset_select(
+                    'kanbanccead_column',
+                    'id',
+                    'kanbanccead_board = :id',
+                    ['id' => $this->board->id]
+                );
                 $this->board->sequence = helper::heal_missing_columns($this->board->sequence, $columnids);
                 $update = [
                     'id' => $this->board->id,
                     'sequence' => helper::sequence_move_after($this->board->sequence, $aftercol, $columnid),
                     'timemodified' => time(),
                 ];
-                $DB->update_record('kanban_board', $update);
+                $DB->update_record('kanbanccead_board', $update);
                 helper::update_cached_board($update['id']);
                 $this->formatter->put('board', $update);
             }
@@ -1079,24 +1096,24 @@ class boardmanager {
         global $DB, $USER;
         $card = $this->get_card($cardid);
         if (empty($columnid)) {
-            $columnid = $card->kanban_column;
+            $columnid = $card->kanbanccead_column;
         }
 
         try {
             $transaction = $DB->start_delegated_transaction();
-            $sourcecolumn = $DB->get_record('kanban_column', ['id' => $card->kanban_column]);
+            $sourcecolumn = $DB->get_record('kanbanccead_column', ['id' => $card->kanbanccead_column]);
 
-            if ($card->kanban_column == $columnid) {
+            if ($card->kanbanccead_column == $columnid) {
                 $update = [
                     'id' => $columnid,
                     'sequence' => helper::sequence_move_after($sourcecolumn->sequence, $aftercard, $cardid),
                     'timemodified' => time(),
                 ];
-                $DB->update_record('kanban_column', $update);
+                $DB->update_record('kanbanccead_column', $update);
                 $transaction->allow_commit();
                 $this->formatter->put('columns', $update);
             } else {
-                $targetcolumn = $DB->get_record('kanban_column', ['id' => $columnid]);
+                $targetcolumn = $DB->get_record('kanbanccead_column', ['id' => $columnid]);
                 $targetiscompletion = $this->is_completion_column($targetcolumn);
 
                 if (!empty($targetcolumn->locked) && !$targetiscompletion) {
@@ -1120,14 +1137,14 @@ class boardmanager {
 
                 // Card needs to be processed first, because column sorting in frontend will only
                 // work if card is already moved in the right position.
-                $updatecard = ['id' => $cardid, 'kanban_column' => $columnid, 'timemodified' => time()];
+                $updatecard = ['id' => $cardid, 'kanbanccead_column' => $columnid, 'timemodified' => time()];
                 // If target column is the completion column, update card to be completed.
                 if ($targetiscompletion) {
                     if ($card->completed) {
                         self::set_card_complete($cardid, 1);
                     }
                 }
-                $DB->update_record('kanban_card', $updatecard);
+                $DB->update_record('kanbanccead_card', $updatecard);
                 // When inplace editing the title and moving the card happens quite fast in a row,
                 // it might happen that the "old" title is shown in the ui since inplace editing does
                 // change the DOM directly and does not trigger the update function.
@@ -1140,7 +1157,7 @@ class boardmanager {
                     'sequence' => helper::sequence_remove($sourcecolumn->sequence, $cardid),
                     'timemodified' => time(),
                 ];
-                $DB->update_record('kanban_column', $update);
+                $DB->update_record('kanbanccead_column', $update);
                 $this->formatter->put('columns', $update);
 
                 // Add to target column.
@@ -1149,13 +1166,13 @@ class boardmanager {
                     'sequence' => helper::sequence_add_after($targetcolumn->sequence, $aftercard, $cardid),
                     'timemodified' => time(),
                 ];
-                $DB->update_record('kanban_column', $update);
+                $DB->update_record('kanbanccead_column', $update);
                 $transaction->allow_commit();
                 $this->formatter->put('columns', $update);
 
                 $data = array_merge((array) $card, $updatecard);
                 $data['username'] = fullname($USER);
-                $data['boardname'] = $this->kanban->name;
+                $data['boardname'] = $this->kanbanccead->name;
                 $data['columnname'] = clean_param($targetcolumn->title, PARAM_TEXT);
                 $assignees = $this->get_card_assignees($cardid);
                 helper::send_notification($this->cminfo, 'moved', $assignees, (object) $data);
@@ -1167,17 +1184,17 @@ class boardmanager {
                 }
                 $this->write_history(
                     'moved',
-                    constants::MOD_KANBAN_CARD,
+                    constants::MOD_KANBANCCEAD_CARD,
                     ['columnname' => clean_param($targetcolumn->title, PARAM_TEXT)],
-                    $card->kanban_column,
+                    $card->kanbanccead_column,
                     $cardid
                 );
-                helper::update_cached_timestamp($this->board->id, constants::MOD_KANBAN_CARD, $update['timemodified']);
+                helper::update_cached_timestamp($this->board->id, constants::MOD_KANBANCCEAD_CARD, $update['timemodified']);
             }
         } catch (\Exception $e) {
             $transaction->rollback($e);
         }
-        helper::update_cached_timestamp($this->board->id, constants::MOD_KANBAN_COLUMN, $update['timemodified']);
+        helper::update_cached_timestamp($this->board->id, constants::MOD_KANBANCCEAD_COLUMN, $update['timemodified']);
     }
 
     /**
@@ -1202,7 +1219,7 @@ class boardmanager {
             }
         }
         if (count($overlimit) > 0) {
-            throw new moodle_exception('wiplimitreached', 'mod_kanban', '', ['users' => implode(', ', $overlimit)]);
+            throw new moodle_exception('wiplimitreached', 'mod_kanbanccead', '', ['users' => implode(', ', $overlimit)]);
         }
     }
 
@@ -1216,10 +1233,10 @@ class boardmanager {
         global $DB;
         $count = $DB->get_field_sql(
             'SELECT COUNT(*)
-            FROM {kanban_card} c
-            INNER JOIN {kanban_assignee} a
-            ON a.kanban_card = c.id
-            WHERE a.userid = :userid AND c.kanban_column = :columnid AND c.id != :cardid',
+            FROM {kanbanccead_card} c
+            INNER JOIN {kanbanccead_assignee} a
+            ON a.kanbanccead_card = c.id
+            WHERE a.userid = :userid AND c.kanbanccead_column = :columnid AND c.id != :cardid',
             ['columnid' => $columnid, 'userid' => $userid, 'cardid' => $cardtoexclude]
         );
         return $count;
@@ -1235,23 +1252,23 @@ class boardmanager {
     public function assign_user(int $cardid, int $userid): void {
         global $DB, $OUTPUT, $USER;
         $card = $this->get_card($cardid);
-        $column = $this->get_column($card->kanban_column);
+        $column = $this->get_column($card->kanbanccead_column);
         $options = json_decode($column->options);
         $wiplimit = $options->wiplimit ?? 0;
 
         if ($wiplimit > 0) {
-            self::check_wiplimit($card->kanban_column, $cardid, $wiplimit, [$userid]);
+            self::check_wiplimit($card->kanbanccead_column, $cardid, $wiplimit, [$userid]);
         }
 
-        $DB->insert_record('kanban_assignee', ['kanban_card' => $cardid, 'userid' => $userid]);
+        $DB->insert_record('kanbanccead_assignee', ['kanbanccead_card' => $cardid, 'userid' => $userid]);
 
         $update = [
             'id' => $cardid,
             'timemodified' => time(),
         ];
-        $DB->update_record('kanban_card', $update);
+        $DB->update_record('kanbanccead_card', $update);
 
-        helper::add_or_update_calendar_event($this->kanban, $card, [$userid]);
+        helper::add_or_update_calendar_event($this->kanbanccead, $card, [$userid]);
 
         $userids = $this->get_card_assignees($cardid);
 
@@ -1267,8 +1284,14 @@ class boardmanager {
         $update['canedit'] = $this->can_user_manage_specific_card($card->id);
         $this->formatter->put('cards', $update);
 
-        $this->write_history('assigned', constants::MOD_KANBAN_CARD, ['userid' => $userid], $card->kanban_column, $cardid);
-        helper::update_cached_timestamp($this->board->id, constants::MOD_KANBAN_CARD, $update['timemodified']);
+        $this->write_history(
+            'assigned',
+            constants::MOD_KANBANCCEAD_CARD,
+            ['userid' => $userid],
+            $card->kanbanccead_column,
+            $cardid
+        );
+        helper::update_cached_timestamp($this->board->id, constants::MOD_KANBANCCEAD_CARD, $update['timemodified']);
         if (!empty($card->completed)) {
             $this->update_completion([$userid]);
         }
@@ -1283,15 +1306,15 @@ class boardmanager {
      */
     public function unassign_user(int $cardid, int $userid): void {
         global $DB, $USER;
-        $DB->delete_records('kanban_assignee', ['kanban_card' => $cardid, 'userid' => $userid]);
+        $DB->delete_records('kanbanccead_assignee', ['kanbanccead_card' => $cardid, 'userid' => $userid]);
         $card = $this->get_card($cardid);
         $update = [
             'id' => $cardid,
             'timemodified' => time(),
         ];
-        $DB->update_record('kanban_card', $update);
+        $DB->update_record('kanbanccead_card', $update);
 
-        helper::remove_calendar_event($this->kanban, (object) ['id' => $cardid], [$userid]);
+        helper::remove_calendar_event($this->kanbanccead, (object) ['id' => $cardid], [$userid]);
 
         $userids = $this->get_card_assignees($cardid);
         $userids = array_unique($userids);
@@ -1300,8 +1323,14 @@ class boardmanager {
         $update['selfassigned'] = in_array($USER->id, $userids);
         $update['canedit'] = $this->can_user_manage_specific_card($card->id);
         $this->formatter->put('cards', $update);
-        $this->write_history('unassigned', constants::MOD_KANBAN_CARD, ['userid' => $userid], $card->kanban_column, $cardid);
-        helper::update_cached_timestamp($this->board->id, constants::MOD_KANBAN_CARD, $update['timemodified']);
+        $this->write_history(
+            'unassigned',
+            constants::MOD_KANBANCCEAD_CARD,
+            ['userid' => $userid],
+            $card->kanbanccead_column,
+            $cardid
+        );
+        helper::update_cached_timestamp($this->board->id, constants::MOD_KANBANCCEAD_CARD, $update['timemodified']);
         if (!empty($card->completed)) {
             $this->update_completion([$userid]);
         }
@@ -1321,20 +1350,21 @@ class boardmanager {
         $updateforfrontend = $update;
         $updateforfrontend['completedat'] = !empty($state) ? $update['timemodified'] : 0;
         $this->formatter->put('cards', $updateforfrontend);
-        $DB->update_record('kanban_card', $update);
+        $DB->update_record('kanbanccead_card', $update);
         $assignees = $this->get_card_assignees($cardid);
         if ($state) {
-            helper::remove_calendar_event($this->kanban, $card, $assignees);
+            helper::remove_calendar_event($this->kanbanccead, $card, $assignees);
             if (!empty($card->repeat_enable)) {
                 $newcard = clone $card;
                 $newcard->discussion = 0;
-                if ($card->repeat_newduedate == constants::MOD_KANBAN_REPEAT_NONEWDUEDATE) {
+                if ($card->repeat_newduedate == constants::MOD_KANBANCCEAD_REPEAT_NONEWDUEDATE) {
                     $newcard->duedate = 0;
                     $newcard->reminder = 0;
                 } else {
                     $timedifference = $newcard->duedate - $newcard->reminder;
                     $timebase = (
-                        $card->repeat_newduedate == constants::MOD_KANBAN_REPEAT_NEWDUEDATE_AFTERDUE && !empty($newcard->duedate) ?
+                        $card->repeat_newduedate == constants::MOD_KANBANCCEAD_REPEAT_NEWDUEDATE_AFTERDUE &&
+                        !empty($newcard->duedate) ?
                         $newcard->duedate :
                         time()
                     );
@@ -1342,28 +1372,28 @@ class boardmanager {
                         '+' .
                         $card->repeat_interval .
                         ' ' .
-                        constants::MOD_KANBAN_REPEAT_INTERVAL_TYPE[$card->repeat_interval_type],
+                        constants::MOD_KANBANCCEAD_REPEAT_INTERVAL_TYPE[$card->repeat_interval_type],
                         $timebase
                     );
                     $newcard->reminder = $newcard->duedate - $timedifference;
                 }
-                $this->add_card($this->get_leftmost_column($card->kanban_board), 0, (array)$newcard);
+                $this->add_card($this->get_leftmost_column($card->kanbanccead_board), 0, (array)$newcard);
             }
         } else {
-            helper::add_or_update_calendar_event($this->kanban, $card, $assignees);
+            helper::add_or_update_calendar_event($this->kanbanccead, $card, $assignees);
         }
         $card->username = fullname($USER);
-        $card->boardname = $this->kanban->name;
+        $card->boardname = $this->kanbanccead->name;
         helper::send_notification($this->cminfo, 'closed', $assignees, $card, ($state == 0 ? 'reopened' : null));
         $this->update_completion($assignees);
         $this->write_history(
             ($state == 0 ? 'reopened' : 'completed'),
-            constants::MOD_KANBAN_CARD,
+            constants::MOD_KANBANCCEAD_CARD,
             $update,
-            $card->kanban_column,
+            $card->kanbanccead_column,
             $cardid
         );
-        helper::update_cached_timestamp($this->board->id, constants::MOD_KANBAN_CARD, $update['timemodified']);
+        helper::update_cached_timestamp($this->board->id, constants::MOD_KANBANCCEAD_CARD, $update['timemodified']);
     }
 
     /**
@@ -1376,9 +1406,9 @@ class boardmanager {
     public function set_column_locked(int $columnid, int $state): void {
         global $DB;
         $update = ['id' => $columnid, 'locked' => $state, 'timemodified' => time()];
-        $DB->update_record('kanban_column', $update);
+        $DB->update_record('kanbanccead_column', $update);
         $this->formatter->put('columns', $update);
-        helper::update_cached_timestamp($this->board->id, constants::MOD_KANBAN_COLUMN, $update['timemodified']);
+        helper::update_cached_timestamp($this->board->id, constants::MOD_KANBANCCEAD_COLUMN, $update['timemodified']);
     }
 
     /**
@@ -1389,9 +1419,9 @@ class boardmanager {
      */
     public function set_board_columns_locked(int $state): void {
         global $DB;
-        $columns = $DB->get_fieldset_select('kanban_column', 'id', 'kanban_board = :id', ['id' => $this->board->id]);
+        $columns = $DB->get_fieldset_select('kanbanccead_column', 'id', 'kanbanccead_board = :id', ['id' => $this->board->id]);
         $update = ['id' => $this->board->id, 'locked' => $state, 'timemodified' => time()];
-        $DB->update_record('kanban_board', $update);
+        $DB->update_record('kanbanccead_board', $update);
         helper::update_cached_board($update['id']);
         $this->formatter->put('board', $update);
         foreach ($columns as $col) {
@@ -1409,11 +1439,11 @@ class boardmanager {
     public function add_discussion_message(int $cardid, string $message): void {
         global $DB, $USER;
         $card = $this->get_card($cardid);
-        $update = ['kanban_card' => $cardid, 'content' => $message, 'userid' => $USER->id, 'timecreated' => time()];
-        $update['id'] = $DB->insert_record('kanban_discussion_comment', $update);
+        $update = ['kanbanccead_card' => $cardid, 'content' => $message, 'userid' => $USER->id, 'timecreated' => time()];
+        $update['id'] = $DB->insert_record('kanbanccead_discussion_comment', $update);
         $update['candelete'] = true;
         $update['username'] = fullname($USER);
-        if (!empty($this->kanban->usenumbers) && !empty($this->kanban->linknumbers)) {
+        if (!empty($this->kanbanccead->usenumbers) && !empty($this->kanbanccead->linknumbers)) {
             $update['content'] = numberfilter::filter($update['content']);
         }
         $update['content'] = format_text($update['content'], FORMAT_HTML);
@@ -1422,18 +1452,18 @@ class boardmanager {
 
         if (empty($card->discussion)) {
             $updatecard = ['id' => $cardid, 'discussion' => 1, 'timemodified' => time()];
-            $DB->update_record('kanban_card', $updatecard);
+            $DB->update_record('kanbanccead_card', $updatecard);
             $this->formatter->put('cards', $updatecard);
-            helper::update_cached_timestamp($this->board->id, constants::MOD_KANBAN_CARD, $updatecard['timemodified']);
+            helper::update_cached_timestamp($this->board->id, constants::MOD_KANBANCCEAD_CARD, $updatecard['timemodified']);
         }
 
-        $update['boardname'] = $this->kanban->name;
+        $update['boardname'] = $this->kanbanccead->name;
         $update['title'] = clean_param($card->title, PARAM_TEXT);
         $assignees = $this->get_card_assignees($cardid);
         helper::send_notification($this->cminfo, 'discussion', $assignees, (object) $update);
         // Do not write username to history.
         unset($update['username']);
-        $this->write_history('added', constants::MOD_KANBAN_DISCUSSION, $update, $card->kanban_column, $cardid);
+        $this->write_history('added', constants::MOD_KANBANCCEAD_DISCUSSION, $update, $card->kanbanccead_column, $cardid);
     }
 
     /**
@@ -1447,14 +1477,14 @@ class boardmanager {
         global $DB;
         $card = $this->get_card($cardid);
         $update = ['id' => $messageid];
-        $DB->delete_records('kanban_discussion_comment', $update);
+        $DB->delete_records('kanbanccead_discussion_comment', $update);
         $this->formatter->delete('discussions', $update);
-        $this->write_history('deleted', constants::MOD_KANBAN_DISCUSSION, $update, $card->kanban_column, $cardid);
-        if (!$DB->record_exists('kanban_discussion_comment', ['kanban_card' => $cardid])) {
+        $this->write_history('deleted', constants::MOD_KANBANCCEAD_DISCUSSION, $update, $card->kanbanccead_column, $cardid);
+        if (!$DB->record_exists('kanbanccead_discussion_comment', ['kanbanccead_card' => $cardid])) {
             $update = ['id' => $cardid, 'discussion' => 0, 'timemodified' => time()];
-            $DB->update_record('kanban_card', $update);
+            $DB->update_record('kanbanccead_card', $update);
             $this->formatter->put('cards', $update);
-            helper::update_cached_timestamp($this->board->id, constants::MOD_KANBAN_CARD, $update['timemodified']);
+            helper::update_cached_timestamp($this->board->id, constants::MOD_KANBANCCEAD_CARD, $update['timemodified']);
         }
     }
 
@@ -1476,8 +1506,8 @@ class boardmanager {
             'duedate',
             'reminderdate',
             'options',
-            'kanban_column',
-            'kanban_board',
+            'kanbanccead_column',
+            'kanbanccead_board',
             'completed',
             'repeat_enable',
             'repeat_interval',
@@ -1489,7 +1519,7 @@ class boardmanager {
         if (isset($data['title'])) {
             $data['title'] = s($data['title']);
             if (trim((string) $data['title']) === '') {
-                $data['title'] = get_string('newcard', 'mod_kanban');
+                $data['title'] = get_string('newcard', 'mod_kanbanccead');
             }
         }
         if (isset($data['description'])) {
@@ -1543,31 +1573,31 @@ class boardmanager {
         $cardupdate['id'] = $cardid;
         $cardupdate['timemodified'] = time();
         if (count($cardupdate) > 2) {
-            $DB->update_record('kanban_card', $cardupdate);
+            $DB->update_record('kanbanccead_card', $cardupdate);
         }
         $carddata = array_merge($card, $cardupdate);
         $carddata['username'] = fullname($USER);
-        $carddata['boardname'] = $this->kanban->name;
+        $carddata['boardname'] = $this->kanbanccead->name;
         if (isset($data['assignees'])) {
             $assignees = $data['assignees'];
             $currentassignees = $this->get_card_assignees($cardid);
             $toinsert = array_diff($assignees, $currentassignees);
             $todelete = array_diff($currentassignees, $assignees);
 
-            helper::add_or_update_calendar_event($this->kanban, (object) $carddata, $assignees);
+            helper::add_or_update_calendar_event($this->kanbanccead, (object) $carddata, $assignees);
             if (!empty($todelete)) {
-                helper::remove_calendar_event($this->kanban, (object) $carddata, $todelete);
+                helper::remove_calendar_event($this->kanbanccead, (object) $carddata, $todelete);
                 [$sql, $params] = $DB->get_in_or_equal($todelete, SQL_PARAMS_NAMED);
-                $sql = 'kanban_card = :cardid AND userid ' . $sql;
+                $sql = 'kanbanccead_card = :cardid AND userid ' . $sql;
                 $params['cardid'] = $cardid;
-                $DB->delete_records_select('kanban_assignee', $sql, $params);
+                $DB->delete_records_select('kanbanccead_assignee', $sql, $params);
                 helper::send_notification($this->cminfo, 'assigned', $todelete, (object) $carddata, 'unassigned');
                 foreach ($todelete as $user) {
                     $this->write_history(
                         'unassigned',
-                        constants::MOD_KANBAN_CARD,
+                        constants::MOD_KANBANCCEAD_CARD,
                         ['userid' => $user],
-                        $card['kanban_column'],
+                        $card['kanbanccead_column'],
                         $card['id']
                     );
                 }
@@ -1580,7 +1610,7 @@ class boardmanager {
             }
             $assignees = [];
 
-            $columnid = $cardupdate['kanban_column'] ?? $card['kanban_column'];
+            $columnid = $cardupdate['kanbanccead_column'] ?? $card['kanbanccead_column'];
             $column = $this->get_column($columnid);
             $options = json_decode($column->options);
             $wiplimit = $options->wiplimit ?? 0;
@@ -1590,7 +1620,7 @@ class boardmanager {
             }
 
             foreach ($toinsert as $assignee) {
-                $assignees[] = ['kanban_card' => $cardid, 'userid' => $assignee];
+                $assignees[] = ['kanbanccead_card' => $cardid, 'userid' => $assignee];
                 $user = \core_user::get_user($assignee);
                 $this->formatter->put('users', [
                         'id' => $user->id,
@@ -1598,7 +1628,7 @@ class boardmanager {
                         'userpicture' => $OUTPUT->user_picture($user, ['link' => false]),
                     ]);
             }
-            $DB->insert_records('kanban_assignee', $assignees);
+            $DB->insert_records('kanbanccead_assignee', $assignees);
             helper::send_notification(
                 $this->cminfo,
                 'assigned',
@@ -1611,9 +1641,9 @@ class boardmanager {
             foreach ($toinsert as $user) {
                 $this->write_history(
                     'assigned',
-                    constants::MOD_KANBAN_CARD,
+                    constants::MOD_KANBANCCEAD_CARD,
                     ['userid' => $user],
-                    $card['kanban_column'],
+                    $card['kanbanccead_column'],
                     $card['id']
                 );
             }
@@ -1626,7 +1656,7 @@ class boardmanager {
                 $cardupdate['description'],
                 'pluginfile.php',
                 $context->id,
-                'mod_kanban',
+                'mod_kanbanccead',
                 'attachments',
                 $cardupdate['id']
             );
@@ -1635,14 +1665,14 @@ class boardmanager {
 
         $this->write_history(
             'updated',
-            constants::MOD_KANBAN_CARD,
+            constants::MOD_KANBANCCEAD_CARD,
             array_merge(['title' => clean_param($card['title'], PARAM_TEXT)], $cardupdate),
-            $card['kanban_column'],
+            $card['kanbanccead_column'],
             $card['id']
         );
-        helper::update_cached_timestamp($this->board->id, constants::MOD_KANBAN_CARD, $cardupdate['timemodified']);
+        helper::update_cached_timestamp($this->board->id, constants::MOD_KANBANCCEAD_CARD, $cardupdate['timemodified']);
 
-        if (!empty($this->kanban->usenumbers) && !empty($this->kanban->linknumbers)) {
+        if (!empty($this->kanbanccead->usenumbers) && !empty($this->kanbanccead->linknumbers)) {
             if (isset($cardupdate['description'])) {
                 $cardupdate['description'] = numberfilter::filter($cardupdate['description']);
             }
@@ -1700,22 +1730,22 @@ class boardmanager {
             'timemodified' => time(),
         ];
 
-        $DB->update_record('kanban_column', $columndata);
+        $DB->update_record('kanbanccead_column', $columndata);
 
         $this->formatter->put('columns', $columndata);
 
-        helper::update_cached_timestamp($this->board->id, constants::MOD_KANBAN_COLUMN, $columndata['timemodified']);
+        helper::update_cached_timestamp($this->board->id, constants::MOD_KANBANCCEAD_COLUMN, $columndata['timemodified']);
 
         if ($column->title != $columndata['title']) {
-            $this->write_history('updated', constants::MOD_KANBAN_COLUMN, $columndata, $columnid);
+            $this->write_history('updated', constants::MOD_KANBANCCEAD_COLUMN, $columndata, $columnid);
         }
     }
 
     /**
-     * Push a copy of this card to other boards. If target boards array is empty, card is pushed to all boards in this kanban
+     * Push a copy of this card to other boards. If target boards array is empty, card is pushed to all boards in this kanbanccead
      * activity (including templates) to the leftmost column (if there is none, card is not copied). If there is already a copy
      * of this card, it is replaced. History, assignees and discussion are not copied.
-     * For now, only boards inside the same kanban are supported.
+     * For now, only boards inside the same kanbanccead are supported.
      *
      * @param int $cardid Id of the card to push
      * @param array $boardids Array of ids of the target boards
@@ -1723,47 +1753,52 @@ class boardmanager {
      */
     public function push_card_copy(int $cardid, array $boardids = []): void {
         global $DB;
-        $allboardids = $DB->get_fieldset_select('kanban_board', 'id', 'kanban_instance = :id', ['id' => $this->kanban->id]);
+        $allboardids = $DB->get_fieldset_select(
+            'kanbanccead_board',
+            'id',
+            'kanbanccead_instance = :id',
+            ['id' => $this->kanbanccead->id]
+        );
         if (empty($boards)) {
             $boardids = $allboardids;
         } else {
             $boardids = array_intersect($boards, $allboardids);
         }
         $card = $this->get_card($cardid);
-        $originalboard = $card->kanban_board;
+        $originalboard = $card->kanbanccead_board;
         unset($card->id);
         unset($card->createdby);
-        unset($card->kanban_board);
-        unset($card->kanban_column);
+        unset($card->kanbanccead_board);
+        unset($card->kanbanccead_column);
         unset($card->completed);
         unset($card->discussion);
         $card->originalid = $cardid;
         $card->timemodified = time();
 
-        $context = context_module::instance($this->cmid, 'kanban');
+        $context = context_module::instance($this->cmid, 'kanbanccead');
 
         foreach ($boardids as $boardid) {
             if ($originalboard == $boardid) {
                 continue;
             }
-            $existingcard = $DB->get_record('kanban_card', ['kanban_board' => $boardid, 'originalid' => $cardid]);
+            $existingcard = $DB->get_record('kanbanccead_card', ['kanbanccead_board' => $boardid, 'originalid' => $cardid]);
             if (!$existingcard) {
-                $sequence = $DB->get_field('kanban_board', 'sequence', ['id' => $boardid]);
+                $sequence = $DB->get_field('kanbanccead_board', 'sequence', ['id' => $boardid]);
                 if (!$sequence) {
                     continue;
                 } else {
                     $columnids = explode(',', $sequence, 2);
                     $newcard = (array) $card;
-                    $newcard['kanban_column'] = $columnids[0];
-                    $newcard['kanban_board'] = $boardid;
+                    $newcard['kanbanccead_column'] = $columnids[0];
+                    $newcard['kanbanccead_board'] = $boardid;
                     $newcard['timecreated'] = time();
                     $newcard['timemodified'] = time();
                     unset($newcard['id']);
-                    $newcard['id'] = $DB->insert_record('kanban_card', $newcard);
+                    $newcard['id'] = $DB->insert_record('kanbanccead_card', $newcard);
                     $this->copy_attachment_files($context->id, $cardid, $newcard['id']);
-                    $column = $DB->get_record('kanban_column', ['id' => $columnids[0]]);
+                    $column = $DB->get_record('kanbanccead_column', ['id' => $columnids[0]]);
                     $DB->update_record(
-                        'kanban_column',
+                        'kanbanccead_column',
                         [
                             'id' => $columnids[0],
                             'sequence' => helper::sequence_add_after($column->sequence, 0, $newcard['id']),
@@ -1771,16 +1806,16 @@ class boardmanager {
                         ]
                     );
                     $newcard['columnname'] = $column->title;
-                    $this->write_history('added', constants::MOD_KANBAN_CARD, $newcard, $newcard['kanban_column']);
-                    helper::update_cached_timestamp($boardid, constants::MOD_KANBAN_CARD, $newcard['timemodified']);
-                    helper::update_cached_timestamp($boardid, constants::MOD_KANBAN_COLUMN, $newcard['timemodified']);
+                    $this->write_history('added', constants::MOD_KANBANCCEAD_CARD, $newcard, $newcard['kanbanccead_column']);
+                    helper::update_cached_timestamp($boardid, constants::MOD_KANBANCCEAD_CARD, $newcard['timemodified']);
+                    helper::update_cached_timestamp($boardid, constants::MOD_KANBANCCEAD_COLUMN, $newcard['timemodified']);
                 }
             } else {
                 $newcard = array_merge((array) $existingcard, (array) $card, ['timemodified' => time()]);
-                $DB->update_record('kanban_card', $newcard);
+                $DB->update_record('kanbanccead_card', $newcard);
                 $this->copy_attachment_files($context->id, $cardid, $newcard['id']);
-                $this->write_history('updated', constants::MOD_KANBAN_CARD, $newcard, $newcard['kanban_column']);
-                helper::update_cached_timestamp($boardid, constants::MOD_KANBAN_CARD, $newcard['timemodified']);
+                $this->write_history('updated', constants::MOD_KANBANCCEAD_CARD, $newcard, $newcard['kanbanccead_column']);
+                helper::update_cached_timestamp($boardid, constants::MOD_KANBANCCEAD_CARD, $newcard['timemodified']);
             }
         }
     }
@@ -1793,7 +1828,12 @@ class boardmanager {
      */
     public function get_card_assignees(int $cardid): array {
         global $DB;
-        return array_unique($DB->get_fieldset_select('kanban_assignee', 'userid', 'kanban_card = :id', ['id' => $cardid]));
+        return array_unique($DB->get_fieldset_select(
+            'kanbanccead_assignee',
+            'userid',
+            'kanbanccead_card = :id',
+            ['id' => $cardid]
+        ));
     }
 
     /**
@@ -1804,7 +1844,7 @@ class boardmanager {
      */
     public function get_card(int $cardid): stdClass {
         global $DB;
-        return $DB->get_record('kanban_card', ['id' => $cardid], '*', MUST_EXIST);
+        return $DB->get_record('kanbanccead_card', ['id' => $cardid], '*', MUST_EXIST);
     }
 
     /**
@@ -1815,7 +1855,7 @@ class boardmanager {
      */
     public function get_column(int $columnid): stdClass {
         global $DB;
-        return $DB->get_record('kanban_column', ['id' => $columnid], '*', MUST_EXIST);
+        return $DB->get_record('kanbanccead_column', ['id' => $columnid], '*', MUST_EXIST);
     }
 
     /**
@@ -1826,7 +1866,7 @@ class boardmanager {
      */
     public function get_discussion_message(int $messageid): stdClass {
         global $DB;
-        return $DB->get_record('kanban_discussion_comment', ['id' => $messageid], '*', MUST_EXIST);
+        return $DB->get_record('kanbanccead_discussion_comment', ['id' => $messageid], '*', MUST_EXIST);
     }
 
     /**
@@ -1850,7 +1890,7 @@ class boardmanager {
     public function write_history(string $action, int $type, array $data = [], int $columnid = 0, int $cardid = 0): void {
         global $DB, $USER;
 
-        if (empty($this->kanban->history)) {
+        if (empty($this->kanbanccead->history)) {
             return;
         }
 
@@ -1870,16 +1910,16 @@ class boardmanager {
         unset($data['id']);
         $record = [
             'action' => $action,
-            'kanban_board' => $this->board->id,
+            'kanbanccead_board' => $this->board->id,
             'userid' => $USER->id,
-            'kanban_column' => $columnid,
-            'kanban_card' => $cardid,
+            'kanbanccead_column' => $columnid,
+            'kanbanccead_card' => $cardid,
             'parameters' => helper::sanitize_json_string(json_encode($data)),
             'affected_userid' => $affecteduser,
             'timestamp' => time(),
             'type' => $type,
         ];
-        $DB->insert_record('kanban_history', $record);
+        $DB->insert_record('kanbanccead_history', $record);
     }
 
     /**
@@ -1911,11 +1951,11 @@ class boardmanager {
      * @return bool
      */
     public function custom_completion_enabled(): bool {
-        return !empty($this->kanban->completioncreate) || !empty($this->kanban->completioncomplete);
+        return !empty($this->kanbanccead->completioncreate) || !empty($this->kanbanccead->completioncomplete);
     }
 
     /**
-     * Copy attachment files from one card to another (works only inside the same kanban instance). Overwrites files that have
+     * Copy attachment files from one card to another (works only inside the same kanbanccead instance). Overwrites files that have
      * the same filename.
      *
      * @param int $contextid Context id of the instance
@@ -1925,11 +1965,11 @@ class boardmanager {
      */
     public function copy_attachment_files(int $contextid, int $cardid, int $newcardid): void {
         $fs = get_file_storage();
-        $attachments = $fs->get_area_files($contextid, 'mod_kanban', 'attachments', $cardid, 'filename', false);
+        $attachments = $fs->get_area_files($contextid, 'mod_kanbanccead', 'attachments', $cardid, 'filename', false);
         foreach ($attachments as $attachment) {
             $existingfile = $fs->get_file(
                 $contextid,
-                'mod_kanban',
+                'mod_kanbanccead',
                 'attachments',
                 $newcardid,
                 $attachment->get_filepath(),
@@ -1956,7 +1996,7 @@ class boardmanager {
         }
 
         $context = context_module::instance($this->cmid);
-        if (has_capability('mod/kanban:manageallcards', $context, $userid)) {
+        if (has_capability('mod/kanbanccead:manageallcards', $context, $userid)) {
             return true;
         }
 
@@ -1967,7 +2007,7 @@ class boardmanager {
         }
 
         if (
-            has_capability('mod/kanban:manageassignedcards', $context, $userid)
+            has_capability('mod/kanbanccead:manageassignedcards', $context, $userid)
         ) {
             $assignees = $this->get_card_assignees($card->id);
             if (empty($assignees) || in_array($userid, $assignees)) {
@@ -1989,7 +2029,7 @@ class boardmanager {
         if (empty($boardid) || $this->board->id == $boardid) {
             $sequence = $this->board->sequence;
         } else {
-            $sequence = $DB->get_field('kanban_board', 'sequence', ['id' => $boardid]);
+            $sequence = $DB->get_field('kanbanccead_board', 'sequence', ['id' => $boardid]);
         }
         if (empty($sequence)) {
             return 0;
@@ -2020,7 +2060,7 @@ class boardmanager {
         if (empty($boardid) || $this->board->id == $boardid) {
             $sequence = $this->board->sequence;
         } else {
-            $sequence = $DB->get_field('kanban_board', 'sequence', ['id' => $boardid]);
+            $sequence = $DB->get_field('kanbanccead_board', 'sequence', ['id' => $boardid]);
         }
 
         if (empty($sequence)) {
@@ -2029,7 +2069,7 @@ class boardmanager {
 
         $columnids = explode(',', $sequence);
         $fallback = 0;
-        $donevalue = clean_param(get_string('done', 'kanban'), PARAM_TEXT);
+        $donevalue = clean_param(get_string('done', 'kanbanccead'), PARAM_TEXT);
         foreach ($columnids as $columnid) {
             if (empty($columnid)) {
                 continue;
@@ -2066,7 +2106,7 @@ class boardmanager {
             return true;
         }
 
-        $donevalue = clean_param(get_string('done', 'kanban'), PARAM_TEXT);
+        $donevalue = clean_param(get_string('done', 'kanbanccead'), PARAM_TEXT);
         $columntitle = clean_param(html_entity_decode($column->title ?? '', ENT_COMPAT, 'UTF-8'), PARAM_TEXT);
         return !empty($donevalue) && $columntitle === $donevalue;
     }
@@ -2103,7 +2143,7 @@ class boardmanager {
         $card = $this->get_card($cardid);
         $card->createdby = $USER->id;
         $card->discussion = 0;
-        $newcardid = $this->add_card($card->kanban_column, $card->id, (array) $card);
+        $newcardid = $this->add_card($card->kanbanccead_column, $card->id, (array) $card);
         $this->copy_attachment_files($this->cminfo->context->id, $cardid, $newcardid);
         return $newcardid;
     }
@@ -2119,15 +2159,15 @@ class boardmanager {
         if (empty($boardid)) {
             $boardid = $this->board->id;
         }
-        $nextnumber = $DB->get_field('kanban_card', 'MAX(number)+1', ['kanban_board' => $boardid]);
+        $nextnumber = $DB->get_field('kanbanccead_card', 'MAX(number)+1', ['kanbanccead_board' => $boardid]);
         return empty($nextnumber) ? 1 : $nextnumber;
     }
 
     /**
-     * Returns the current kanban instance.
+     * Returns the current kanbanccead instance.
      * @return stdClass Kanban instance
      */
     public function get_instance(): stdClass {
-        return $this->kanban;
+        return $this->kanbanccead;
     }
 }

@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace mod_kanban;
+namespace mod_kanbanccead;
 
 /**
  * Tests for Kanban activity form validation.
  *
- * @package     mod_kanban
+ * @package     mod_kanbanccead
  * @copyright   2026 CCEAD PUC-Rio
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers      ::mod_kanban_mod_form
+ * @covers      ::mod_kanbanccead_mod_form
  */
 final class mod_form_test extends \advanced_testcase {
     /**
@@ -34,7 +34,7 @@ final class mod_form_test extends \advanced_testcase {
         global $CFG;
 
         parent::setUp();
-        require_once($CFG->dirroot . '/mod/kanban/mod_form.php');
+        require_once($CFG->dirroot . '/mod/kanbanccead/mod_form.php');
     }
 
     /**
@@ -48,16 +48,16 @@ final class mod_form_test extends \advanced_testcase {
         $this->resetAfterTest();
         $_POST = [];
         $course = $this->getDataGenerator()->create_course();
-        $kanban = $this->getDataGenerator()->create_module('kanban', ['course' => $course]);
-        $cm = get_coursemodule_from_id('kanban', $kanban->cmid, 0, false, MUST_EXIST);
+        $kanbanccead = $this->getDataGenerator()->create_module('kanbanccead', ['course' => $course]);
+        $cm = get_coursemodule_from_id('kanbanccead', $kanbanccead->cmid, 0, false, MUST_EXIST);
         $PAGE->set_course($course);
 
-        $data = $this->get_form_data($course->id, $kanban->id, $cm->id);
-        $form = new \mod_kanban_mod_form($data, 0, $cm, $course);
+        $data = $this->get_form_data($course->id, $kanbanccead->id, $cm->id);
+        $form = new \mod_kanbanccead_mod_form($data, 0, $cm, $course);
         $errors = $form->validation((array) $data, []);
 
         $this->assertArrayHasKey('boardmode', $errors);
-        $this->assertEquals(get_string('boardgroupsnogroupsgroupmodeerror', 'kanban'), $errors['boardmode']);
+        $this->assertEquals(get_string('boardgroupsnogroupsgroupmodeerror', 'kanbanccead'), $errors['boardmode']);
     }
 
     /**
@@ -72,18 +72,18 @@ final class mod_form_test extends \advanced_testcase {
         $_POST = [];
         $course = $this->getDataGenerator()->create_course();
         groups_create_group((object) ['courseid' => $course->id, 'name' => 'Test group']);
-        $kanban = $this->getDataGenerator()->create_module('kanban', ['course' => $course]);
-        $cm = get_coursemodule_from_id('kanban', $kanban->cmid, 0, false, MUST_EXIST);
+        $kanbanccead = $this->getDataGenerator()->create_module('kanbanccead', ['course' => $course]);
+        $cm = get_coursemodule_from_id('kanbanccead', $kanbanccead->cmid, 0, false, MUST_EXIST);
         $PAGE->set_course($course);
 
-        $data = $this->get_form_data($course->id, $kanban->id, $cm->id);
+        $data = $this->get_form_data($course->id, $kanbanccead->id, $cm->id);
         $_POST['selectedboardgroupscsv'] = '';
         $_POST['selectedboardgroups'] = [];
-        $form = new \mod_kanban_mod_form($data, 0, $cm, $course);
+        $form = new \mod_kanbanccead_mod_form($data, 0, $cm, $course);
         $errors = $form->validation((array) $data, []);
 
         $this->assertArrayHasKey('boardmode', $errors);
-        $this->assertEquals(get_string('boardgroupsrequired', 'kanban'), $errors['boardmode']);
+        $this->assertEquals(get_string('boardgroupsrequired', 'kanbanccead'), $errors['boardmode']);
     }
 
     /**
@@ -98,14 +98,14 @@ final class mod_form_test extends \advanced_testcase {
         $_POST = [];
         $course = $this->getDataGenerator()->create_course();
         $groupid = groups_create_group((object) ['courseid' => $course->id, 'name' => 'Test group']);
-        $kanban = $this->getDataGenerator()->create_module('kanban', ['course' => $course]);
-        $cm = get_coursemodule_from_id('kanban', $kanban->cmid, 0, false, MUST_EXIST);
+        $kanbanccead = $this->getDataGenerator()->create_module('kanbanccead', ['course' => $course]);
+        $cm = get_coursemodule_from_id('kanbanccead', $kanbanccead->cmid, 0, false, MUST_EXIST);
         $PAGE->set_course($course);
 
-        $data = $this->get_form_data($course->id, $kanban->id, $cm->id);
+        $data = $this->get_form_data($course->id, $kanbanccead->id, $cm->id);
         $_POST['selectedboardgroupscsv'] = (string) $groupid;
         $_POST['selectedboardgroups'] = [$groupid];
-        $form = new \mod_kanban_mod_form($data, 0, $cm, $course);
+        $form = new \mod_kanbanccead_mod_form($data, 0, $cm, $course);
         $errors = $form->validation((array) $data, []);
 
         $this->assertArrayNotHasKey('boardmode', $errors);
@@ -122,13 +122,13 @@ final class mod_form_test extends \advanced_testcase {
     private function get_form_data(int $courseid, int $instance, int $coursemodule): object {
         return (object) [
             'course' => $courseid,
-            'modulename' => 'kanban',
+            'modulename' => 'kanbanccead',
             'instance' => $instance,
             'coursemodule' => $coursemodule,
             'cmidnumber' => '',
             'availabilityconditionsjson' => '{"op":"&","c":[],"showc":[]}',
             'name' => 'Test Kanban',
-            'boardmode' => constants::MOD_KANBAN_BOARDMODE_GROUP,
+            'boardmode' => constants::MOD_KANBANCCEAD_BOARDMODE_GROUP,
             'boardgroups' => '',
             'selectedboardgroupscsv' => '',
             'selectedboardgroups' => [],

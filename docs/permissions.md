@@ -6,18 +6,18 @@ All capabilities below use module context unless noted otherwise.
 
 | Capability | Default intent |
 | --- | --- |
-| `mod/kanban:addinstance` | Create the activity; course context. |
-| `mod/kanban:view` | Open the activity. |
-| `mod/kanban:addcard` | Create cards and duplicate cards. |
-| `mod/kanban:assignself` | Assign or unassign oneself. |
-| `mod/kanban:assignothers` | Assign or unassign other users. |
-| `mod/kanban:manageassignedcards` | Manage cards assigned to the current user. |
-| `mod/kanban:manageallcards` | Manage any card in an accessible board. |
-| `mod/kanban:managecolumns` | Add, edit, move, lock, or delete columns. |
-| `mod/kanban:viewhistory` | Read board history. |
-| `mod/kanban:viewallboards` | Navigate all eligible boards in the activity. |
-| `mod/kanban:editallboards` | Edit all eligible boards in the activity. |
-| `mod/kanban:manageboard` | Manage board-level actions, including templates and board deletion. |
+| `mod/kanbanccead:addinstance` | Create the activity; course context. |
+| `mod/kanbanccead:view` | Open the activity. |
+| `mod/kanbanccead:addcard` | Create cards and duplicate cards. |
+| `mod/kanbanccead:assignself` | Assign or unassign oneself. |
+| `mod/kanbanccead:assignothers` | Assign or unassign other users. |
+| `mod/kanbanccead:manageassignedcards` | Manage cards assigned to the current user. |
+| `mod/kanbanccead:manageallcards` | Manage any card in an accessible board. |
+| `mod/kanbanccead:managecolumns` | Add, edit, move, lock, or delete columns. |
+| `mod/kanbanccead:viewhistory` | Read board history. |
+| `mod/kanbanccead:viewallboards` | Navigate all eligible boards in the activity. |
+| `mod/kanbanccead:editallboards` | Edit all eligible boards in the activity. |
+| `mod/kanbanccead:manageboard` | Manage board-level actions, including templates and board deletion. |
 
 Deprecated capabilities are mapped in [db/access.php](../db/access.php); new role definitions should use their replacements.
 
@@ -29,7 +29,7 @@ Moodle site administrators can override any capability. This table describes def
 
 ## Recommended monitor role
 
-For a monitor who must view all group boards without being enrolled in every group, grant `mod/kanban:viewallboards`. Grant `mod/kanban:editallboards` only if the monitor must edit cards in every board. Add `mod/kanban:manageallcards` where card-level edits are required.
+For a monitor who must view all group boards without being enrolled in every group, grant `mod/kanbanccead:viewallboards`. Grant `mod/kanbanccead:editallboards` only if the monitor must edit cards in every board. Add `mod/kanbanccead:manageallcards` where card-level edits are required.
 
 Do not grant broad course group capabilities merely to solve Kanban navigation. The all-boards capabilities are intentionally scoped to this activity.
 

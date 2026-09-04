@@ -1,64 +1,84 @@
-# Mapeamento de Strings pt_br (mod_kanban)
+# Referência de strings pt_br (mod_kanbanccead)
 
-Total de chaves: 219
+Esta tabela reproduz as chaves e traduções de [lang/pt_br/kanbanccead.php](../lang/pt_br/kanbanccead.php). O arquivo PHP é a fonte oficial; atualize esta referência quando alterar as traduções. As chaves identificam as mensagens usadas pela API de strings do Moodle.
 
-| Chave | Traducao (pt_br) |
-|---|---|
-| `addcard` | Adicionar um cartao a esta coluna |
-| `addcardshort` | Adicionar cartao |
+| Chave | Tradução (pt_br) |
+| --- | --- |
+| `addcard` | Adicionar um cartão a esta coluna |
+| `addcardshort` | Adicionar cartão |
 | `addcolumn` | Adicionar uma coluna a este quadro |
 | `addcolumnshort` | Adicionar coluna |
-| `aftercompletion` | apos o cartao ser concluido |
-| `afterdue` | apos o vencimento do cartao |
+| `aftercompletion` | após o cartão ser concluído |
+| `afterdue` | após o vencimento do cartão |
 | `andmore` | e mais |
-| `assignee` | Responsavel |
-| `assignees` | Responsaveis |
+| `applytemplateaction` | Aplicar modelo |
+| `applytemplatetoallgroupboards` | Aplicar modelo a todos os quadros de grupo |
+| `applytemplatetoallgroupboardsconfirm` | Isso substituirá a estrutura de todos os quadros de grupo configurados pelo modelo salvo. Todos os cartões existentes nesses quadros serão excluídos permanentemente. Os cartões do modelo não serão copiados. Deseja continuar? |
+| `applytemplatetothisboard` | Aplicar modelo a este quadro |
+| `applytemplatetothisboardconfirm` | Isso substituirá a estrutura deste quadro pelo modelo salvo. Todos os cartões existentes neste quadro serão excluídos permanentemente. Os cartões do modelo não serão copiados. Deseja continuar? |
+| `assignee` | Responsável |
+| `assignees` | Responsáveis |
 | `assignme` | Atribuir a mim |
 | `attachments` | Anexos |
-| `autoclose` | Concluir cartoes automaticamente |
-| `autohide` | Ocultar cartoes concluidos automaticamente |
-| `boardactions` | Acoes do quadro |
+| `autoclose` | Concluir cartões automaticamente |
+| `autohide` | Ocultar cartões concluídos automaticamente |
+| `boardactions` | Ações do quadro |
+| `boardgroupaccessdenied` | Você não pode acessar este quadro porque não pertence ao grupo associado a ele. |
 | `boardgroupcurrent` | Usar o grupo atual |
-| `boardgroupid` | Quadro padrao do grupo |
-| `boardgroupid_help` | Escolha qual quadro de grupo deve abrir primeiro para professores quando a atividade usar quadros por grupo. Os alunos continuam abrindo o quadro do proprio grupo. |
+| `boardgroupid` | Quadro padrão do grupo |
+| `boardgroupid_help` | Escolha qual quadro de grupo deve abrir primeiro para professores quando a atividade usar quadros por grupo. Os alunos continuam abrindo o quadro do próprio grupo. |
 | `boardgroups` | Grupos do quadro |
 | `boardgroupsadd` | Adicionar |
-| `boardgroupsavailable` | Grupos disponiveis |
-| `boardgroupsdescription` | Escolha quais grupos podem aparecer como quadros quando a atividade usar um quadro por grupo. |
-| `boardgroupsnogroups` | Nao ha grupos disponiveis neste curso ainda. |
+| `boardgroupsavailable` | Grupos disponíveis |
+| `boardgroupsavailable_help` | Selecione um ou mais grupos e clique em Adicionar. |
+| `boardgroupsdescription` | Use a caixa da direita para escolher grupos e transfira-os para a caixa da esquerda. Somente os grupos selecionados serão usados como quadros nesta atividade. |
+| `boardgroupsnogroups` | Não há grupos disponíveis neste curso ainda. |
+| `boardgroupsnogroupsgroupmode` | Este curso ainda não possui grupos. Escolha a opção "Quadro compartilhado" ou crie ao menos um grupo antes de usar um quadro por grupo. |
+| `boardgroupsnogroupsgroupmodeerror` | Este curso ainda não possui grupos. Escolha a opção "Quadro compartilhado" ou crie ao menos um grupo antes de usar um quadro por grupo. |
 | `boardgroupsremove` | Remover |
 | `boardgroupsrequired` | Selecione pelo menos um grupo para quadros por grupo. |
 | `boardgroupsselected` | Grupos selecionados |
+| `boardgroupsselected_help` | Selecione os grupos que deseja retirar e clique em Remover. |
 | `boardmode` | Modo do quadro |
 | `boardmode_help` | Escolha se a atividade usa um quadro compartilhado para todos ou um quadro por grupo. |
 | `boardmodegroup` | Um quadro por grupo |
 | `boardmodeshared` | Um quadro compartilhado |
-| `boardviewsummary` | Voce esta visualizando {$a->current} de {$a->total} quadros |
-| `cachedef_board` | Cache de uma instancia de quadro |
-| `cachedef_timestamp` | Timestamp da ultima modificacao de cartao, coluna ou instancia de quadro |
-| `cardcount` | Numero de cartoes nesta coluna |
-| `cardnotfound` | Cartao nao encontrado |
-| `cardtitle` | Titulo do cartao |
+| `boardviewsummary` | Você está visualizando {$a->current} de {$a->total} quadros |
+| `cachedef_board` | Cache de uma instância de quadro |
+| `cachedef_timestamp` | Timestamp da última modificação de cartão, coluna ou instância de quadro |
+| `cardcolorcoral` | Coral |
+| `cardcolorgreen` | Verde |
+| `cardcolorlavender` | Lavanda |
+| `cardcolorlightblue` | Azul claro |
+| `cardcolorlightlime` | Verde lima claro |
+| `cardcolorlightyellow` | Amarelo claro |
+| `cardcolorpink` | Rosa |
+| `cardcolorsoftorange` | Laranja suave |
+| `cardcolorturquoise` | Turquesa |
+| `cardcolorwhite` | Branco |
+| `cardcount` | Número de cartões nesta coluna |
+| `cardnotfound` | Cartão não encontrado |
+| `cardtitle` | Título do cartão |
 | `changegroup` | Trocar quadro do grupo |
-| `changeuser` | Trocar quadro do usuario |
-| `closecard` | Concluir cartao |
+| `changeuser` | Trocar quadro do usuário |
+| `closecard` | Concluir cartão |
 | `color` | Cor |
 | `column` | Coluna |
-| `columntitle` | Titulo da coluna |
-| `completedon` | Concluido em |
-| `completioncomplete` | Concluir esta quantidade de cartoes |
-| `completioncreate` | Criar esta quantidade de cartoes |
-| `completiondetail:complete` | Cartoes concluidos: {$a} |
-| `completiondetail:create` | Cartoes criados: {$a} |
-| `connectionlost` | Conexao perdida |
-| `connectionlostmessage` | A conexao com o servidor foi perdida. Tentando reconectar... |
+| `columntitle` | Título da coluna |
+| `completedon` | Concluído em |
+| `completioncomplete` | Concluir esta quantidade de cartões |
+| `completioncreate` | Criar esta quantidade de cartões |
+| `completiondetail:complete` | Cartões concluídos: {$a} |
+| `completiondetail:create` | Cartões criados: {$a} |
+| `connectionlost` | Conexão perdida |
+| `connectionlostmessage` | A conexão com o servidor foi perdida. Tentando reconectar... |
 | `courseboard` | Quadro compartilhado |
 | `createtemplate` | Criar modelo |
 | `currentboard` | Quadro atual |
 | `deleteboard` | Excluir quadro |
-| `deleteboardconfirm` | Tem certeza de que deseja excluir este quadro? Um novo quadro sera criado com base no modelo. |
-| `deletecard` | Excluir cartao |
-| `deletecardconfirm` | Tem certeza de que deseja excluir este cartao? |
+| `deleteboardconfirm` | Tem certeza de que deseja excluir este quadro? Um novo quadro será criado com base no modelo. |
+| `deletecard` | Excluir cartão |
+| `deletecardconfirm` | Tem certeza de que deseja excluir este cartão? |
 | `deletecolumn` | Excluir coluna |
 | `deletecolumnconfirm` | Tem certeza de que deseja excluir esta coluna? |
 | `deletemessage` | Excluir mensagem |
@@ -66,13 +86,13 @@ Total de chaves: 219
 | `deletetemplate` | Excluir modelo |
 | `deletetemplateconfirm` | Tem certeza de que deseja excluir este modelo? |
 | `doing` | Em andamento |
-| `done` | Concluido |
+| `done` | Concluído |
 | `dotcolor` | Marcador da coluna |
-| `dotcolor_help` | Define a cor do indicador exibido ao lado do titulo da coluna. |
-| `dotcoloramber` | Ambar |
+| `dotcolor_help` | Define a cor do indicador exibido ao lado do título da coluna. |
+| `dotcoloramber` | Âmbar |
 | `dotcolorblue` | Azul |
 | `dotcolorcyan` | Ciano |
-| `dotcolordefault` | Padrao (automatico) |
+| `dotcolordefault` | Padrão (automático) |
 | `dotcolorgray` | Cinza |
 | `dotcolorgreen` | Verde |
 | `dotcolorolive` | Verde oliva |
@@ -80,146 +100,159 @@ Total de chaves: 219
 | `dotcolorrose` | Rosa queimado |
 | `dotcolorteal` | Turquesa |
 | `dotcolorterracotta` | Terracota |
+| `dotcolorwhite` | Branco |
 | `due` | Vence em |
 | `duedate` | Data de vencimento |
 | `editboard` | Editar quadro |
-| `editcard` | Editar cartao |
+| `editcard` | Editar cartão |
 | `editcolumn` | Editar coluna |
 | `editdetails` | Editar detalhes |
-| `editing_this_card_is_not_allowed` | A edicao deste cartao nao e permitida |
-| `enablehistory` | Ativar historico |
-| `enablehistory_help` | Ativa o registro de historico dos cartoes neste quadro (ex.: quando o cartao foi movido / renomeado / concluido) |
-| `enablehistorydescription` | Ao ativar esta opcao, o historico de alteracoes ficara disponivel nos quadros. |
+| `editing_this_card_is_not_allowed` | A edição deste cartão não é permitida |
+| `enablehistory` | Ativar histórico |
+| `enablehistory_help` | Ativa o registro de histórico dos cartões neste quadro (ex.: quando o cartão foi movido / renomeado / concluído) |
+| `enablehistorydescription` | Ao ativar esta opção, o histórico de alterações ficará disponível nos quadros. |
 | `groupboard` | Quadro do grupo "{$a}" |
 | `groupmemberscount` | {$a} participantes neste grupo |
 | `groupmemberstitle` | Membros do grupo |
-| `hidehidden` | Ocultar cartoes ocultos |
-| `history` | Historico |
-| `history_card_added` | {$a->username} adicionou o cartao "{$a->title}" na coluna "{$a->columnname}" |
-| `history_card_assigned` | {$a->username} atribuiu o cartao ao usuario {$a->affectedusername} |
-| `history_card_completed` | {$a->username} concluiu o cartao |
-| `history_card_deleted` | {$a->username} excluiu o cartao da coluna "{$a->columnname}" |
-| `history_card_moved` | {$a->username} moveu o cartao para a coluna "{$a->columnname}" |
-| `history_card_reopened` | {$a->username} reabriu o cartao |
-| `history_card_unassigned` | {$a->username} removeu a atribuicao do cartao para o usuario {$a->affectedusername} |
-| `history_card_updated` | {$a->username} alterou o titulo do cartao para "{$a->title}" |
-| `history_discussion_added` | {$a->username} adicionou uma mensagem de discussao |
-| `history_discussion_deleted` | {$a->username} excluiu uma mensagem de discussao |
-| `kanban:addcard` | Adicionar um cartao a um quadro Kanban |
-| `kanban:addinstance` | Adicionar um quadro Kanban |
-| `kanban:assignothers` | Atribuir outras pessoas a um cartao |
-| `kanban:assignself` | Atribuir a si mesmo a um cartao |
-| `kanban:editallboards` | Editar todos os quadros |
-| `kanban:manageallcards` | Editar / mover todos os cartoes |
-| `kanban:manageassignedcards` | Editar / mover cartoes atribuidos a si mesmo |
-| `kanban:manageboard` | Gerenciar o quadro (modelos, excluir o quadro) |
-| `kanban:managecolumns` | Editar as colunas do quadro |
-| `kanban:view` | Ver um quadro Kanban |
-| `kanban:viewallboards` | Ver todos os quadros |
-| `kanban:viewhistory` | Ver o historico do quadro |
-| `linknumbers` | Vincular numeros dos cartoes |
-| `linknumbers_help` | Numeros de cartao em descricoes de cartao e comentarios de discussao serao vinculados. |
-| `liveupdatetime` | Intervalo de atualizacao em tempo real em segundos |
-| `liveupdatetimedescription` | Os quadros buscarao atualizacoes apos este intervalo. Defina 0 para desativar atualizacao em tempo real. |
-| `loading` | Carregando quadro kanban |
-| `loadingdiscussion` | Carregando discussao |
+| `hidehidden` | Ocultar cartões ocultos |
+| `history` | Histórico |
+| `history_card_added` | {$a->username} adicionou o cartão "{$a->title}" na coluna "{$a->columnname}" |
+| `history_card_assigned` | {$a->username} atribuiu o cartão ao usuário {$a->affectedusername} |
+| `history_card_completed` | {$a->username} concluiu o cartão |
+| `history_card_deleted` | {$a->username} excluiu o cartão da coluna "{$a->columnname}" |
+| `history_card_moved` | {$a->username} moveu o cartão para a coluna "{$a->columnname}" |
+| `history_card_reopened` | {$a->username} reabriu o cartão |
+| `history_card_unassigned` | {$a->username} removeu a atribuição do cartão para o usuário {$a->affectedusername} |
+| `history_card_updated` | {$a->username} alterou o título do cartão para "{$a->title}" |
+| `history_discussion_added` | {$a->username} adicionou uma mensagem de discussão |
+| `history_discussion_deleted` | {$a->username} excluiu uma mensagem de discussão |
+| `kanbanccead:addcard` | Adicionar um cartão a um quadro Kanban |
+| `kanbanccead:addinstance` | Adicionar um quadro Kanban |
+| `kanbanccead:assignothers` | Atribuir outras pessoas a um cartão |
+| `kanbanccead:assignself` | Atribuir a si mesmo a um cartão |
+| `kanbanccead:editallboards` | Editar todos os quadros |
+| `kanbanccead:manageallcards` | Editar / mover todos os cartões |
+| `kanbanccead:manageassignedcards` | Editar / mover cartões atribuídos a si mesmo |
+| `kanbanccead:manageboard` | Gerenciar o quadro (modelos, excluir o quadro) |
+| `kanbanccead:managecolumns` | Editar as colunas do quadro |
+| `kanbanccead:view` | Ver um quadro Kanban |
+| `kanbanccead:viewallboards` | Ver todos os quadros |
+| `kanbanccead:viewhistory` | Ver o histórico do quadro |
+| `linknumbers` | Vincular números dos cartões |
+| `linknumbers_help` | Números de cartão em descrições de cartão e comentários de discussão serão vinculados. |
+| `liveupdatetime` | Intervalo de atualização em tempo real em segundos |
+| `liveupdatetimedescription` | Os quadros buscarão atualizações após este intervalo. Defina 0 para desativar atualização em tempo real. |
+| `loading` | Carregando quadro kanbanccead |
+| `loadingdiscussion` | Carregando discussão |
 | `lock` | Bloquear |
 | `lockboardcolumns` | Bloquear colunas do quadro |
-| `message_assigned_fullmessage` | O cartao "{$a->title}" no quadro "{$a->boardname}" foi atribuido a voce por {$a->username} |
-| `message_assigned_smallmessage` | O cartao "{$a->title}" foi atribuido a voce |
-| `message_closed_fullmessage` | O cartao "{$a->title}" foi concluido por {$a->username} |
-| `message_closed_smallmessage` | O cartao "{$a->title}" foi concluido |
-| `message_discussion_fullmessage` | Ha uma nova mensagem na discussao do cartao "{$a->title}" no quadro "{$a->boardname}":<br>{$a->username}<br>{$a->content} |
-| `message_discussion_smallmessage` | O cartao "{$a->title}" recebeu discussao |
-| `message_due_fullmessage` | O cartao "{$a->title}" no quadro "{$a->boardname}" vence em {$a->duedate} |
-| `message_due_smallmessage` | O cartao "{$a->title}" esta proximo do vencimento |
-| `message_moved_fullmessage` | O cartao "{$a->title}" foi movido para a coluna "{$a->columnname}" por {$a->username} |
-| `message_moved_smallmessage` | O cartao "{$a->title}" foi movido |
-| `message_reopened_fullmessage` | O cartao "{$a->title}" no quadro "{$a->boardname}" foi reaberto por {$a->username} |
-| `message_reopened_smallmessage` | O cartao "{$a->title}" foi reaberto |
-| `message_unassigned_fullmessage` | A atribuicao do cartao "{$a->title}" no quadro "{$a->boardname}" foi removida para voce por {$a->username} |
-| `message_unassigned_smallmessage` | A atribuicao do cartao "{$a->title}" foi removida para voce |
-| `messageprovider:assigned` | Cartao atribuido / desatribuido |
-| `messageprovider:closed` | Cartao concluido / reaberto |
-| `messageprovider:discussion` | Discussao de cartao |
-| `messageprovider:due` | Vencimento de cartao |
-| `messageprovider:moved` | Cartao movido |
-| `modulename` | Quadro Kanban |
-| `modulename_help` | Esta atividade permite usar o metodo Kanban para gerenciar projetos ou processos de aprendizagem.<br>Kanban e um metodo agil de gerenciamento de projetos que organiza tarefas por meio de um quadro visual para otimizar o fluxo de trabalho. As tarefas sao categorizadas em colunas como "A fazer", "Em andamento" e "Concluido" para tornar o progresso transparente. O objetivo e identificar gargalos no fluxo de trabalho e melhorar continuamente a eficiencia.<br><br>Dependendo das configuracoes, pode haver varios tipos de quadros dentro de uma atividade Kanban:<br><ul><br>    <li>Quadro do curso: acessivel a todos que tem acesso a atividade</li><br>    <li>Quadros pessoais: um para cada usuario</li><br>    <li>Quadros de grupo</li><br>    <li>Quadros de modelo: qualquer pessoa que possa gerenciar quadros pode copiar um quadro existente como modelo.</li><br></ul> |
-| `modulenameplural` | Quadros Kanban |
-| `moveaftercard` | Mover apos |
-| `movecard` | Mover cartao |
+| `message_assigned_fullmessage` | O cartão "{$a->title}" no quadro "{$a->boardname}" foi atribuído a você por {$a->username} |
+| `message_assigned_smallmessage` | O cartão "{$a->title}" foi atribuído a você |
+| `message_closed_fullmessage` | O cartão "{$a->title}" foi concluído por {$a->username} |
+| `message_closed_smallmessage` | O cartão "{$a->title}" foi concluído |
+| `message_discussion_fullmessage` | Há uma nova mensagem na discussão do cartão "{$a->title}" no quadro "{$a->boardname}":<br>{$a->username}<br>{$a->content} |
+| `message_discussion_smallmessage` | O cartão "{$a->title}" recebeu discussão |
+| `message_due_fullmessage` | O cartão "{$a->title}" no quadro "{$a->boardname}" vence em {$a->duedate} |
+| `message_due_smallmessage` | O cartão "{$a->title}" está próximo do vencimento |
+| `message_moved_fullmessage` | O cartão "{$a->title}" foi movido para a coluna "{$a->columnname}" por {$a->username} |
+| `message_moved_smallmessage` | O cartão "{$a->title}" foi movido |
+| `message_reopened_fullmessage` | O cartão "{$a->title}" no quadro "{$a->boardname}" foi reaberto por {$a->username} |
+| `message_reopened_smallmessage` | O cartão "{$a->title}" foi reaberto |
+| `message_unassigned_fullmessage` | A atribuição do cartão "{$a->title}" no quadro "{$a->boardname}" foi removida para você por {$a->username} |
+| `message_unassigned_smallmessage` | A atribuição do cartão "{$a->title}" foi removida para você |
+| `messageprovider:assigned` | Cartão atribuído / desatribuído |
+| `messageprovider:closed` | Cartão concluído / reaberto |
+| `messageprovider:discussion` | Discussão de cartão |
+| `messageprovider:due` | Vencimento de cartão |
+| `messageprovider:moved` | Cartão movido |
+| `modulename` | Kanban CCEAD |
+| `modulename_help` | Esta atividade permite usar o método Kanban para gerenciar projetos ou processos de aprendizagem.<br>Kanban é um método ágil de gerenciamento de projetos que organiza tarefas por meio de um quadro visual para otimizar o fluxo de trabalho. As tarefas são categorizadas em colunas como "A fazer", "Em andamento" e "Concluído" para tornar o progresso transparente. O objetivo é identificar gargalos no fluxo de trabalho e melhorar continuamente a eficiência.<br><br>Dependendo das configurações, pode haver vários tipos de quadros dentro de uma atividade Kanban:<br><ul><br>    <li>Quadro do curso: acessível a todos que têm acesso à atividade</li><br>    <li>Quadros pessoais: um para cada usuário</li><br>    <li>Quadros de grupo</li><br>    <li>Quadros de modelo: qualquer pessoa que possa gerenciar quadros pode copiar um quadro existente como modelo.</li><br></ul> |
+| `modulenameplural` | Quadros Kanban CCEAD |
+| `moveaftercard` | Mover após |
+| `movecard` | Mover cartão |
 | `movecolumn` | Mover coluna |
 | `myuserboard` | Meu quadro pessoal |
 | `name` | Nome do quadro |
-| `name_help` | Este nome sera visivel na visao geral do curso e como titulo do quadro |
-| `newcard` | Novo cartao |
+| `name_help` | Este nome será visível na visão geral do curso e como título do quadro |
+| `newcard` | Novo cartão |
 | `newcolumn` | Nova coluna |
-| `nogroupavailable` | Nenhum grupo disponivel |
-| `nokanbaninstances` | Nao ha quadros kanban neste curso ou voce nao tem permissao para acessa-los |
+| `nogroupavailable` | Nenhum grupo disponível |
+| `nokanbancceadinstances` | Não há quadros kanbanccead neste curso ou você não tem permissão para acessá-los |
 | `nonewduedate` | Sem nova data de vencimento |
-| `nouser` | Sem usuario |
+| `notemplateavailable` | Não há um modelo salvo disponível para aplicar. |
+| `nouser` | Sem usuário |
 | `nouserboards` | Sem quadros pessoais |
 | `plannedfor` | Previsto para |
-| `pluginadministration` | Administracao do Kanban |
-| `pluginname` | Quadro Kanban |
-| `privacy:metadata:action` | Acao |
-| `privacy:metadata:affected_userid` | Usuario afetado |
-| `privacy:metadata:content` | Conteudo |
-| `privacy:metadata:createdby` | Usuario que criou o cartao |
+| `pluginadministration` | Administração do Kanban CCEAD |
+| `pluginname` | Kanban CCEAD |
+| `privacy:metadata:action` | Ação |
+| `privacy:metadata:affected_userid` | Usuário afetado |
+| `privacy:metadata:completed` | Estado de conclusão |
+| `privacy:metadata:content` | Conteúdo |
+| `privacy:metadata:createdby` | Usuário que criou o cartão |
+| `privacy:metadata:description` | Descrição |
+| `privacy:metadata:duedate` | Data de vencimento |
 | `privacy:metadata:groupid` | ID do grupo |
-| `privacy:metadata:kanban_assignee` | Responsavel |
-| `privacy:metadata:kanban_board` | Quadro |
-| `privacy:metadata:kanban_card` | Cartao |
-| `privacy:metadata:kanban_column` | Coluna |
-| `privacy:metadata:kanban_discussion_comment` | Comentario |
-| `privacy:metadata:kanban_history` | Historico |
-| `privacy:metadata:parameters` | Informacoes sobre a acao |
-| `privacy:metadata:timecreated` | Horario de criacao |
-| `privacy:metadata:timemodified` | Horario da ultima modificacao |
-| `privacy:metadata:timestamp` | Horario da acao |
-| `privacy:metadata:userid` | ID do usuario |
-| `pushcard` | Enviar cartao para todos os quadros |
-| `pushcardconfirm` | Isso enviara uma copia deste cartao para todos os quadros desta atividade kanban, incluindo modelos. Copias existentes serao substituidas. |
+| `privacy:metadata:kanbanccead_assignee` | Responsável |
+| `privacy:metadata:kanbanccead_board` | Quadro |
+| `privacy:metadata:kanbanccead_card` | Cartão |
+| `privacy:metadata:kanbanccead_column` | Coluna |
+| `privacy:metadata:kanbanccead_discussion_comment` | Comentário |
+| `privacy:metadata:kanbanccead_history` | Histórico |
+| `privacy:metadata:options` | Opções de configuração armazenadas |
+| `privacy:metadata:parameters` | Informações sobre a ação |
+| `privacy:metadata:reminderdate` | Data do lembrete |
+| `privacy:metadata:timecreated` | Horário de criação |
+| `privacy:metadata:timemodified` | Horário da última modificação |
+| `privacy:metadata:timestamp` | Horário da ação |
+| `privacy:metadata:title` | Título |
+| `privacy:metadata:userid` | ID do usuário |
+| `pushcard` | Enviar cartão para todos os quadros |
+| `pushcardconfirm` | Isso enviará uma cópia deste cartão para todos os quadros desta atividade kanbanccead, incluindo modelos. Cópias existentes serão substituídas. |
 | `reminderdate` | Data de lembrete |
-| `remindertask` | Enviar notificacoes de lembrete |
-| `repeat` | Repetir cartao |
-| `repeat_help` | Se selecionado, uma nova copia deste cartao sera criada na coluna mais a esquerda assim que esta instancia for concluida. Discussao, historico e responsaveis nao sao copiados.<br>Voce pode escolher como calcular a nova data de vencimento, se necessario. Isso tambem sera aplicado a nova data de lembrete. |
+| `remindertask` | Enviar notificações de lembrete |
+| `repeat` | Repetir cartão |
+| `repeat_help` | Se selecionado, uma nova cópia deste cartão será criada na coluna mais à esquerda assim que esta instância for concluída. Discussão, histórico e responsáveis não são copiados.<br>Você pode escolher como calcular a nova data de vencimento, se necessário. Isso também será aplicado à nova data de lembrete. |
 | `repeat_interval` | Intervalo |
-| `repeat_interval_type` | Frequencia |
+| `repeat_interval_type` | Frequência |
 | `repeat_newduedate` | Nova data de vencimento |
 | `reset_group` | Redefinir quadros de grupo |
-| `reset_kanban` | Redefinir quadros compartilhados |
+| `reset_kanbanccead` | Redefinir quadros compartilhados |
 | `reset_personal` | Redefinir quadros pessoais |
 | `saveastemplate` | Salvar como modelo |
-| `saveastemplateconfirm` | Tem certeza de que deseja salvar este quadro como modelo? Ele substituira o modelo atual, se houver. |
-| `senddiscussion` | Enviar mensagem de discussao |
+| `saveastemplateconfirm` | O modelo salvará somente a estrutura deste quadro: colunas, ordem, configurações e marcadores. Cartões, anexos, responsáveis, discussões e histórico não serão incluídos. Ele substituirá o modelo atual, se houver. |
+| `senddiscussion` | Enviar mensagem de discussão |
 | `showattachment` | Mostrar anexos |
 | `showboard` | Mostrar quadro compartilhado |
-| `showdescription` | Mostrar descricao |
-| `showdiscussion` | Mostrar discussao |
-| `showhidden` | Mostrar cartoes ocultos |
+| `showdescription` | Mostrar descrição |
+| `showdiscussion` | Mostrar discussão |
+| `showhidden` | Mostrar cartões ocultos |
 | `showtemplate` | Mostrar modelo |
-| `startdiscussion` | Iniciar discussao |
+| `startdiscussion` | Iniciar discussão |
 | `switchboard` | Trocar quadro |
 | `template` | Modelo |
+| `templateactionsrequiregroupmode` | As ações de modelo só estão disponíveis quando a atividade usa um quadro por grupo. |
+| `templateappliedtoallgroupboards` | Modelo aplicado a todos os quadros de grupo. |
+| `templateappliedtoboard` | Modelo aplicado ao quadro atual. |
+| `templateoverwriteconfirmationrequired` | Confirme a substituição do conteúdo existente antes de aplicar o modelo. |
+| `templatesaved` | Quadro salvo como modelo. |
 | `toboard` | Quadro "{$a->boardname}" |
 | `todo` | A fazer |
 | `topofcolumn` | Topo da coluna |
-| `unassign` | Remover atribuicao deste usuario |
-| `unassignme` | Remover minha atribuicao |
+| `unassign` | Remover atribuição deste usuário |
+| `unassignme` | Remover minha atribuição |
 | `uncomplete` | Reabrir |
 | `unlock` | Desbloquear |
 | `unlockboardcolumns` | Desbloquear colunas do quadro |
-| `usenumbers` | Usar numeros de cartao |
-| `usenumbers_help` | Ativa numeracao de cartoes nesta atividade kanban. Os numeros sao unicos por quadro (ou seja, cartoes em quadros de usuario / grupo e no quadro compartilhado podem ter o mesmo numero). |
+| `usenumbers` | Usar números de cartão |
+| `usenumbers_help` | Ativa numeração de cartões nesta atividade kanbanccead. Os números são únicos por quadro (ou seja, cartões em quadros de usuário / grupo e no quadro compartilhado podem ter o mesmo número). |
 | `userboard` | Quadro pessoal de {$a} |
 | `userboards` | Quadros pessoais |
-| `userboards_help` | Ativa quadros pessoais para os participantes (visiveis apenas para eles e para os professores) |
+| `userboards_help` | Ativa quadros pessoais para os participantes (visíveis apenas para eles e para os professores) |
 | `userboardsenabled` | Quadros pessoais ativados |
 | `userboardsonly` | Apenas quadros pessoais |
 | `viewmembers` | Ver membros |
-| `wiplimit` | Limite de cartoes por pessoa |
-| `wiplimitenable` | Definir limite de cartoes por pessoa nesta coluna |
-| `wiplimitgreaterzero` | O limite de cartoes precisa ser maior que zero |
+| `wiplimit` | Limite de cartões por pessoa |
+| `wiplimitenable` | Definir limite de cartões por pessoa nesta coluna |
+| `wiplimitgreaterzero` | O limite de cartões precisa ser maior que zero |
 | `wiplimitreached` | O limite de WIP foi atingido para {$a->users}. |

@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Capability definitions for mod_kanban
+ * Capability definitions for mod_kanbanccead
  *
- * @package     mod_kanban
+ * @package     mod_kanbanccead
  * @copyright   2023-2024 ISB Bayern
  * @author      Stefan Hanauska <stefan.hanauska@csg-in.de>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $capabilities = [
 
-    'mod/kanban:addinstance' => [
+    'mod/kanbanccead:addinstance' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => [
@@ -37,7 +37,7 @@ $capabilities = [
         'clonepermissionsfrom' => 'moodle/course:manageactivities',
     ],
 
-    'mod/kanban:view' => [
+    'mod/kanbanccead:view' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
@@ -48,7 +48,7 @@ $capabilities = [
         ],
     ],
 
-    'mod/kanban:addcard' => [
+    'mod/kanbanccead:addcard' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
@@ -59,7 +59,7 @@ $capabilities = [
         ],
     ],
 
-    'mod/kanban:assignself' => [
+    'mod/kanbanccead:assignself' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
@@ -70,7 +70,7 @@ $capabilities = [
         ],
     ],
 
-    'mod/kanban:assignothers' => [
+    'mod/kanbanccead:assignothers' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
@@ -81,7 +81,7 @@ $capabilities = [
         ],
     ],
 
-    'mod/kanban:manageassignedcards' => [
+    'mod/kanbanccead:manageassignedcards' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
@@ -92,7 +92,7 @@ $capabilities = [
         ],
     ],
 
-    'mod/kanban:manageallcards' => [
+    'mod/kanbanccead:manageallcards' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
@@ -103,7 +103,7 @@ $capabilities = [
         ],
     ],
 
-    'mod/kanban:managecolumns' => [
+    'mod/kanbanccead:managecolumns' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
@@ -114,7 +114,7 @@ $capabilities = [
         ],
     ],
 
-    'mod/kanban:viewhistory' => [
+    'mod/kanbanccead:viewhistory' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
@@ -125,7 +125,7 @@ $capabilities = [
         ],
     ],
 
-    'mod/kanban:viewallboards' => [
+    'mod/kanbanccead:viewallboards' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
@@ -136,7 +136,7 @@ $capabilities = [
         ],
     ],
 
-    'mod/kanban:editallboards' => [
+    'mod/kanbanccead:editallboards' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
@@ -147,7 +147,7 @@ $capabilities = [
         ],
     ],
 
-    'mod/kanban:manageboard' => [
+    'mod/kanbanccead:manageboard' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
@@ -160,13 +160,13 @@ $capabilities = [
 ];
 
 $deprecatedcapabilities = [
-    'mod/kanban:managecards' => [
-        'replacement' => 'mod/kanban:manageallcards',
+    'mod/kanbanccead:managecards' => [
+        'replacement' => 'mod/kanbanccead:manageallcards',
     ],
-    'mod/kanban:moveallcards' => [
-        'replacement' => 'mod/kanban:manageallcards',
+    'mod/kanbanccead:moveallcards' => [
+        'replacement' => 'mod/kanbanccead:manageallcards',
     ],
-    'mod/kanban:moveassignedcards' => [
-        'replacement' => 'mod/kanban:manageassignedcards',
+    'mod/kanbanccead:moveassignedcards' => [
+        'replacement' => 'mod/kanbanccead:manageassignedcards',
     ],
 ];

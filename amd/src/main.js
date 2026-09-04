@@ -1,26 +1,26 @@
-import Reactive from 'mod_kanban/reactive';
-import KanbanParent from 'mod_kanban/kanbanparent';
-import KanbanMutations from 'mod_kanban/mutations';
+import Reactive from 'mod_kanbanccead/reactive';
+import KanbanCceadParent from 'mod_kanbanccead/kanbancceadparent';
+import KanbanCceadMutations from 'mod_kanbanccead/mutations';
 
-const stateChangedEventName = 'mod_kanban:stateChanged';
+const stateChangedEventName = 'mod_kanbanccead:stateChanged';
 
 /**
- * Create reactive instance for kanban, load initial state.
+ * Create reactive instance for kanbanccead, load initial state.
  * @param {string} domElementId Id of render container
- * @param {number} cmId Course module id of the kanban board
+ * @param {number} cmId Course module id of the kanbanccead board
  * @param {number} boardId Id of the board to display
- * @returns {KanbanComponent}
+ * @returns {KanbanCceadComponent}
  */
 export const init = (domElementId, cmId, boardId) => {
     const reactiveInstance = new Reactive({
-        name: 'kanban_' + cmId,
+        name: 'kanbanccead_' + cmId,
         eventName: stateChangedEventName,
-        eventDispatch: dispatchKanbanEvent,
+        eventDispatch: dispatchKanbanCceadEvent,
         target: document.getElementById(domElementId),
-        mutations: new KanbanMutations(),
+        mutations: new KanbanCceadMutations(),
     });
     reactiveInstance.loadBoard(cmId, boardId);
-    return new KanbanParent({
+    return new KanbanCceadParent({
         element: document.getElementById(domElementId),
         reactive: reactiveInstance,
     });
@@ -29,11 +29,11 @@ export const init = (domElementId, cmId, boardId) => {
 /**
  * Internal state changed event.
  *
- * @method dispatchKanbanEvent
+ * @method dispatchKanbanCceadEvent
  * @param {object} detail the full state
  * @param {object} target the custom event target (document if none provided)
  */
-function dispatchKanbanEvent(detail, target) {
+function dispatchKanbanCceadEvent(detail, target) {
     if (target === undefined) {
         target = document;
     }

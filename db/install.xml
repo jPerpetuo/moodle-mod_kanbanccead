@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/kanban/db" VERSION="20241205" COMMENT="XMLDB file for mod/kanban"
+<XMLDB PATH="mod/kanbanccead/db" VERSION="20241205" COMMENT="XMLDB file for mod/kanbanccead"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="kanban" COMMENT="Kanban instances">
+    <TABLE NAME="kanbanccead" COMMENT="Kanban instances">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -25,14 +25,14 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="kanban_board" COMMENT="Kanban boards">
+    <TABLE NAME="kanbanccead_board" COMMENT="Kanban boards">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="sequence" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="groupid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="template" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="kanban_instance" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="kanbanccead_instance" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="options" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="locked" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -40,15 +40,15 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="instance" TYPE="foreign" FIELDS="kanban_instance" REFTABLE="kanban" REFFIELDS="id"/>
+        <KEY NAME="instance" TYPE="foreign" FIELDS="kanbanccead_instance" REFTABLE="kanbanccead" REFFIELDS="id"/>
         <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
         <KEY NAME="groupid" TYPE="foreign" FIELDS="groupid" REFTABLE="groups" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="kanban_column" COMMENT="Columns">
+    <TABLE NAME="kanbanccead_column" COMMENT="Columns">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="kanban_board" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="kanbanccead_board" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="sequence" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="options" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
@@ -58,18 +58,18 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="board" TYPE="foreign" FIELDS="kanban_board" REFTABLE="kanban_board" REFFIELDS="id"/>
+        <KEY NAME="board" TYPE="foreign" FIELDS="kanbanccead_board" REFTABLE="kanbanccead_board" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="kanbcolu_kantim_ix" UNIQUE="false" FIELDS="kanban_board, timemodified"/>
+        <INDEX NAME="kanbcolu_kantim_ix" UNIQUE="false" FIELDS="kanbanccead_board, timemodified"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="kanban_card" COMMENT="Cards">
+    <TABLE NAME="kanbanccead_card" COMMENT="Cards">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="title" TYPE="char" LENGTH="1333" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="kanban_column" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="kanban_board" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="kanbanccead_column" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="kanbanccead_board" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="options" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="duedate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="reminderdate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
@@ -91,50 +91,50 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="board" TYPE="foreign" FIELDS="kanban_board" REFTABLE="kanban_board" REFFIELDS="id"/>
-        <KEY NAME="column" TYPE="foreign" FIELDS="kanban_column" REFTABLE="kanban_column" REFFIELDS="id"/>
+        <KEY NAME="board" TYPE="foreign" FIELDS="kanbanccead_board" REFTABLE="kanbanccead_board" REFFIELDS="id"/>
+        <KEY NAME="column" TYPE="foreign" FIELDS="kanbanccead_column" REFTABLE="kanbanccead_column" REFFIELDS="id"/>
         <KEY NAME="userid" TYPE="foreign" FIELDS="createdby" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="kanbcard_kantim_ix" UNIQUE="false" FIELDS="kanban_board, timemodified"/>
+        <INDEX NAME="kanbcard_kantim_ix" UNIQUE="false" FIELDS="kanbanccead_board, timemodified"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="kanban_assignee" COMMENT="Users assigned to cards">
+    <TABLE NAME="kanbanccead_assignee" COMMENT="Users assigned to cards">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="kanban_card" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="kanbanccead_card" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="card" TYPE="foreign" FIELDS="kanban_card" REFTABLE="kanban_card" REFFIELDS="id"/>
+        <KEY NAME="card" TYPE="foreign" FIELDS="kanbanccead_card" REFTABLE="kanbanccead_card" REFFIELDS="id"/>
         <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="kanban_discussion_comment" COMMENT="Discussion comments for cards">
+    <TABLE NAME="kanbanccead_discussion_comment" COMMENT="Discussion comments for cards">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="kanban_card" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="kanbanccead_card" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="content" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="card" TYPE="foreign" FIELDS="kanban_card" REFTABLE="kanban_card" REFFIELDS="id"/>
+        <KEY NAME="card" TYPE="foreign" FIELDS="kanbanccead_card" REFTABLE="kanbanccead_card" REFFIELDS="id"/>
         <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="kanbdisccomm_kantim_ix" UNIQUE="false" FIELDS="kanban_card, timecreated"/>
+        <INDEX NAME="kanbdisccomm_kantim_ix" UNIQUE="false" FIELDS="kanbanccead_card, timecreated"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="kanban_history" COMMENT="History of board items">
+    <TABLE NAME="kanbanccead_history" COMMENT="History of board items">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="kanban_board" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="kanban_column" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="kanban_card" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="kanbanccead_board" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="kanbanccead_column" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="kanbanccead_card" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="action" TYPE="char" LENGTH="1333" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="parameters" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="affected_userid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
@@ -144,13 +144,13 @@
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
-        <KEY NAME="board" TYPE="foreign" FIELDS="kanban_board" REFTABLE="kanban_board" REFFIELDS="id"/>
-        <KEY NAME="column" TYPE="foreign" FIELDS="kanban_column" REFTABLE="kanban_column" REFFIELDS="id"/>
-        <KEY NAME="card" TYPE="foreign" FIELDS="kanban_card" REFTABLE="kanban_card" REFFIELDS="id"/>
+        <KEY NAME="board" TYPE="foreign" FIELDS="kanbanccead_board" REFTABLE="kanbanccead_board" REFFIELDS="id"/>
+        <KEY NAME="column" TYPE="foreign" FIELDS="kanbanccead_column" REFTABLE="kanbanccead_column" REFFIELDS="id"/>
+        <KEY NAME="card" TYPE="foreign" FIELDS="kanbanccead_card" REFTABLE="kanbanccead_card" REFFIELDS="id"/>
         <KEY NAME="affected_userid" TYPE="foreign" FIELDS="affected_userid" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="kanbhist_kantim_ix" UNIQUE="false" FIELDS="kanban_card, timestamp"/>
+        <INDEX NAME="kanbhist_kantim_ix" UNIQUE="false" FIELDS="kanbanccead_card, timestamp"/>
       </INDEXES>
     </TABLE>
   </TABLES>

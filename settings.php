@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Admin settings for mod_kanban
+ * Admin settings for mod_kanbanccead
  *
- * @package     mod_kanban
+ * @package     mod_kanbanccead
  * @copyright   2023-2024 ISB Bayern
  * @author      Stefan Hanauska <stefan.hanauska@csg-in.de>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -27,16 +27,16 @@ defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtext(
-        'mod_kanban/liveupdatetime',
-        get_string('liveupdatetime', 'kanban'),
-        get_string('liveupdatetimedescription', 'kanban'),
+        'mod_kanbanccead/liveupdatetime',
+        get_string('liveupdatetime', 'kanbanccead'),
+        get_string('liveupdatetimedescription', 'kanbanccead'),
         10,
         PARAM_INT
     ));
     $settings->add(new admin_setting_configcheckbox(
-        'mod_kanban/enablehistory',
-        get_string('enablehistory', 'kanban'),
-        get_string('enablehistorydescription', 'kanban'),
+        'mod_kanbanccead/enablehistory',
+        get_string('enablehistory', 'kanbanccead'),
+        get_string('enablehistorydescription', 'kanbanccead'),
         true,
         PARAM_BOOL
     ));

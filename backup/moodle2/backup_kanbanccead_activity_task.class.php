@@ -16,17 +16,17 @@
 
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
-require_once($CFG->dirroot . '/mod/kanban/backup/moodle2/backup_kanban_stepslib.php');
+require_once($CFG->dirroot . '/mod/kanbanccead/backup/moodle2/backup_kanbanccead_stepslib.php');
 
 /**
- * Backup class for mod_kanban
+ * Backup class for mod_kanbanccead
  *
- * @package     mod_kanban
+ * @package     mod_kanbanccead
  * @copyright   2023-2024 ISB Bayern
  * @author      Stefan Hanauska <stefan.hanauska@csg-in.de>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class backup_kanban_activity_task extends backup_activity_task {
+class backup_kanbanccead_activity_task extends backup_activity_task {
     /**
      * No specific settings for this activity
      */
@@ -34,10 +34,10 @@ class backup_kanban_activity_task extends backup_activity_task {
     }
 
     /**
-     * Defines a backup step to store the instance data in the kanban.xml file
+     * Defines a backup step to store the instance data in the kanbanccead.xml file
      */
     protected function define_my_steps(): void {
-        $this->add_step(new backup_kanban_activity_structure_step('kanban_structure', 'kanban.xml'));
+        $this->add_step(new backup_kanbanccead_activity_structure_step('kanbanccead_structure', 'kanbanccead.xml'));
     }
 
     /**
@@ -49,10 +49,10 @@ class backup_kanban_activity_task extends backup_activity_task {
     public static function encode_content_links($content): string {
         global $CFG;
 
-        $base = preg_quote($CFG->wwwroot . '/mod/kanban', '#');
+        $base = preg_quote($CFG->wwwroot . '/mod/kanbanccead', '#');
 
         $pattern = "#(" . $base . "\/view.php\?id\=)([0-9]+)#";
-        $content = preg_replace($pattern, '$@KANBANVIEWBYID*$2@$', $content);
+        $content = preg_replace($pattern, '$@KANBANCCEADVIEWBYID*$2@$', $content);
         return $content;
     }
 }

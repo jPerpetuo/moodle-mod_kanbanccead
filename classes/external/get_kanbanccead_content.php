@@ -15,21 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Class for delivering kanban content
+ * Class for delivering kanbanccead content
  *
- * @package    mod_kanban
+ * @package    mod_kanbanccead
  * @copyright  2023-2024 ISB Bayern
  * @author     Stefan Hanauska
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_kanban\external;
+namespace mod_kanbanccead\external;
 
 // Compatibility with Moodle < 4.2.
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->dirroot . '/lib/externallib.php');
-require_once($CFG->dirroot . '/mod/kanban/lib.php');
+require_once($CFG->dirroot . '/mod/kanbanccead/lib.php');
 
 use coding_exception;
 use context_module;
@@ -39,24 +39,24 @@ use external_multiple_structure;
 use external_single_structure;
 use external_value;
 use invalid_parameter_exception;
-use mod_kanban\boardmanager;
-use mod_kanban\constants;
-use mod_kanban\helper;
-use mod_kanban\numberfilter;
-use mod_kanban\updateformatter;
+use mod_kanbanccead\boardmanager;
+use mod_kanbanccead\constants;
+use mod_kanbanccead\helper;
+use mod_kanbanccead\numberfilter;
+use mod_kanbanccead\updateformatter;
 use moodle_exception;
 use required_capability_exception;
 use restricted_context_exception;
 use stdClass;
 
 /**
- * Class for delivering kanban content
+ * Class for delivering kanbanccead content
  *
  * @copyright  2023-2024 ISB Bayern
  * @author     Stefan Hanauska
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class get_kanban_content extends external_api {
+class get_kanbanccead_content extends external_api {
     /**
      * Returns description of method parameters for the execute webservice function.
      *
@@ -71,11 +71,11 @@ class get_kanban_content extends external_api {
     }
 
     /**
-     * Returns description of method parameters for the get_kanban_content_init webservice function.
+     * Returns description of method parameters for the get_kanbanccead_content_init webservice function.
      *
      * @return external_function_parameters
      */
-    public static function get_kanban_content_init_parameters(): external_function_parameters {
+    public static function get_kanbanccead_content_init_parameters(): external_function_parameters {
         return new external_function_parameters([
             'cmid' => new external_value(PARAM_INT, 'course module id', VALUE_REQUIRED),
             'boardid' => new external_value(PARAM_INT, 'board id', VALUE_REQUIRED),
@@ -84,11 +84,11 @@ class get_kanban_content extends external_api {
     }
 
     /**
-     * Returns description of method parameters for the get_kanban_content_update webservice function.
+     * Returns description of method parameters for the get_kanbanccead_content_update webservice function.
      *
      * @return external_function_parameters
      */
-    public static function get_kanban_content_update_parameters(): external_function_parameters {
+    public static function get_kanbanccead_content_update_parameters(): external_function_parameters {
         return new external_function_parameters([
             'cmid' => new external_value(PARAM_INT, 'course module id', VALUE_REQUIRED),
             'boardid' => new external_value(PARAM_INT, 'board id', VALUE_REQUIRED),
@@ -97,11 +97,11 @@ class get_kanban_content extends external_api {
     }
 
     /**
-     * Definition of return values of the get_kanban_content webservice function.
+     * Definition of return values of the get_kanbanccead_content webservice function.
      *
      * @return external_single_structure
      */
-    public static function get_kanban_content_init_returns(): external_single_structure {
+    public static function get_kanbanccead_content_init_returns(): external_single_structure {
         return
             new external_single_structure(
                 [
@@ -184,7 +184,7 @@ class get_kanban_content extends external_api {
                             [
                                 'id' => new external_value(PARAM_INT, 'card id'),
                                 'title' => new external_value(PARAM_TEXT, 'card title'),
-                                'kanban_column' => new external_value(PARAM_INT, 'column'),
+                                'kanbanccead_column' => new external_value(PARAM_INT, 'column'),
                                 'duedate' => new external_value(PARAM_INT, 'due date'),
                                 'options' => new external_value(PARAM_TEXT, 'options for the card'),
                                 'assignees' => new external_multiple_structure(
@@ -292,7 +292,7 @@ class get_kanban_content extends external_api {
                                 'id' => new external_value(PARAM_INT, 'id'),
                                 'timecreated' => new external_value(PARAM_INT, 'timecreated'),
                                 'userid' => new external_value(PARAM_INT, 'userid'),
-                                'kanban_card' => new external_value(PARAM_INT, 'card id'),
+                                'kanbanccead_card' => new external_value(PARAM_INT, 'card id'),
                                 'content' => new external_value(PARAM_TEXT, 'discussion message'),
                                 'username' => new external_value(PARAM_TEXT, 'user name'),
                                 'candelete' => new external_value(PARAM_BOOL, 'whether the current user can delete this message'),
@@ -307,8 +307,8 @@ class get_kanban_content extends external_api {
                                 'id' => new external_value(PARAM_INT, 'id'),
                                 'timestamp' => new external_value(PARAM_INT, 'timestamp'),
                                 'userid' => new external_value(PARAM_INT, 'userid'),
-                                'kanban_card' => new external_value(PARAM_INT, 'card id'),
-                                'kanban_column' => new external_value(PARAM_INT, 'column'),
+                                'kanbanccead_card' => new external_value(PARAM_INT, 'card id'),
+                                'kanbanccead_column' => new external_value(PARAM_INT, 'column'),
                                 'content' => new external_value(PARAM_TEXT, 'discussion message'),
                                 'affectedusername' => new external_value(PARAM_TEXT, 'user name'),
                             ],
@@ -323,8 +323,8 @@ class get_kanban_content extends external_api {
     /**
      * This method returns the requested data.
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @param int $timestamp the timestamp of the state present in the frontend
      * @return array The requested content, divided into board, columns and cards
      * @throws coding_exception
@@ -333,15 +333,15 @@ class get_kanban_content extends external_api {
      * @throws restricted_context_exception
      * @throws moodle_exception
      */
-    public static function get_kanban_content_init(int $cmid, int $boardid, int $timestamp = 0): array {
+    public static function get_kanbanccead_content_init(int $cmid, int $boardid, int $timestamp = 0): array {
         return self::execute($cmid, $boardid, $timestamp);
     }
 
     /**
      * This method returns the requested data.
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @param int $timestamp the timestamp of the state present in the frontend
      * @return array The requested content, divided into board, columns and cards
      * @throws coding_exception
@@ -350,16 +350,16 @@ class get_kanban_content extends external_api {
      * @throws restricted_context_exception
      * @throws moodle_exception
      */
-    public static function get_kanban_content_update(int $cmid, int $boardid, int $timestamp = 0): array {
+    public static function get_kanbanccead_content_update(int $cmid, int $boardid, int $timestamp = 0): array {
         return self::execute($cmid, $boardid, $timestamp, true);
     }
 
     /**
-     * Definition of return values of the get_kanban_content_update webservice function.
+     * Definition of return values of the get_kanbanccead_content_update webservice function.
      *
      * @return external_single_structure
      */
-    public static function get_kanban_content_update_returns(): external_single_structure {
+    public static function get_kanbanccead_content_update_returns(): external_single_structure {
         return new external_single_structure(
             [
                 'update' => new external_value(PARAM_RAW, 'update JSON'),
@@ -368,10 +368,10 @@ class get_kanban_content extends external_api {
     }
 
     /**
-     * Get kanban content from database.
+     * Get kanbanccead content from database.
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @param int $timestamp the timestamp of the state present in the frontend
      * @param bool $asupdate whether to format content as update for StateMananger
      * @return array The requested content, divided into board, columns and cards
@@ -394,20 +394,20 @@ class get_kanban_content extends external_api {
         [$course, $cminfo] = get_course_and_cm_from_cmid($cmid);
         $context = context_module::instance($cmid);
         self::validate_context($context);
-        require_capability('mod/kanban:view', $context);
+        require_capability('mod/kanbanccead:view', $context);
 
         // Get the values of some capabilities for output.
         $capabilities = [
-            'addcard' => has_capability('mod/kanban:addcard', $context),
-            'manageallcards' => has_capability('mod/kanban:manageallcards', $context),
-            'manageassignedcards' => has_capability('mod/kanban:manageallcards', $context),
-            'assignself' => has_capability('mod/kanban:assignself', $context),
-            'assignothers' => has_capability('mod/kanban:assignothers', $context),
-            'managecolumns' => has_capability('mod/kanban:managecolumns', $context),
-            'editallboards' => has_capability('mod/kanban:editallboards', $context),
-            'manageboard' => has_capability('mod/kanban:manageboard', $context),
-            'viewhistory' => has_capability('mod/kanban:viewhistory', $context),
-            'viewallboards' => has_capability('mod/kanban:viewallboards', $context),
+            'addcard' => has_capability('mod/kanbanccead:addcard', $context),
+            'manageallcards' => has_capability('mod/kanbanccead:manageallcards', $context),
+            'manageassignedcards' => has_capability('mod/kanbanccead:manageallcards', $context),
+            'assignself' => has_capability('mod/kanbanccead:assignself', $context),
+            'assignothers' => has_capability('mod/kanbanccead:assignothers', $context),
+            'managecolumns' => has_capability('mod/kanbanccead:managecolumns', $context),
+            'editallboards' => has_capability('mod/kanbanccead:editallboards', $context),
+            'manageboard' => has_capability('mod/kanbanccead:manageboard', $context),
+            'viewhistory' => has_capability('mod/kanbanccead:viewhistory', $context),
+            'viewallboards' => has_capability('mod/kanbanccead:viewallboards', $context),
         ];
 
         $params['board'] = $boardid;
@@ -415,19 +415,19 @@ class get_kanban_content extends external_api {
 
         $boardmanager = new boardmanager($cmid, $boardid);
 
-        $kanban = $DB->get_record('kanban', ['id' => $cminfo->instance]);
-        $boardmode = (int)($kanban->boardmode ?? constants::MOD_KANBAN_BOARDMODE_SHARED);
+        $kanbanccead = $DB->get_record('kanbanccead', ['id' => $cminfo->instance]);
+        $boardmode = (int)($kanbanccead->boardmode ?? constants::MOD_KANBANCCEAD_BOARDMODE_SHARED);
 
-        $kanbanboard = helper::get_cached_board($boardid);
+        $kanbancceadboard = helper::get_cached_board($boardid);
         helper::check_permissions_for_user_or_group(
-            $kanbanboard,
+            $kanbancceadboard,
             $context,
             $cminfo,
-            constants::MOD_KANBAN_VIEW
+            constants::MOD_KANBANCCEAD_VIEW
         );
-        $groupid = $kanbanboard->groupid;
+        $groupid = $kanbancceadboard->groupid;
 
-        $kanbanboard->heading = get_string('courseboard', 'mod_kanban');
+        $kanbancceadboard->heading = get_string('courseboard', 'mod_kanbanccead');
         $boardselector = [
             'show' => false,
             'label' => '',
@@ -440,7 +440,7 @@ class get_kanban_content extends external_api {
 
         if (!$asupdate) {
             $selectorcurrentgroupid = 0;
-            if ($boardmode == constants::MOD_KANBAN_BOARDMODE_GROUP) {
+            if ($boardmode == constants::MOD_KANBANCCEAD_BOARDMODE_GROUP) {
                 if ($canaccessotherboards) {
                     // Keep the configured group board available in the selector
                     // for teachers/managers even when current board differs.
@@ -448,31 +448,35 @@ class get_kanban_content extends external_api {
                     if (empty($selectorcurrentgroupid)) {
                         $selectorcurrentgroupid = (int)$currentgroupid;
                     }
-                } else if (!empty($kanbanboard->groupid)) {
+                } else if (!empty($kanbancceadboard->groupid)) {
                     // Students should only see their effective current group board.
-                    $selectorcurrentgroupid = (int)$kanbanboard->groupid;
+                    $selectorcurrentgroupid = (int)$kanbancceadboard->groupid;
                 } else {
                     $selectorcurrentgroupid = (int)$currentgroupid;
                 }
             }
 
-            if (!empty($kanbanboard->groupid)) {
-                $kanbanboard->heading = get_string('groupboard', 'mod_kanban', groups_get_group_name($kanbanboard->groupid));
+            if (!empty($kanbancceadboard->groupid)) {
+                $kanbancceadboard->heading = get_string(
+                    'groupboard',
+                    'mod_kanbanccead',
+                    groups_get_group_name($kanbancceadboard->groupid)
+                );
             }
 
-            if (!empty($kanbanboard->userid)) {
-                $boarduser = \core_user::get_user($kanbanboard->userid);
-                $kanbanboard->heading = get_string('userboard', 'mod_kanban', fullname($boarduser));
+            if (!empty($kanbancceadboard->userid)) {
+                $boarduser = \core_user::get_user($kanbancceadboard->userid);
+                $kanbancceadboard->heading = get_string('userboard', 'mod_kanbanccead', fullname($boarduser));
             }
 
-            if (!empty($kanbanboard->template)) {
-                $kanbanboard->heading = get_string('template', 'mod_kanban');
+            if (!empty($kanbancceadboard->template)) {
+                $kanbancceadboard->heading = get_string('template', 'mod_kanbanccead');
             }
 
             $boardselectorboards = $boardmanager->get_board_selector_items(
                 (int)$selectorcurrentgroupid,
-                $canaccessotherboards && $boardmode == constants::MOD_KANBAN_BOARDMODE_GROUP,
-                !empty($kanban->userboards)
+                $canaccessotherboards && $boardmode == constants::MOD_KANBANCCEAD_BOARDMODE_GROUP,
+                !empty($kanbanccead->userboards)
             );
             if (!empty($boardselectorboards)) {
                 $currentposition = 1;
@@ -486,10 +490,10 @@ class get_kanban_content extends external_api {
                 $groupmemberslabel = '';
                 $hasgroupmembers = false;
                 $groupmembers = [];
-                if (!empty($kanbanboard->groupid)) {
-                    $members = groups_get_members((int)$kanbanboard->groupid);
+                if (!empty($kanbancceadboard->groupid)) {
+                    $members = groups_get_members((int)$kanbancceadboard->groupid);
                     $membercount = is_array($members) ? count($members) : 0;
-                    $groupmemberslabel = get_string('groupmemberscount', 'mod_kanban', $membercount);
+                    $groupmemberslabel = get_string('groupmemberscount', 'mod_kanbanccead', $membercount);
                     if (!empty($members)) {
                         $hasgroupmembers = true;
                         foreach ($members as $member) {
@@ -504,13 +508,13 @@ class get_kanban_content extends external_api {
 
                 $boardselector = [
                     'show' => true,
-                    'label' => get_string('currentboard', 'mod_kanban'),
-                    'currentlabel' => $kanbanboard->heading,
-                    'shortcurrentlabel' => self::get_board_short_label($kanbanboard),
-                    'icon' => self::get_board_icon($kanbanboard),
+                    'label' => get_string('currentboard', 'mod_kanbanccead'),
+                    'currentlabel' => $kanbancceadboard->heading,
+                    'shortcurrentlabel' => self::get_board_short_label($kanbancceadboard),
+                    'icon' => self::get_board_icon($kanbancceadboard),
                     'summary' => get_string(
                         'boardviewsummary',
-                        'mod_kanban',
+                        'mod_kanbanccead',
                         (object) [
                             'current' => $currentposition,
                             'total' => count($boardselectorboards),
@@ -524,20 +528,20 @@ class get_kanban_content extends external_api {
             }
         }
 
-        if (!(empty($kanbanboard->userid) && empty($kanbanboard->groupid))) {
+        if (!(empty($kanbancceadboard->userid) && empty($kanbancceadboard->groupid))) {
             $restrictcaps = false;
-            if (!empty($kanbanboard->userid) && $kanbanboard->userid != $USER->id) {
-                require_capability('mod/kanban:viewallboards', $context);
+            if (!empty($kanbancceadboard->userid) && $kanbancceadboard->userid != $USER->id) {
+                require_capability('mod/kanbanccead:viewallboards', $context);
                 $restrictcaps = true;
             }
-            if (!empty($kanbanboard->groupid)) {
-                $members = groups_get_members($kanbanboard->groupid, 'u.id');
+            if (!empty($kanbancceadboard->groupid)) {
+                $members = groups_get_members($kanbancceadboard->groupid, 'u.id');
                 $members = array_map(function ($v) {
                     return intval($v->id);
                 }, $members);
                 $ismember = in_array($USER->id, $members);
                 if (
-                    ($boardmode == constants::MOD_KANBAN_BOARDMODE_GROUP ||
+                    ($boardmode == constants::MOD_KANBANCCEAD_BOARDMODE_GROUP ||
                         $groupmode == SEPARATEGROUPS ||
                         $groupmode == VISIBLEGROUPS) && !$ismember
                 ) {
@@ -545,7 +549,7 @@ class get_kanban_content extends external_api {
                 }
             }
             if ($restrictcaps) {
-                $editcap = has_capability('mod/kanban:editallboards', $context);
+                $editcap = has_capability('mod/kanbanccead:editallboards', $context);
                 foreach ($capabilities as $cap => $value) {
                     $capabilities[$cap] &= $editcap;
                 }
@@ -559,25 +563,25 @@ class get_kanban_content extends external_api {
         // Additional information in the locale (e.g. ".UTF-8") cannot be parsed by the browser.
         $common->lang = explode('.', get_string('locale', 'langconfig'))[0];
         $common->lang = str_replace('_', '-', $common->lang);
-        $common->liveupdate = get_config('mod_kanban', 'liveupdatetime');
+        $common->liveupdate = get_config('mod_kanbanccead', 'liveupdatetime');
         $common->boardmode = $boardmode;
         $common->boardgroupid = $boardmanager->get_preferred_board_group_id();
         $common->boardselector = $boardselector;
-        $common->userboards = $kanban->userboards;
+        $common->userboards = $kanbanccead->userboards;
         $common->groupmode = $groupmode;
         $common->groupselector = '';
-        $common->history = $kanban->history;
+        $common->history = $kanbanccead->history;
         $common->updatefails = 0;
-        $common->usenumbers = $kanban->usenumbers;
-        $common->linknumbers = $kanban->linknumbers;
+        $common->usenumbers = $kanbanccead->usenumbers;
+        $common->linknumbers = $kanbanccead->linknumbers;
 
         if (!$asupdate) {
             $common->template = $DB->get_field_sql(
                 'SELECT id
-                 FROM {kanban_board}
-                 WHERE template = 1 AND kanban_instance = :instance
+                 FROM {kanbanccead_board}
+                 WHERE template = 1 AND kanbanccead_instance = :instance
                  ORDER BY timemodified DESC',
-                ['instance' => $kanbanboard->kanban_instance],
+                ['instance' => $kanbancceadboard->kanbanccead_instance],
                 IGNORE_MULTIPLE
             );
             if (empty($common->template)) {
@@ -585,14 +589,14 @@ class get_kanban_content extends external_api {
             }
         }
 
-        $kanbanusers = [];
-        $kanbanuserids = [];
+        $kanbancceadusers = [];
+        $kanbancceaduserids = [];
 
-        $sql = 'kanban_board = :board AND timemodified > :timestamp';
+        $sql = 'kanbanccead_board = :board AND timemodified > :timestamp';
 
-        $timestampcolumns = helper::get_cached_timestamp($boardid, constants::MOD_KANBAN_COLUMN);
-        $timestampcards = helper::get_cached_timestamp($boardid, constants::MOD_KANBAN_CARD);
-        $boardchanged = intval($kanbanboard->timemodified) > $timestamp;
+        $timestampcolumns = helper::get_cached_timestamp($boardid, constants::MOD_KANBANCCEAD_COLUMN);
+        $timestampcards = helper::get_cached_timestamp($boardid, constants::MOD_KANBANCCEAD_CARD);
+        $boardchanged = intval($kanbancceadboard->timemodified) > $timestamp;
         $columnschanged = $timestamp <= $timestampcolumns;
         $cardschanged = $timestamp <= $timestampcards;
 
@@ -603,72 +607,72 @@ class get_kanban_content extends external_api {
         }
 
         if ($columnschanged) {
-            $kanbancolumns = $DB->get_records_select('kanban_column', $sql, $params);
+            $kanbancceadcolumns = $DB->get_records_select('kanbanccead_column', $sql, $params);
         } else {
-            $kanbancolumns = [];
+            $kanbancceadcolumns = [];
         }
-        foreach ($kanbancolumns as $kanbancolumn) {
-            $kanbancolumn->title = clean_param($kanbancolumn->title, PARAM_TEXT);
+        foreach ($kanbancceadcolumns as $kanbancceadcolumn) {
+            $kanbancceadcolumn->title = clean_param($kanbancceadcolumn->title, PARAM_TEXT);
         }
 
         if ($cardschanged) {
-            $kanbancards = $DB->get_records_select('kanban_card', $sql, $params);
+            $kanbancceadcards = $DB->get_records_select('kanbanccead_card', $sql, $params);
         } else {
-            $kanbancards = [];
+            $kanbancceadcards = [];
         }
 
-        $kanbancardids = array_map(fn($card) => $card->id, $kanbancards);
-        if (!empty($kanbancardids) || (!empty($kanban->userboards) && $capabilities['viewallboards'])) {
+        $kanbancceadcardids = array_map(fn($card) => $card->id, $kanbancceadcards);
+        if (!empty($kanbancceadcardids) || (!empty($kanbanccead->userboards) && $capabilities['viewallboards'])) {
             $users = get_enrolled_users($context);
             foreach ($users as $user) {
-                $kanbanusers[$user->id] = [
+                $kanbancceadusers[$user->id] = [
                     'id' => $user->id,
                     'fullname' => fullname($user),
                     'userpicture' => $OUTPUT->user_picture($user, ['link' => false]),
                 ];
             }
         }
-        if (!empty($kanbancardids)) {
-            [$sql, $params] = $DB->get_in_or_equal($kanbancardids);
-            $sql = 'kanban_card ' . $sql;
-            $kanbanassigneesraw = $DB->get_records_select('kanban_assignee', $sql, $params);
-            $kanbanassignees = [];
-            $kanbanuserids = [];
+        if (!empty($kanbancceadcardids)) {
+            [$sql, $params] = $DB->get_in_or_equal($kanbancceadcardids);
+            $sql = 'kanbanccead_card ' . $sql;
+            $kanbancceadassigneesraw = $DB->get_records_select('kanbanccead_assignee', $sql, $params);
+            $kanbancceadassignees = [];
+            $kanbancceaduserids = [];
             $completedtimestamps = [];
-            foreach ($kanbanassigneesraw as $assignee) {
-                if (!empty($kanbanusers[$assignee->userid])) {
-                    $kanbanassignees[$assignee->kanban_card][] = $assignee->userid;
-                    $kanbanuserids[] = $assignee->userid;
+            foreach ($kanbancceadassigneesraw as $assignee) {
+                if (!empty($kanbancceadusers[$assignee->userid])) {
+                    $kanbancceadassignees[$assignee->kanbanccead_card][] = $assignee->userid;
+                    $kanbancceaduserids[] = $assignee->userid;
                 }
             }
-            [$insql, $inparams] = $DB->get_in_or_equal($kanbancardids, SQL_PARAMS_NAMED);
+            [$insql, $inparams] = $DB->get_in_or_equal($kanbancceadcardids, SQL_PARAMS_NAMED);
             $historyparams = array_merge(
                 $inparams,
                 [
                     'boardid' => $boardid,
-                    'type' => constants::MOD_KANBAN_CARD,
+                    'type' => constants::MOD_KANBANCCEAD_CARD,
                     'action' => 'completed',
                 ]
             );
             $completedhistory = $DB->get_records_sql(
-                "SELECT kanban_card, MAX(timestamp) AS completedat
-                   FROM {kanban_history}
-                  WHERE kanban_board = :boardid
+                "SELECT kanbanccead_card, MAX(timestamp) AS completedat
+                   FROM {kanbanccead_history}
+                  WHERE kanbanccead_board = :boardid
                     AND type = :type
                     AND action = :action
-                    AND kanban_card {$insql}
-               GROUP BY kanban_card",
+                    AND kanbanccead_card {$insql}
+               GROUP BY kanbanccead_card",
                 $historyparams
             );
             foreach ($completedhistory as $row) {
-                $completedtimestamps[(int)$row->kanban_card] = (int)$row->completedat;
+                $completedtimestamps[(int)$row->kanbanccead_card] = (int)$row->completedat;
             }
-            foreach ($kanbancards as $card) {
-                if (empty($kanbanassignees[$card->id])) {
-                    $kanbanassignees[$card->id] = [];
+            foreach ($kanbancceadcards as $card) {
+                if (empty($kanbancceadassignees[$card->id])) {
+                    $kanbancceadassignees[$card->id] = [];
                 }
                 $card->title = clean_param($card->title, PARAM_TEXT);
-                $card->assignees = $kanbanassignees[$card->id];
+                $card->assignees = $kanbancceadassignees[$card->id];
                 $card->selfassigned = in_array($USER->id, $card->assignees);
                 $card->canedit = $boardmanager->can_user_manage_specific_card($card->id);
                 $card->hasdescription = !empty($card->description);
@@ -680,7 +684,7 @@ class get_kanban_content extends external_api {
                     format_text($card->description),
                     'pluginfile.php',
                     $context->id,
-                    'mod_kanban',
+                    'mod_kanbanccead',
                     'attachments',
                     $card->id
                 );
@@ -702,16 +706,16 @@ class get_kanban_content extends external_api {
             $formatter = new updateformatter();
             $formatter->put('common', (array) $common);
             if ($boardchanged) {
-                $formatter->put('board', (array) $kanbanboard);
+                $formatter->put('board', (array) $kanbancceadboard);
             }
-            foreach ($kanbancolumns as $column) {
+            foreach ($kanbancceadcolumns as $column) {
                 $formatter->put('columns', (array) $column);
             }
-            foreach ($kanbancards as $card) {
+            foreach ($kanbancceadcards as $card) {
                 $formatter->put('cards', (array) $card);
             }
-            foreach ($kanbanuserids as $userid) {
-                $formatter->put('users', (array) $kanbanusers[$userid]);
+            foreach ($kanbancceaduserids as $userid) {
+                $formatter->put('users', (array) $kanbancceadusers[$userid]);
             }
             return [
                 'update' => $formatter->get_formatted_updates(),
@@ -719,15 +723,15 @@ class get_kanban_content extends external_api {
         }
 
         // This shouldn't be done for content updates as it would make it necessary to query all columns everytime.
-        $columnids = array_map(fn($column) => $column->id, $kanbancolumns);
-        $kanbanboard->sequence = helper::heal_missing_columns($kanbanboard->sequence, $columnids);
+        $columnids = array_map(fn($column) => $column->id, $kanbancceadcolumns);
+        $kanbancceadboard->sequence = helper::heal_missing_columns($kanbancceadboard->sequence, $columnids);
 
         return [
             'common' => $common,
-            'board' => $kanbanboard,
-            'columns' => $kanbancolumns,
-            'cards' => $kanbancards,
-            'users' => $kanbanusers,
+            'board' => $kanbancceadboard,
+            'columns' => $kanbancceadcolumns,
+            'cards' => $kanbancceadcards,
+            'users' => $kanbancceadusers,
             'capabilities' => $caps,
             'discussions' => [],
             'history' => [],
@@ -746,12 +750,12 @@ class get_kanban_content extends external_api {
         }
         if (!empty($board->userid)) {
             $user = \core_user::get_user((int)$board->userid);
-            return $user ? fullname($user) : get_string('userboard', 'mod_kanban', '');
+            return $user ? fullname($user) : get_string('userboard', 'mod_kanbanccead', '');
         }
         if (!empty($board->template)) {
-            return get_string('template', 'mod_kanban');
+            return get_string('template', 'mod_kanbanccead');
         }
-        return get_string('courseboard', 'mod_kanban');
+        return get_string('courseboard', 'mod_kanbanccead');
     }
 
     /**
@@ -800,8 +804,8 @@ class get_kanban_content extends external_api {
     /**
      * Get card discussion from database.
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @param int $cardid the id of the card
      * @param int $timestamp the timestamp of the discussion present in the frontend
      * @return array The requested content
@@ -816,23 +820,23 @@ class get_kanban_content extends external_api {
         [$course, $cminfo] = get_course_and_cm_from_cmid($cmid);
         $context = context_module::instance($cmid);
         self::validate_context($context);
-        require_capability('mod/kanban:view', $context);
+        require_capability('mod/kanbanccead:view', $context);
 
         $boardmanager = new boardmanager($cmid, $boardid);
-        $kanbanboard = $boardmanager->get_board();
+        $kanbancceadboard = $boardmanager->get_board();
 
-        helper::check_permissions_for_user_or_group($kanbanboard, $context, $cminfo, constants::MOD_KANBAN_VIEW);
+        helper::check_permissions_for_user_or_group($kanbancceadboard, $context, $cminfo, constants::MOD_KANBANCCEAD_VIEW);
 
-        $sql = 'kanban_card = :cardid AND timecreated > :timestamp';
+        $sql = 'kanbanccead_card = :cardid AND timecreated > :timestamp';
         $params['cardid'] = $cardid;
         $params['timestamp'] = $timestamp;
 
-        $discussions = $DB->get_records_select('kanban_discussion_comment', $sql, $params);
+        $discussions = $DB->get_records_select('kanbanccead_discussion_comment', $sql, $params);
 
         $formatter = new updateformatter();
         foreach ($discussions as $discussion) {
             $discussion->content = format_text($discussion->content, FORMAT_HTML);
-            $discussion->candelete = $discussion->userid == $USER->id || has_capability('mod/kanban:manageboard', $context);
+            $discussion->candelete = $discussion->userid == $USER->id || has_capability('mod/kanbanccead:manageboard', $context);
             $discussion->username = fullname(\core_user::get_user($discussion->userid));
             if (!empty($boardmanager->get_instance()->usenumbers) && !empty($boardmanager->get_instance()->linknumbers)) {
                 $discussion->content = numberfilter::filter($discussion->content);
@@ -874,8 +878,8 @@ class get_kanban_content extends external_api {
     /**
      * Get card history from database.
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @param int $cardid the id of the card
      * @param int $timestamp the timestamp of the history present in the frontend
      * @return array The requested content
@@ -890,18 +894,18 @@ class get_kanban_content extends external_api {
         [$course, $cminfo] = get_course_and_cm_from_cmid($cmid);
         $context = context_module::instance($cmid);
         self::validate_context($context);
-        require_capability('mod/kanban:viewhistory', $context);
+        require_capability('mod/kanbanccead:viewhistory', $context);
 
         $formatter = new updateformatter();
-        $kanban = $DB->get_record('kanban', ['id' => $cminfo->instance]);
-        if (!empty($kanban->history)) {
-            $kanbanboard = helper::get_cached_board($boardid);
+        $kanbanccead = $DB->get_record('kanbanccead', ['id' => $cminfo->instance]);
+        if (!empty($kanbanccead->history)) {
+            $kanbancceadboard = helper::get_cached_board($boardid);
 
-            helper::check_permissions_for_user_or_group($kanbanboard, $context, $cminfo, constants::MOD_KANBAN_VIEW);
+            helper::check_permissions_for_user_or_group($kanbancceadboard, $context, $cminfo, constants::MOD_KANBANCCEAD_VIEW);
 
-            $sql = 'kanban_card = :id AND timestamp > :time';
+            $sql = 'kanbanccead_card = :id AND timestamp > :time';
             $params = ['id' => $cardid, 'time' => $timestamp];
-            $historyitems = $DB->get_records_select('kanban_history', $sql, $params);
+            $historyitems = $DB->get_records_select('kanbanccead_history', $sql, $params);
 
             foreach ($historyitems as $item) {
                 $item->affectedusername = get_string('unknownuser');
@@ -919,15 +923,15 @@ class get_kanban_content extends external_api {
                     }
                 }
 
-                $type = constants::MOD_KANBAN_TYPES[$item->type];
+                $type = constants::MOD_KANBANCCEAD_TYPES[$item->type];
                 // One has to be careful, because $item->parameters theoretically could contain user input.
                 $item->parameters = helper::sanitize_json_string($item->parameters);
                 $item = (object) array_merge((array) $item, json_decode($item->parameters, true));
                 $historyitem = [];
                 $historyitem['id'] = $item->id;
-                $historyitem['text'] = get_string('history_' . $type . '_' . $item->action, 'mod_kanban', $item);
+                $historyitem['text'] = get_string('history_' . $type . '_' . $item->action, 'mod_kanbanccead', $item);
                 $historyitem['timestamp'] = $item->timestamp;
-                $historyitem['kanban_card'] = $cardid;
+                $historyitem['kanbanccead_card'] = $cardid;
                 $formatter->put("history", $historyitem);
             }
         }
@@ -939,24 +943,26 @@ class get_kanban_content extends external_api {
     /**
      * Get the timestamp of the latest entry in a db table from cache.
      *
-     * @param int $type one of constants::MOD_KANBAN_BOARD, constants::MOD_KANBAN_COLUMN or constants::MOD_KANBAN_CARD
+     * @param int $type one of constants::MOD_KANBANCCEAD_BOARD, constants::MOD_KANBANCCEAD_COLUMN
+     *     or constants::MOD_KANBANCCEAD_CARD
      * @param int $id Id of the board
      * @return mixed timestamp or false if none found
      */
     public static function get_cached_timestamp(int $type, int $id): mixed {
-        $cache = \cache::make('mod_kanban', 'timestamp');
+        $cache = \cache::make('mod_kanbanccead', 'timestamp');
         return $cache->get(join('-', [$type, $id]));
     }
 
     /**
      * Set the timestamp of the latest entry in a db table from cache.
      *
-     * @param int $type one of constants::MOD_KANBAN_BOARD, constants::MOD_KANBAN_COLUMN or constants::MOD_KANBAN_CARD
+     * @param int $type one of constants::MOD_KANBANCCEAD_BOARD, constants::MOD_KANBANCCEAD_COLUMN
+     *     or constants::MOD_KANBANCCEAD_CARD
      * @param int $timestamp value
      * @param int $id Id of the board
      */
     public static function set_cached_timestamp(int $type, int $timestamp, int $id): void {
-        $cache = \cache::make('mod_kanban', 'timestamp');
+        $cache = \cache::make('mod_kanbanccead', 'timestamp');
         $cache->set(join('-', [$type, $id]), $timestamp);
     }
 }

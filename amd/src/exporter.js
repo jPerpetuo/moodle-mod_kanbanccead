@@ -15,13 +15,13 @@
 
 /**
  * Exporter for use in mustache template.
- * @module mod_kanban/exporter
+ * @module mod_kanbanccead/exporter
  * @copyright 2024 ISB Bayern
  * @author Stefan Hanauska stefan.hanauska@csg-in.de
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import capabilities from 'mod_kanban/capabilities';
+import capabilities from 'mod_kanbanccead/capabilities';
 
 /**
  * Exporter for use in mustache template.
@@ -158,7 +158,7 @@ export default class {
     static exportDiscussion(state, cardId) {
         let d = [];
         state.discussions.forEach((c) => {
-            if (c.kanban_card == cardId) {
+            if (c.kanbanccead_card == cardId) {
                 d.push(c);
             }
         });
@@ -176,7 +176,7 @@ export default class {
         let d = [];
         // Only get history of this card.
         state.history.forEach((c) => {
-            if (c.kanban_card == cardId) {
+            if (c.kanbanccead_card == cardId) {
                 d.push(c);
             }
         });

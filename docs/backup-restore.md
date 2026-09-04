@@ -2,6 +2,8 @@
 
 ## Two data modes
 
+This document describes backups and restores within `mod_kanbanccead`, implemented in [backup/moodle2](../backup/moodle2). It does not describe migration from `mod_kanban`; no cross-component backup converter is provided.
+
 Moodle backup and restore has a user-data setting, commonly surfaced as **Include enrolled users** or `userinfo` in backup APIs. Course import normally operates without user data.
 
 | Data | With user data | Without user data / normal course import |
@@ -30,9 +32,8 @@ If groups are included, Moodle maps source group identifiers to destination grou
 
 ## Testing this behaviour
 
-[tests/backup_restore_test.php](../tests/backup_restore_test.php) verifies the no-user-data import path: custom columns and options survive; cards do not; a destination board created from the restored template is structurally identical and empty.
+[tests/backup_restore_test.php](../tests/backup_restore_test.php) contains checks for the no-user-data import path: custom columns and options survive; cards do not; a destination board created from the restored template is structurally identical and empty. These tests still need execution against the renamed component.
 
 ## Operational guidance
 
 Before changing backup/restore logic, test both paths: a full backup with user data and a course import without it. The second path is the most common teacher workflow and has stricter privacy expectations.
-

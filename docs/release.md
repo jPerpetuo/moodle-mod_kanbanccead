@@ -2,16 +2,23 @@
 
 ## Before a release
 
+This checklist is pending execution for the renamed variant. See [development status](../README.md#development-status-and-declared-compatibility); the historical release notes are not a release approval for `mod_kanbanccead`.
+
 1. Confirm [version.php](../version.php) has a new monotonically increasing build number, accurate release name, maturity, and support range.
 2. Update user-facing release notes and this documentation when behaviour changes.
 3. Run the local preflight.
-4. Push the branch and wait for the complete GitHub Actions matrix to finish successfully.
+4. Push the branch, manually dispatch the complete GitHub Actions matrix for that revision, and wait for every job to succeed.
 5. Test the affected flows in a Moodle staging site with developer debugging enabled.
+
+Rebuild AMD artifacts before packaging. Check that the ZIP contains `kanbanccead/`, with component `mod_kanbanccead`, and no obsolete generated modules. Confirm the dedicated repository and support links before publication.
 
 ## Staging verification
 
 At a minimum, verify:
 
+* clean installation alongside `mod_kanban`, with separate activity entries and plugin-owned tables;
+* creating, editing and deleting Kanban CCEAD content leaves existing `mod_kanban` content unchanged;
+* backup and restore within `mod_kanbanccead`, without claiming cross-component conversion;
 * shared-board activity creation and normal card movement;
 * group-board activity creation with selected groups and with no groups available;
 * student board access, including a rejected direct URL to an unrelated group board;
@@ -23,6 +30,8 @@ At a minimum, verify:
 * basic privacy export/deletion behaviour when that code changes.
 
 ## Production upgrade
+
+This procedure applies only to updates of an existing `mod_kanbanccead` installation. For a site using `mod_kanban`, follow the [separate installation guidance](../README.md#existing-installations-of-the-original-module).
 
 1. Record the running plugin build, Moodle release, PHP version, and database engine/version.
 2. Back up the database, `moodledata`, and the current plugin directory.
@@ -37,5 +46,6 @@ Do not roll back plugin files alone after a database schema change. Restore a co
 
 ## Fork maintenance
 
-This repository retains the `mod_kanban` component identity of its upstream project. It can therefore replace the original plugin in an existing installation, but it cannot be listed as a separate Marketplace plugin with the same component name. Preserve upstream licence and copyright notices in every distribution.
+This repository uses `mod_kanbanccead`. Preserve the provenance and notices in [NOTICE](../NOTICE) in every distribution. A separate component name does not establish Marketplace acceptance; publication and submission remain pending.
 
+Before publication, search active documentation for claims that this fork replaces `mod_kanban` in place. Such instructions belong only in clearly marked historical material. Confirm that installation commands target `mod/kanbanccead` and links point to the dedicated repository.

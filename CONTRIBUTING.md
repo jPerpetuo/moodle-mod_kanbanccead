@@ -2,6 +2,8 @@
 
 Contributions must preserve Moodle compatibility, data privacy, and the behaviour documented in this repository.
 
+Changes target `mod_kanbanccead`. Preserve upstream copyright, author and licence notices as described in [NOTICE](NOTICE). Any additional attribution must identify actual contributions without replacing inherited notices.
+
 ## Before opening an issue
 
 Use the relevant issue form. Include the Moodle version, plugin release, PHP version, database engine, and steps that reproduce the result. Remove passwords, session keys, student data, and production logs containing personal information.

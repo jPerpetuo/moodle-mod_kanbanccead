@@ -2,6 +2,8 @@
 
 ## Supported releases
 
+For this renamed variant, check the [development status](README.md#development-status-and-declared-compatibility). This policy does not imply an available release or an active private reporting channel.
+
 Security fixes are evaluated for the current supported plugin release and its declared Moodle compatibility range in [version.php](version.php). The repository does not guarantee fixes for obsolete releases.
 
 ## Reporting a vulnerability

@@ -17,20 +17,20 @@
 /**
  * Reminder task
  *
- * @package    mod_kanban
+ * @package    mod_kanbanccead
  * @copyright   2023-2024 ISB Bayern
  * @author     Stefan Hanauska
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_kanban\task;
+namespace mod_kanbanccead\task;
 
-use mod_kanban\helper;
+use mod_kanbanccead\helper;
 
 /**
  * Reminder task
  *
- * @package    mod_kanban
+ * @package    mod_kanbanccead
  * @copyright   2023-2024 ISB Bayern
  * @author     Stefan Hanauska
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -42,7 +42,7 @@ class reminder extends \core\task\scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('remindertask', 'mod_kanban');
+        return get_string('remindertask', 'mod_kanbanccead');
     }
 
     /**
@@ -51,29 +51,29 @@ class reminder extends \core\task\scheduled_task {
     public function execute() {
         global $DB;
         $time = time();
-        $kanbancards = $DB->get_records_sql(
+        $kanbancceadcards = $DB->get_records_sql(
             'SELECT ' . $DB->sql_concat('c.id', "'-'", 'a.userid') . ' as uniqid,
                     c.id as id, c.title as title, k.name as boardname, c.duedate as duedate, a.userid as userid, k.id as instance
-               FROM {kanban_card} c
-         INNER JOIN {kanban_assignee} a ON a.kanban_card = c.id
+               FROM {kanbanccead_card} c
+         INNER JOIN {kanbanccead_assignee} a ON a.kanbanccead_card = c.id
                 AND c.duedate != 0
                 AND c.reminder_sent = 0
                 AND c.completed = 0
                 AND (c.duedate < :time OR (c.reminderdate != 0 AND c.reminderdate < :time2))
-         INNER JOIN {kanban_board} b ON b.id = c.kanban_board
-         INNER JOIN {kanban} k ON b.kanban_instance = k.id',
+         INNER JOIN {kanbanccead_board} b ON b.id = c.kanbanccead_board
+         INNER JOIN {kanbanccead} k ON b.kanbanccead_instance = k.id',
             ['time' => $time, 'time2' => $time]
         );
-        foreach ($kanbancards as $kanbancard) {
-            [$course, $cminfo] = get_course_and_cm_from_instance($kanbancard->instance, 'kanban');
-            $user = \core_user::get_user($kanbancard->userid);
+        foreach ($kanbancceadcards as $kanbancceadcard) {
+            [$course, $cminfo] = get_course_and_cm_from_instance($kanbancceadcard->instance, 'kanbanccead');
+            $user = \core_user::get_user($kanbancceadcard->userid);
             helper::fix_current_language($user->lang);
-            $kanbancard->duedate = userdate($kanbancard->duedate, get_string('strftimedate', 'langconfig'));
-            helper::send_notification($cminfo, 'due', [$kanbancard->userid], $kanbancard, null, true);
+            $kanbancceadcard->duedate = userdate($kanbancceadcard->duedate, get_string('strftimedate', 'langconfig'));
+            helper::send_notification($cminfo, 'due', [$kanbancceadcard->userid], $kanbancceadcard, null, true);
             $data = new \stdClass();
-            $data->id = $kanbancard->id;
+            $data->id = $kanbancceadcard->id;
             $data->reminder_sent = 1;
-            $DB->update_record('kanban_card', $data);
+            $DB->update_record('kanbanccead_card', $data);
         }
     }
 }

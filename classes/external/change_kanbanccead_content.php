@@ -15,15 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Class for modifying kanban content
+ * Class for modifying kanbanccead content
  *
- * @package    mod_kanban
+ * @package    mod_kanbanccead
  * @copyright  2023-2024 ISB Bayern
  * @author     Stefan Hanauska
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_kanban\external;
+namespace mod_kanbanccead\external;
 
 // Compatibility with Moodle < 4.2.
 defined('MOODLE_INTERNAL') || die();
@@ -36,20 +36,20 @@ use external_function_parameters;
 use external_single_structure;
 use external_value;
 use invalid_parameter_exception;
-use mod_kanban\boardmanager;
-use mod_kanban\helper;
+use mod_kanbanccead\boardmanager;
+use mod_kanbanccead\helper;
 use moodle_exception;
 use required_capability_exception;
 use restricted_context_exception;
 
 /**
- * Class for modifying kanban content.
+ * Class for modifying kanbanccead content.
  *
  * @copyright   2023-2024 ISB Bayern
  * @author     Stefan Hanauska
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class change_kanban_content extends external_api {
+class change_kanbanccead_content extends external_api {
     /**
      * Returns description of method parameters for the add_column function.
      *
@@ -64,7 +64,7 @@ class change_kanban_content extends external_api {
                     PARAM_TEXT,
                     'title of the new column',
                     VALUE_OPTIONAL,
-                    get_string('newcolumn', 'mod_kanban')
+                    get_string('newcolumn', 'mod_kanbanccead')
                 ),
                 'aftercol' => new external_value(PARAM_INT, 'insert column after this id', VALUE_OPTIONAL, 0),
             ]),
@@ -72,7 +72,7 @@ class change_kanban_content extends external_api {
     }
 
     /**
-     * Definition of return values of the get_kanban_content webservice function.
+     * Definition of return values of the get_kanbanccead_content webservice function.
      *
      * @return external_single_structure
      */
@@ -83,8 +83,8 @@ class change_kanban_content extends external_api {
     /**
      * This method adds a new column to the board.
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @param array $data array containing 'aftercol' the column to insert after and 'title'
      * @return array the updated data formatted as update message
      * @throws coding_exception
@@ -110,7 +110,7 @@ class change_kanban_content extends external_api {
         [$course, $cminfo] = get_course_and_cm_from_cmid($cmid);
         $context = context_module::instance($cmid);
         self::validate_context($context);
-        require_capability('mod/kanban:managecolumns', $context);
+        require_capability('mod/kanbanccead:managecolumns', $context);
 
         $boardmanager = new boardmanager($cmid, $boardid);
         helper::check_permissions_for_user_or_group($boardmanager->get_board(), $context, $cminfo);
@@ -135,7 +135,7 @@ class change_kanban_content extends external_api {
                     PARAM_TEXT,
                     'title of the new card',
                     VALUE_OPTIONAL,
-                    get_string('newcard', 'mod_kanban')
+                    get_string('newcard', 'mod_kanbanccead')
                 ),
                 'columnid' => new external_value(PARAM_INT, 'column id', VALUE_REQUIRED),
                 'aftercard' => new external_value(PARAM_INT, 'insert card after this id', VALUE_OPTIONAL, 0),
@@ -144,7 +144,7 @@ class change_kanban_content extends external_api {
     }
 
     /**
-     * Definition of return values of the get_kanban_content webservice function.
+     * Definition of return values of the get_kanbanccead_content webservice function.
      *
      * @return external_single_structure
      */
@@ -155,8 +155,8 @@ class change_kanban_content extends external_api {
     /**
      * This method adds a new card to the board.
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @param array $data array containing 'aftercard' the card to insert after, 'title' and the id of the column 'columnid'
      * @return array the updated data formatted as update message
      * @throws coding_exception
@@ -183,7 +183,7 @@ class change_kanban_content extends external_api {
         [$course, $cminfo] = get_course_and_cm_from_cmid($cmid);
         $context = context_module::instance($cmid);
         self::validate_context($context);
-        require_capability('mod/kanban:addcard', $context);
+        require_capability('mod/kanbanccead:addcard', $context);
 
         $boardmanager = new boardmanager($cmid, $boardid);
         helper::check_permissions_for_user_or_group($boardmanager->get_board(), $context, $cminfo);
@@ -222,8 +222,8 @@ class change_kanban_content extends external_api {
     /**
      * This method moves a column within the board.
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @param array $data array containing 'columnid' and 'aftercol' the column to move after
      * @return array the updated data formatted as update message
      * @throws coding_exception
@@ -246,7 +246,7 @@ class change_kanban_content extends external_api {
         [$course, $cminfo] = get_course_and_cm_from_cmid($cmid);
         $context = context_module::instance($cmid);
         self::validate_context($context);
-        require_capability('mod/kanban:managecolumns', $context);
+        require_capability('mod/kanbanccead:managecolumns', $context);
 
         $boardmanager = new boardmanager($cmid, $boardid);
 
@@ -288,8 +288,8 @@ class change_kanban_content extends external_api {
     /**
      * This method moves a card within the board.
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @param array $data array containing 'cardid', 'columnid' and 'aftercard' the column/card to move after
      * @return array the updated data formatted as update message
      * @throws coding_exception
@@ -315,7 +315,7 @@ class change_kanban_content extends external_api {
         $boardmanager = new boardmanager($cmid, $boardid);
 
         if (!$boardmanager->can_user_manage_specific_card($cardid)) {
-            throw new moodle_exception('editing_this_card_is_not_allowed', 'mod_kanban');
+            throw new moodle_exception('editing_this_card_is_not_allowed', 'mod_kanbanccead');
         }
 
         helper::check_permissions_for_user_or_group($boardmanager->get_board(), $context, $cminfo);
@@ -353,8 +353,8 @@ class change_kanban_content extends external_api {
     /**
      * This method deletes a card from the board.
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @param array $data array containing 'cardid'
      * @return array the updated data formatted as update message
      * @throws coding_exception
@@ -380,7 +380,7 @@ class change_kanban_content extends external_api {
         $boardmanager = new boardmanager($cmid, $boardid);
 
         if (!$boardmanager->can_user_manage_specific_card($cardid)) {
-            throw new moodle_exception('editing_this_card_is_not_allowed', 'mod_kanban');
+            throw new moodle_exception('editing_this_card_is_not_allowed', 'mod_kanbanccead');
         }
 
         helper::check_permissions_for_user_or_group($boardmanager->get_board(), $context, $cminfo);
@@ -418,8 +418,8 @@ class change_kanban_content extends external_api {
     /**
      * This method deletes a column from the board.
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @param array $data array containing 'columnid'
      * @return array the updated data formatted as update message
      * @throws coding_exception
@@ -440,7 +440,7 @@ class change_kanban_content extends external_api {
         [$course, $cminfo] = get_course_and_cm_from_cmid($cmid);
         $context = context_module::instance($cmid);
         self::validate_context($context);
-        require_capability('mod/kanban:managecolumns', $context);
+        require_capability('mod/kanbanccead:managecolumns', $context);
 
         $boardmanager = new boardmanager($cmid, $boardid);
         helper::check_permissions_for_user_or_group($boardmanager->get_board(), $context, $cminfo);
@@ -479,8 +479,8 @@ class change_kanban_content extends external_api {
     /**
      * This method assigns a user to a card.
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @param array $data array containing 'cardid' and 'userid'
      * @return array the updated data formatted as update message
      * @throws coding_exception
@@ -504,10 +504,10 @@ class change_kanban_content extends external_api {
         $context = context_module::instance($cmid);
         self::validate_context($context);
         if (empty($userid)) {
-            require_capability('mod/kanban:assignself', $context);
+            require_capability('mod/kanbanccead:assignself', $context);
             $userid = $USER->id;
         } else {
-            require_capability('mod/kanban:assignothers', $context);
+            require_capability('mod/kanbanccead:assignothers', $context);
         }
 
         $boardmanager = new boardmanager($cmid, $boardid);
@@ -547,8 +547,8 @@ class change_kanban_content extends external_api {
     /**
      * This method unassigns a user from a card.
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @param array $data array containing 'cardid' and 'userid'
      * @return bool Whether the request was successful
      * @throws coding_exception
@@ -575,9 +575,9 @@ class change_kanban_content extends external_api {
         $context = context_module::instance($cmid);
         self::validate_context($context);
         if ($userid == $USER->id) {
-            require_capability('mod/kanban:assignself', $context);
+            require_capability('mod/kanbanccead:assignself', $context);
         } else {
-            require_capability('mod/kanban:assignothers', $context);
+            require_capability('mod/kanbanccead:assignothers', $context);
         }
 
         $boardmanager = new boardmanager($cmid, $boardid);
@@ -617,8 +617,8 @@ class change_kanban_content extends external_api {
     /**
      * This method sets the completion state of a card.
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @param array $data array containing 'cardid' and 'state'
      * @return array the updated data formatted as update message
      * @throws coding_exception
@@ -643,16 +643,16 @@ class change_kanban_content extends external_api {
         $boardmanager = new boardmanager($cmid, $boardid);
 
         if (!$boardmanager->can_user_manage_specific_card($cardid)) {
-            throw new moodle_exception('editing_this_card_is_not_allowed', 'mod_kanban');
+            throw new moodle_exception('editing_this_card_is_not_allowed', 'mod_kanbanccead');
         }
 
         helper::check_permissions_for_user_or_group($boardmanager->get_board(), $context, $cminfo);
 
         if (!empty($state)) {
             $card = $boardmanager->get_card($cardid);
-            $completedcolumnid = $boardmanager->get_first_completion_column($card->kanban_board);
+            $completedcolumnid = $boardmanager->get_first_completion_column($card->kanbanccead_board);
 
-            if (!empty($completedcolumnid) && $completedcolumnid !== (int) $card->kanban_column) {
+            if (!empty($completedcolumnid) && $completedcolumnid !== (int) $card->kanbanccead_column) {
                 $aftercard = $boardmanager->get_last_card_in_column($completedcolumnid);
                 $boardmanager->move_card($cardid, $aftercard, $completedcolumnid);
             } else {
@@ -695,8 +695,8 @@ class change_kanban_content extends external_api {
     /**
      * This method sets the lock state of a column.
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @param array $data array containing 'columnid' and 'state'
      * @return array the updated data formatted as update message
      * @throws coding_exception
@@ -719,7 +719,7 @@ class change_kanban_content extends external_api {
         $context = context_module::instance($cmid);
         self::validate_context($context);
 
-        require_capability('mod/kanban:managecolumns', $context);
+        require_capability('mod/kanbanccead:managecolumns', $context);
 
         $boardmanager = new boardmanager($cmid, $boardid);
 
@@ -759,8 +759,8 @@ class change_kanban_content extends external_api {
     /**
      * This method sets the lock state of a board.
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @param array $data array containing 'state'
      * @return bool Whether the request was successful
      * @throws coding_exception
@@ -783,7 +783,7 @@ class change_kanban_content extends external_api {
         $context = context_module::instance($cmid);
         self::validate_context($context);
 
-        require_capability('mod/kanban:manageboard', $context);
+        require_capability('mod/kanbanccead:manageboard', $context);
 
         $boardmanager = new boardmanager($cmid, $boardid);
         helper::check_permissions_for_user_or_group($boardmanager->get_board(), $context, $cminfo);
@@ -822,8 +822,8 @@ class change_kanban_content extends external_api {
     /**
      * This adds a message to a discussion.
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @param array $data array containing 'cardId' and 'message'
      * @return array the updated data formatted as update message
      * @throws coding_exception
@@ -848,7 +848,7 @@ class change_kanban_content extends external_api {
         $context = context_module::instance($cmid);
         self::validate_context($context);
 
-        require_capability('mod/kanban:view', $context);
+        require_capability('mod/kanbanccead:view', $context);
 
         $boardmanager = new boardmanager($cmid, $boardid);
         helper::check_permissions_for_user_or_group($boardmanager->get_board(), $context, $cminfo);
@@ -886,8 +886,8 @@ class change_kanban_content extends external_api {
     /**
      * This method deletes a message from a discussion.
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @param array $data array containing 'messageId'
      * @return array the updated data formatted as update message
      * @throws coding_exception
@@ -911,17 +911,17 @@ class change_kanban_content extends external_api {
         $context = context_module::instance($cmid);
         self::validate_context($context);
 
-        require_capability('mod/kanban:view', $context);
+        require_capability('mod/kanbanccead:view', $context);
 
         $boardmanager = new boardmanager($cmid, $boardid);
         helper::check_permissions_for_user_or_group($boardmanager->get_board(), $context, $cminfo);
         $message = $boardmanager->get_discussion_message($messageid);
 
         if ($message->userid != $USER->id) {
-            require_capability('mod/kanban:manageboard', $context);
+            require_capability('mod/kanbanccead:manageboard', $context);
         }
 
-        $boardmanager->delete_discussion_message($messageid, $message->kanban_card);
+        $boardmanager->delete_discussion_message($messageid, $message->kanbanccead_card);
 
         return [
             'update' => $boardmanager->get_formatted_updates(),
@@ -950,11 +950,11 @@ class change_kanban_content extends external_api {
     }
 
     /**
-     * This method saves the current board as template for the whole kanban activity.
+     * This method saves the current board as template for the whole kanbanccead activity.
      * This does _not_ affect existing sub-boards (e.g. personal boards or group boards).
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @return array the updated data formatted as update message
      * @throws coding_exception
      * @throws invalid_parameter_exception
@@ -972,7 +972,7 @@ class change_kanban_content extends external_api {
         [$course, $cminfo] = get_course_and_cm_from_cmid($cmid);
         $context = context_module::instance($cmid);
         self::validate_context($context);
-        require_capability('mod/kanban:manageboard', $context);
+        require_capability('mod/kanbanccead:manageboard', $context);
 
         $boardmanager = new boardmanager($cmid, $boardid);
         helper::check_permissions_for_user_or_group($boardmanager->get_board(), $context, $cminfo);
@@ -1007,8 +1007,8 @@ class change_kanban_content extends external_api {
     /**
      * Delete this board.
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @return array the updated data formatted as update message
      * @throws coding_exception
      * @throws invalid_parameter_exception
@@ -1031,7 +1031,7 @@ class change_kanban_content extends external_api {
         $boardmanager = new boardmanager($cmid, $boardid);
 
         if ($boardmanager->get_board()->userid != $USER->id) {
-            require_capability('mod/kanban:manageboard', $context);
+            require_capability('mod/kanbanccead:manageboard', $context);
         }
 
         helper::check_permissions_for_user_or_group($boardmanager->get_board(), $context, $cminfo);
@@ -1070,8 +1070,8 @@ class change_kanban_content extends external_api {
     /**
      * Push a copy of a card to all boards.
      *
-     * @param int $cmid the course module id of the kanban board
-     * @param int $boardid the id of the kanban board
+     * @param int $cmid the course module id of the kanbanccead board
+     * @param int $boardid the id of the kanbanccead board
      * @param array $data array containing 'cardid'
      * @return array the updated data formatted as update message
      * @throws coding_exception
@@ -1093,7 +1093,7 @@ class change_kanban_content extends external_api {
         $context = context_module::instance($cmid);
         self::validate_context($context);
 
-        require_capability('mod/kanban:manageboard', $context);
+        require_capability('mod/kanbanccead:manageboard', $context);
 
         $boardmanager = new boardmanager($cmid, $boardid);
 
@@ -1124,8 +1124,8 @@ class change_kanban_content extends external_api {
     /**
      * Duplicate a card on the board.
      *
-     * @param int $cmid The course module id of the kanban board.
-     * @param int $boardid The id of the kanban board.
+     * @param int $cmid The course module id of the kanbanccead board.
+     * @param int $boardid The id of the kanbanccead board.
      * @param array $data containing 'cardid'
      * @return array The updated data formatted as update message.
      */
@@ -1142,7 +1142,7 @@ class change_kanban_content extends external_api {
         $context = context_module::instance($cmid);
         self::validate_context($context);
 
-        require_capability('mod/kanban:addcard', $context);
+        require_capability('mod/kanbanccead:addcard', $context);
 
         $boardmanager = new boardmanager($cmid, $boardid);
 

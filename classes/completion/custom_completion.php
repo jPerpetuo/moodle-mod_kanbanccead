@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace mod_kanban\completion;
+namespace mod_kanbanccead\completion;
 
 /**
- * Custom completion rules for mod_kanban
+ * Custom completion rules for mod_kanbanccead
  *
- * @package     mod_kanban
+ * @package     mod_kanbanccead
  * @copyright   2023-2024 ISB Bayern
  * @author      Stefan Hanauska <stefan.hanauska@csg-in.de>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -36,33 +36,39 @@ class custom_completion extends \core_completion\activity_custom_completion {
 
         $this->validate_rule($rule);
 
-        $kanban = $DB->get_record("kanban", ["id" => $this->cm->instance], 'completioncreate, completioncomplete', MUST_EXIST);
+        $kanbanccead = $DB->get_record(
+            "kanbanccead",
+            ["id" => $this->cm->instance],
+            'completioncreate, completioncomplete',
+            MUST_EXIST
+        );
 
         if ($rule == 'completioncreate') {
-            if ($kanban->completioncreate > 0) {
+            if ($kanbanccead->completioncreate > 0) {
                 $count = $DB->get_field_sql(
                     '
                     SELECT COUNT(DISTINCT c.id)
-                    FROM {kanban_board} b
-                    INNER JOIN {kanban_card} c ON b.kanban_instance = :kanbanid AND c.kanban_board = b.id
+                    FROM {kanbanccead_board} b
+                    INNER JOIN {kanbanccead_card} c ON b.kanbanccead_instance = :kanbancceadid AND c.kanbanccead_board = b.id
                     WHERE c.createdby = :userid',
-                    ['userid' => $this->userid, 'kanbanid' => $this->cm->instance]
+                    ['userid' => $this->userid, 'kanbancceadid' => $this->cm->instance]
                 );
-                return ($count >= $kanban->completioncreate ? COMPLETION_COMPLETE : COMPLETION_INCOMPLETE);
+                return ($count >= $kanbanccead->completioncreate ? COMPLETION_COMPLETE : COMPLETION_INCOMPLETE);
             }
         }
         if ($rule == 'completioncomplete') {
-            if ($kanban->completioncomplete > 0) {
+            if ($kanbanccead->completioncomplete > 0) {
                 $count = $DB->get_field_sql(
                     '
                     SELECT COUNT(DISTINCT c.id)
-                    FROM {kanban_board} b
-                    INNER JOIN {kanban_card} c ON b.kanban_instance = :kanbanid AND c.kanban_board = b.id AND c.completed != 0
-                    INNER JOIN {kanban_assignee} a ON a.kanban_card = c.id
+                    FROM {kanbanccead_board} b
+                    INNER JOIN {kanbanccead_card} c ON b.kanbanccead_instance = :kanbancceadid
+                           AND c.kanbanccead_board = b.id AND c.completed != 0
+                    INNER JOIN {kanbanccead_assignee} a ON a.kanbanccead_card = c.id
                     WHERE a.userid = :userid',
-                    ['userid' => $this->userid, 'kanbanid' => $this->cm->instance]
+                    ['userid' => $this->userid, 'kanbancceadid' => $this->cm->instance]
                 );
-                return ($count >= $kanban->completioncomplete ? COMPLETION_COMPLETE : COMPLETION_INCOMPLETE);
+                return ($count >= $kanbanccead->completioncomplete ? COMPLETION_COMPLETE : COMPLETION_INCOMPLETE);
             }
         }
 
@@ -91,8 +97,8 @@ class custom_completion extends \core_completion\activity_custom_completion {
         $completioncomplete = $this->cm->customdata['customcompletionrules']['completioncomplete'] ?? 0;
 
         return [
-            'completioncreate' => get_string('completiondetail:create', 'kanban', $completioncreate),
-            'completioncomplete' => get_string('completiondetail:complete', 'kanban', $completioncomplete),
+            'completioncreate' => get_string('completiondetail:create', 'kanbanccead', $completioncreate),
+            'completioncomplete' => get_string('completiondetail:complete', 'kanbanccead', $completioncomplete),
         ];
     }
 

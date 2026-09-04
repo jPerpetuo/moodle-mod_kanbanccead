@@ -15,24 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Backup steps for mod_kanban
+ * Backup steps for mod_kanbanccead
  *
- * @package     mod_kanban
+ * @package     mod_kanbanccead
  * @copyright   2023-2024 ISB Bayern
  * @author      Stefan Hanauska <stefan.hanauska@csg-in.de>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class backup_kanban_activity_structure_step extends backup_activity_structure_step {
+class backup_kanbanccead_activity_structure_step extends backup_activity_structure_step {
     /**
-     * Defines the XML structure for kanban backups
+     * Defines the XML structure for kanbanccead backups
      *
      * @return backup_nested_element
      */
     protected function define_structure(): backup_nested_element {
         $userinfo = $this->get_setting_value('userinfo');
 
-        $kanban = new backup_nested_element(
-            'kanban',
+        $kanbanccead = new backup_nested_element(
+            'kanbanccead',
             ['id'],
             [
                 'course',
@@ -52,33 +52,36 @@ class backup_kanban_activity_structure_step extends backup_activity_structure_st
                 'repeat_newduedate',
             ]
         );
-        $kanban->set_source_table('kanban', ['id' => backup::VAR_ACTIVITYID]);
-        $kanban->annotate_files('mod_kanban', 'intro', null);
+        $kanbanccead->set_source_table('kanbanccead', ['id' => backup::VAR_ACTIVITYID]);
+        $kanbanccead->annotate_files('mod_kanbanccead', 'intro', null);
 
         $boards = new backup_nested_element('boards');
         $board = new backup_nested_element(
-            'kanban_board',
+            'kanbanccead_board',
             ['id'],
-            ['sequence', 'timecreated', 'timemodified', 'userid', 'groupid', 'template', 'kanban_instance', 'options', 'locked']
+            [
+                'sequence', 'timecreated', 'timemodified', 'userid', 'groupid',
+                'template', 'kanbanccead_instance', 'options', 'locked',
+            ]
         );
 
         $columns = new backup_nested_element('columns');
         $column = new backup_nested_element(
-            'kanban_column',
+            'kanbanccead_column',
             ['id'],
-            ['title', 'sequence', 'timecreated', 'timemodified', 'kanban_board', 'options', 'locked']
+            ['title', 'sequence', 'timecreated', 'timemodified', 'kanbanccead_board', 'options', 'locked']
         );
 
         $cards = new backup_nested_element('cards');
         $card = new backup_nested_element(
-            'kanban_card',
+            'kanbanccead_card',
             ['id'],
             [
                 'title',
                 'timecreated',
                 'timemodified',
-                'kanban_board',
-                'kanban_column',
+                'kanbanccead_board',
+                'kanbanccead_column',
                 'options',
                 'duedate',
                 'reminderdate',
@@ -92,32 +95,32 @@ class backup_kanban_activity_structure_step extends backup_activity_structure_st
                 'createdby',
             ]
         );
-        $card->annotate_files('mod_kanban', 'attachments', 'id');
-        $card->annotate_ids('kanban_card_id', 'originalid');
+        $card->annotate_files('mod_kanbanccead', 'attachments', 'id');
+        $card->annotate_ids('kanbanccead_card_id', 'originalid');
 
         $assignees = new backup_nested_element('assignees');
         $assignee = new backup_nested_element(
-            'kanban_assignee',
+            'kanbanccead_assignee',
             ['id'],
-            ['kanban_card', 'userid']
+            ['kanbanccead_card', 'userid']
         );
 
         $discussions = new backup_nested_element('discussions');
         $discussion = new backup_nested_element(
-            'kanban_discussion_comment',
+            'kanbanccead_discussion_comment',
             ['id'],
-            ['kanban_card', 'userid', 'timecreated', 'content']
+            ['kanbanccead_card', 'userid', 'timecreated', 'content']
         );
 
         $historyitems = new backup_nested_element('historyitems');
         $historyitem = new backup_nested_element(
-            'kanban_history',
+            'kanbanccead_history',
             ['id'],
             [
                 'userid',
-                'kanban_board',
-                'kanban_column',
-                'kanban_card',
+                'kanbanccead_board',
+                'kanbanccead_column',
+                'kanbanccead_card',
                 'action',
                 'parameters',
                 'timestamp',
@@ -126,7 +129,7 @@ class backup_kanban_activity_structure_step extends backup_activity_structure_st
             ]
         );
 
-        $kanban->add_child($boards);
+        $kanbanccead->add_child($boards);
         $boards->add_child($board);
         $board->add_child($columns);
         $columns->add_child($column);
@@ -140,42 +143,42 @@ class backup_kanban_activity_structure_step extends backup_activity_structure_st
         $historyitems->add_child($historyitem);
 
         if ($userinfo) {
-            $board->set_source_table('kanban_board', ['kanban_instance' => backup::VAR_PARENTID]);
+            $board->set_source_table('kanbanccead_board', ['kanbanccead_instance' => backup::VAR_PARENTID]);
             $board->annotate_ids('userid', 'userid');
             $board->annotate_ids('groupid', 'groupid');
-            $assignee->set_source_table('kanban_assignee', ['kanban_card' => backup::VAR_PARENTID]);
+            $assignee->set_source_table('kanbanccead_assignee', ['kanbanccead_card' => backup::VAR_PARENTID]);
             $assignee->annotate_ids('userid', 'userid');
-            $assignee->annotate_ids('kanban_card_id', 'kanban_card');
+            $assignee->annotate_ids('kanbanccead_card_id', 'kanbanccead_card');
             $card->annotate_ids('userid', 'createdby');
-            $discussion->set_source_table('kanban_discussion_comment', ['kanban_card' => backup::VAR_PARENTID]);
+            $discussion->set_source_table('kanbanccead_discussion_comment', ['kanbanccead_card' => backup::VAR_PARENTID]);
             $discussion->annotate_ids('userid', 'userid');
-            $discussion->annotate_ids('kanban_card_id', 'kanban_card');
-            $historyitem->set_source_table('kanban_history', ['kanban_board' => backup::VAR_PARENTID]);
+            $discussion->annotate_ids('kanbanccead_card_id', 'kanbanccead_card');
+            $historyitem->set_source_table('kanbanccead_history', ['kanbanccead_board' => backup::VAR_PARENTID]);
             $historyitem->annotate_ids('userid', 'userid');
             $historyitem->annotate_ids('userid', 'affected_userid');
-            $historyitem->annotate_ids('kanban_card_id', 'kanban_card');
-            $historyitem->annotate_ids('kanban_column_id', 'kanban_column');
-            $historyitem->annotate_ids('kanban_board_id', 'kanban_board');
+            $historyitem->annotate_ids('kanbanccead_card_id', 'kanbanccead_card');
+            $historyitem->annotate_ids('kanbanccead_column_id', 'kanbanccead_column');
+            $historyitem->annotate_ids('kanbanccead_board_id', 'kanbanccead_board');
         } else {
             $structureboardid = $this->get_structure_source_board_id();
             // A source is mandatory even when there is no existing board to copy.
-            $board->set_source_table('kanban_board', ['id' => ['sqlparam' => $structureboardid]]);
+            $board->set_source_table('kanbanccead_board', ['id' => ['sqlparam' => $structureboardid]]);
         }
-        $column->set_source_table('kanban_column', ['kanban_board' => backup::VAR_PARENTID]);
+        $column->set_source_table('kanbanccead_column', ['kanbanccead_board' => backup::VAR_PARENTID]);
 
         if ($userinfo) {
-            $card->set_source_table('kanban_card', ['kanban_column' => backup::VAR_PARENTID]);
+            $card->set_source_table('kanbanccead_card', ['kanbanccead_column' => backup::VAR_PARENTID]);
         } else {
             // Keep the XML element valid without exporting card content.
-            $card->set_source_table('kanban_card', ['id' => ['sqlparam' => 0]]);
+            $card->set_source_table('kanbanccead_card', ['id' => ['sqlparam' => 0]]);
         }
 
-        $board->annotate_ids('kanban_id', 'kanban_instance');
-        $column->annotate_ids('kanban_board_id', 'kanban_board');
-        $card->annotate_ids('kanban_board_id', 'kanban_board');
-        $card->annotate_ids('kanban_column_id', 'kanban_column');
+        $board->annotate_ids('kanbanccead_id', 'kanbanccead_instance');
+        $column->annotate_ids('kanbanccead_board_id', 'kanbanccead_board');
+        $card->annotate_ids('kanbanccead_board_id', 'kanbanccead_board');
+        $card->annotate_ids('kanbanccead_column_id', 'kanbanccead_column');
 
-        return $this->prepare_activity_structure($kanban);
+        return $this->prepare_activity_structure($kanbanccead);
     }
 
     /**
@@ -186,18 +189,18 @@ class backup_kanban_activity_structure_step extends backup_activity_structure_st
     private function get_structure_source_board_id(): int {
         global $DB;
 
-        $kanbanid = $this->task->get_activityid();
-        $kanban = $DB->get_record('kanban', ['id' => $kanbanid], 'boardmode, boardgroupid', IGNORE_MISSING);
-        if (!$kanban) {
+        $kanbancceadid = $this->task->get_activityid();
+        $kanbanccead = $DB->get_record('kanbanccead', ['id' => $kanbancceadid], 'boardmode, boardgroupid', IGNORE_MISSING);
+        if (!$kanbanccead) {
             return 0;
         }
 
-        if ((int)$kanban->boardmode === \mod_kanban\constants::MOD_KANBAN_BOARDMODE_GROUP) {
-            if ($kanban->boardgroupid) {
-                $groupboardid = $DB->get_field('kanban_board', 'id', [
-                    'kanban_instance' => $kanbanid,
+        if ((int)$kanbanccead->boardmode === \mod_kanbanccead\constants::MOD_KANBANCCEAD_BOARDMODE_GROUP) {
+            if ($kanbanccead->boardgroupid) {
+                $groupboardid = $DB->get_field('kanbanccead_board', 'id', [
+                    'kanbanccead_instance' => $kanbancceadid,
                     'userid' => 0,
-                    'groupid' => $kanban->boardgroupid,
+                    'groupid' => $kanbanccead->boardgroupid,
                     'template' => 0,
                 ]);
                 if ($groupboardid) {
@@ -207,19 +210,19 @@ class backup_kanban_activity_structure_step extends backup_activity_structure_st
 
             $groupboardid = $DB->get_field_sql(
                 'SELECT MIN(id)
-                   FROM {kanban_board}
-                  WHERE kanban_instance = :instance
+                   FROM {kanbanccead_board}
+                  WHERE kanbanccead_instance = :instance
                     AND userid = :userid
                     AND groupid > :groupid
                     AND template = :template',
-                ['instance' => $kanbanid, 'userid' => 0, 'groupid' => 0, 'template' => 0]
+                ['instance' => $kanbancceadid, 'userid' => 0, 'groupid' => 0, 'template' => 0]
             );
             if ($groupboardid) {
                 return (int)$groupboardid;
             }
         } else {
-            $courseboardid = $DB->get_field('kanban_board', 'id', [
-                'kanban_instance' => $kanbanid,
+            $courseboardid = $DB->get_field('kanbanccead_board', 'id', [
+                'kanbanccead_instance' => $kanbancceadid,
                 'userid' => 0,
                 'groupid' => 0,
                 'template' => 0,
@@ -231,10 +234,10 @@ class backup_kanban_activity_structure_step extends backup_activity_structure_st
 
         return (int)$DB->get_field_sql(
             'SELECT id
-               FROM {kanban_board}
-              WHERE kanban_instance = :instance AND template = :template
+               FROM {kanbanccead_board}
+              WHERE kanbanccead_instance = :instance AND template = :template
               ORDER BY timemodified DESC',
-            ['instance' => $kanbanid, 'template' => 1],
+            ['instance' => $kanbancceadid, 'template' => 1],
             IGNORE_MISSING
         );
     }

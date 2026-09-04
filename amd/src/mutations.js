@@ -4,7 +4,7 @@ import {get_string as getString} from 'core/str';
 import Log from 'core/log';
 
 /**
- * Mutations library for mod_kanban.
+ * Mutations library for mod_kanbanccead.
  * The functions are just used to forward data to the webservice.
  */
 export default class {
@@ -190,7 +190,7 @@ export default class {
     async _sendChange(method, stateManager, data) {
         const state = stateManager.state;
         const request = {
-            methodname: 'mod_kanban_' + method,
+            methodname: 'mod_kanbanccead_' + method,
             args: {
                 cmid: state.common.id,
                 boardid: state.board.id,
@@ -206,7 +206,7 @@ export default class {
             if (!(e instanceof Object)) {
                 // There is a problem with requesting the webservice if we do not obtain a correct object.
                 // This for example could be due to a connection loss. We therefore need to catch this error separately.
-                Log.warn('Sending a change request to the kanban backend failed, probably due to connection loss.');
+                Log.warn('Sending a change request to the kanbanccead backend failed, probably due to connection loss.');
                 this.processUpdateFail(stateManager);
             }
             return;
@@ -233,7 +233,7 @@ export default class {
             let result = null;
             try {
                 result = await Ajax.call([{
-                    methodname: 'mod_kanban_get_kanban_content_update',
+                    methodname: 'mod_kanbanccead_get_kanbanccead_content_update',
                     args: {
                         cmid: state.common.id,
                         boardid: state.board.id,
@@ -247,7 +247,7 @@ export default class {
                 if (!(e instanceof Object)) {
                     // There is a problem with requesting the webservice if we do not obtain a correct object.
                     // This for example could be due to a connection loss. We therefore need to catch this error separately.
-                    Log.warn('Sending a change request to the kanban backend failed, probably due to connection loss.');
+                    Log.warn('Sending a change request to the kanbanccead backend failed, probably due to connection loss.');
                     this.processUpdateFail(stateManager);
                 }
                 return;
@@ -288,7 +288,7 @@ export default class {
         const state = stateManager.state;
         let timestamp = 0;
         state.discussions.forEach((c) => {
-            if (c.kanban_card == cardId) {
+            if (c.kanbanccead_card == cardId) {
                 if (c.timestamp > timestamp) {
                     timestamp = c.timestamp;
                 }
@@ -296,7 +296,7 @@ export default class {
         });
 
         const result = await Ajax.call([{
-            methodname: 'mod_kanban_get_discussion_update',
+            methodname: 'mod_kanbanccead_get_discussion_update',
             args: {
                 cmid: state.common.id,
                 boardid: state.board.id,
@@ -320,7 +320,7 @@ export default class {
         const state = stateManager.state;
         let timestamp = 0;
         state.history.forEach((c) => {
-            if (c.kanban_card == cardId) {
+            if (c.kanbanccead_card == cardId) {
                 if (c.timestamp > timestamp) {
                     timestamp = c.timestamp;
                 }
@@ -328,7 +328,7 @@ export default class {
         });
 
         const result = await Ajax.call([{
-            methodname: 'mod_kanban_get_history_update',
+            methodname: 'mod_kanbanccead_get_history_update',
             args: {
                 cmid: state.common.id,
                 boardid: state.board.id,
