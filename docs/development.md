@@ -30,6 +30,14 @@ The declared minimum in `version.php` is older than the earliest branch in this 
 
 The matrix is intentionally broader than the development server. A change that works locally can still fail because of database portability, Moodle API changes, generated AMD output, or browser-level behaviour.
 
+## Mustache lint and list fragments
+
+The Mustache lint output includes an intentional HTML validation warning for `templates/column.mustache` and `templates/card.mustache`. Both templates render an `<li>` as their root element because they are list fragments: the board template inserts columns into `ul.mod_kanbanccead_column_container`, and each column inserts cards into its inner `<ul>`.
+
+The linter validates each template fragment as if it were placed directly inside `body`, so it reports the root `<li>` as invalid even though the runtime parent is a list. The frontend also relies on this structure when it identifies and reorders direct column and card children during drag and drop.
+
+This warning is therefore treated as an intentional limitation of standalone template validation. Do not replace the root `<li>` with a `<div>` or add a wrapper only to silence the warning. Any future structural change must include AMD build validation and manual tests for column and card drag and drop, ordering, card creation, and card editing.
+
 ## Test selection
 
 | Change type | Minimum validation |
