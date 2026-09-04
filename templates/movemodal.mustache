@@ -16,6 +16,30 @@
 }}
 {{!
     @template mod_kanbanccead/movemodal
+
+    Example context (json):
+    {
+        "cardid": 15,
+        "kanbancceadcolumn": 2,
+        "columns": [
+            {
+                "id": 1,
+                "title": "To do",
+                "cards": []
+            },
+            {
+                "id": 2,
+                "title": "In progress",
+                "cards": [
+                    {
+                        "id": 16,
+                        "kanbancceadcolumn": 2,
+                        "title": "Example card"
+                    }
+                ]
+            }
+        ]
+    }
 }}
 <div class="row">
     <div class="col-3">

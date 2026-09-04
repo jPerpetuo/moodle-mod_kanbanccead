@@ -21,20 +21,19 @@
 
     Example context (json):
     {
-        "show": true,
-        "label": "Current board",
-        "currentlabel": "Group A",
-        "summary": "You are viewing 1 of 4 boards",
-        "groupmemberslabel": "4 members in this group",
-        "boards": [
-            {
-                "id": 4,
-                "label": "Group A",
-                "icon": "i/group",
-                "url": "view.php?id=12&groupid=4",
-                "current": true
-            }
-        ]
+        "boardselector": {
+            "show": true,
+            "label": "Current board",
+            "shortcurrentlabel": "Group A",
+            "boards": [
+                {
+                    "id": 4,
+                    "label": "Group A",
+                    "url": "view.php?id=12&groupid=4",
+                    "current": true
+                }
+            ]
+        }
     }
 }}
 {{#boardselector.show}}

@@ -18,6 +18,20 @@
     @template mod_kanbanccead/column
 
     Template for a column in the kanbanccead board.
+
+    Example context (json):
+    {
+        "id": 1,
+        "title": "To do",
+        "cardcount": 1,
+        "managecolumns": true,
+        "locked": false,
+        "autohide": false,
+        "wiplimit": 0,
+        "hascards": false,
+        "cards": [],
+        "addcard": true
+    }
 }}
 <li class="mod_kanbanccead_column col card{{#autohide}} mod_kanbanccead_autohide{{/autohide}} {{#locked}}mod_kanbanccead_locked_column{{/locked}} {{#wiplimit}}mod_kanbanccead_column_wiplimit{{/wiplimit}}" id="mod_kanbanccead_column-{{id}}" data-id="{{id}}">
     <div class="mod_kanbanccead_column_header">
