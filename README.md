@@ -8,11 +8,11 @@ It is designed for installation alongside `mod_kanban`, using a separate plugin 
 
 ## Development status and declared compatibility
 
-This renamed variant is not ready for production use. Its JavaScript has been rebuilt, but installation, coexistence and integration tests remain pending. Passing CI results from the predecessor do not validate this component.
+This renamed variant passed static validation and a manual clean-installation and coexistence check in a Moodle 5.2 test environment. It remains beta and is not approved for production or Moodle Marketplace use. Passing CI results from the predecessor do not validate this component.
 
 [version.php](version.php) retains the inherited `0.4.0-beta` label and declares Moodle 4.1 through 5.2. Those declarations are not evidence of a published or tested release of `mod_kanbanccead`.
 
-The planned repository name is `moodle-mod_kanbanccead` under the `jPerpetuo` GitHub account. Publication and the final clone URL are pending; use no predecessor repository as a substitute.
+The source repository is [jPerpetuo/moodle-mod_kanbanccead](https://github.com/jPerpetuo/moodle-mod_kanbanccead). Use no predecessor repository as a substitute.
 
 JavaScript is required. The activity uses Moodle reactive components and has no non-JavaScript fallback.
 
@@ -56,11 +56,11 @@ php {moodle-dirroot}/admin/cli/upgrade.php
 
 ### Install from Git
 
-After publication, replace `CONFIRMED_REPOSITORY_URL` with the clone URL confirmed by the Kanban CCEAD maintainer. From the Moodle `mod` directory, clone into `kanbanccead`:
+From the Moodle `mod` directory, clone into `kanbanccead`:
 
 ```bash
 cd {moodle-dirroot}/mod
-git clone CONFIRMED_REPOSITORY_URL kanbanccead
+git clone https://github.com/jPerpetuo/moodle-mod_kanbanccead.git kanbanccead
 ```
 
 Then complete the Moodle upgrade through **Site administration > Notifications** or:

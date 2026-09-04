@@ -2,7 +2,7 @@
 
 ## Before a release
 
-This checklist is pending execution for the renamed variant. See [development status](../README.md#development-status-and-declared-compatibility); the historical release notes are not a release approval for `mod_kanbanccead`.
+The final release checklist remains pending for the renamed variant. See [development status](../README.md#development-status-and-declared-compatibility); the historical release notes are not a release approval for `mod_kanbanccead`.
 
 1. Confirm [version.php](../version.php) has a new monotonically increasing build number, accurate release name, maturity, and support range.
 2. Update user-facing release notes and this documentation when behaviour changes.
@@ -46,6 +46,6 @@ Do not roll back plugin files alone after a database schema change. Restore a co
 
 ## Fork maintenance
 
-This repository uses `mod_kanbanccead`. Preserve the provenance and notices in [NOTICE](../NOTICE) in every distribution. A separate component name does not establish Marketplace acceptance; publication and submission remain pending.
+This repository uses `mod_kanbanccead`. Preserve the provenance and notices in [NOTICE](../NOTICE) in every distribution. A separate component name does not establish Marketplace acceptance; Marketplace submission remains pending.
 
 Before publication, search active documentation for claims that this fork replaces `mod_kanban` in place. Such instructions belong only in clearly marked historical material. Confirm that installation commands target `mod/kanbanccead` and links point to the dedicated repository.
