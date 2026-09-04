@@ -331,7 +331,8 @@ require([], function() {
                 });
 
                 const rawlabel = (container.dataset.moreLabel || '').trim();
-                const morelabel = (!rawlabel || rawlabel.startsWith('[[') || rawlabel.toLowerCase() === 'and more') ? 'e mais' : rawlabel;
+                const morelabel = (!rawlabel || rawlabel.startsWith('[[') ||
+                    rawlabel.toLowerCase() === 'and more') ? 'e mais' : rawlabel;
 
                 const summary = document.createElement('div');
                 summary.className = 'mod_kanbanccead_assigned_user ' + summaryclass;
@@ -528,4 +529,3 @@ require([], function() {
     window.addEventListener('scroll', handleWindowChange, true);
 });
 {{/js}}
-
