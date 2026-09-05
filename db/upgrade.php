@@ -174,5 +174,15 @@ function xmldb_kanbanccead_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2026051502, 'kanbanccead');
     }
 
+    if ($oldversion < 2026090400) {
+        // Rename the discussion comments table to stay within Moodle 4.1's table-name limit.
+        $table = new xmldb_table('kanbanccead_discussion_comment');
+        if ($dbman->table_exists($table)) {
+            $dbman->rename_table($table, 'kanbanccead_comment');
+        }
+
+        upgrade_mod_savepoint(true, 2026090400, 'kanbanccead');
+    }
+
     return true;
 }

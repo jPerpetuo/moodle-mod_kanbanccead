@@ -97,13 +97,13 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
             'kanbanccead_card' => $this->sharedcard->id,
             'userid' => $this->otheruser->id,
         ]);
-        $DB->insert_record('kanbanccead_discussion_comment', [
+        $DB->insert_record('kanbanccead_comment', [
             'kanbanccead_card' => $this->sharedcard->id,
             'userid' => $this->targetuser->id,
             'content' => 'Target comment',
             'timecreated' => time(),
         ]);
-        $DB->insert_record('kanbanccead_discussion_comment', [
+        $DB->insert_record('kanbanccead_comment', [
             'kanbanccead_card' => $this->sharedcard->id,
             'userid' => $this->otheruser->id,
             'content' => 'Other comment',
@@ -124,7 +124,7 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
             'Personal card'
         );
         $this->personalcardid = $personalcard->id;
-        $DB->insert_record('kanbanccead_discussion_comment', [
+        $DB->insert_record('kanbanccead_comment', [
             'kanbanccead_card' => $personalcard->id,
             'userid' => $this->otheruser->id,
             'content' => 'Personal board comment',
@@ -228,7 +228,7 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
             'Relations card'
         );
         $DB->insert_record('kanbanccead_assignee', ['kanbanccead_card' => $card->id, 'userid' => $assignee->id]);
-        $DB->insert_record('kanbanccead_discussion_comment', [
+        $DB->insert_record('kanbanccead_comment', [
             'kanbanccead_card' => $card->id,
             'userid' => $commenter->id,
             'content' => 'Relations comment',
@@ -273,7 +273,7 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
             'kanbanccead_card' => $this->sharedcard->id,
             'userid' => $this->targetuser->id,
         ]));
-        $this->assertTrue($DB->record_exists('kanbanccead_discussion_comment', [
+        $this->assertTrue($DB->record_exists('kanbanccead_comment', [
             'kanbanccead_card' => $this->sharedcard->id,
             'userid' => $this->targetuser->id,
         ]));
@@ -372,11 +372,11 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
             'kanbanccead_card' => $this->sharedcard->id,
             'userid' => $this->otheruser->id,
         ]));
-        $this->assertFalse($DB->record_exists('kanbanccead_discussion_comment', [
+        $this->assertFalse($DB->record_exists('kanbanccead_comment', [
             'kanbanccead_card' => $this->sharedcard->id,
             'userid' => $this->targetuser->id,
         ]));
-        $this->assertTrue($DB->record_exists('kanbanccead_discussion_comment', [
+        $this->assertTrue($DB->record_exists('kanbanccead_comment', [
             'kanbanccead_card' => $this->sharedcard->id,
             'userid' => $this->otheruser->id,
         ]));

@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_kanbanccead';
 $plugin->release = '0.4.0-beta';
-$plugin->version = 2026090100;
+$plugin->version = 2026090400;
 $plugin->requires = 2022112800;
 $plugin->supported = [401, 502];
 $plugin->maturity = MATURITY_BETA;

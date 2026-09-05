@@ -96,7 +96,7 @@ class provider implements
                JOIN {modules} m ON m.id = cm.module AND m.name = :modname
                JOIN {kanbanccead_board} b ON b.kanbanccead_instance = cm.instance
                JOIN {kanbanccead_card} ca ON ca.kanbanccead_board = b.id
-               JOIN {kanbanccead_discussion_comment} d ON d.kanbanccead_card = ca.id
+               JOIN {kanbanccead_comment} d ON d.kanbanccead_card = ca.id
               WHERE cm.id = :cmid",
             "SELECT DISTINCT h.userid
                FROM {course_modules} cm
@@ -153,7 +153,7 @@ class provider implements
             "SELECT c.id {$base}
                JOIN {kanbanccead_board} b ON b.kanbanccead_instance = cm.instance
                JOIN {kanbanccead_card} ca ON ca.kanbanccead_board = b.id
-               JOIN {kanbanccead_discussion_comment} d ON d.kanbanccead_card = ca.id
+               JOIN {kanbanccead_comment} d ON d.kanbanccead_card = ca.id
               WHERE d.userid = :userid",
             "SELECT c.id {$base}
                JOIN {kanbanccead_board} b ON b.kanbanccead_instance = cm.instance
@@ -220,7 +220,7 @@ class provider implements
             self::export_records($context, 'assigned_cards', $DB->get_records_sql($sql, $params));
 
             $sql = "SELECT d.id, d.content, d.timecreated, ca.title AS cardtitle, co.title AS columntitle
-                      FROM {kanbanccead_discussion_comment} d
+                      FROM {kanbanccead_comment} d
                       JOIN {kanbanccead_card} ca ON ca.id = d.kanbanccead_card
                       JOIN {kanbanccead_column} co ON co.id = ca.kanbanccead_column
                       JOIN {kanbanccead_board} b ON b.id = ca.kanbanccead_board
@@ -401,7 +401,7 @@ class provider implements
                 $cardparams
             );
             $DB->delete_records_select(
-                'kanbanccead_discussion_comment',
+                'kanbanccead_comment',
                 'userid = :userid AND kanbanccead_card ' . $cardsql,
                 $cardparams
             );
@@ -448,7 +448,7 @@ class provider implements
         }
         [$cardsql, $cardparams] = $DB->get_in_or_equal($cardids, SQL_PARAMS_NAMED, 'card');
         $DB->delete_records_select('kanbanccead_assignee', 'kanbanccead_card ' . $cardsql, $cardparams);
-        $DB->delete_records_select('kanbanccead_discussion_comment', 'kanbanccead_card ' . $cardsql, $cardparams);
+        $DB->delete_records_select('kanbanccead_comment', 'kanbanccead_card ' . $cardsql, $cardparams);
 
         $fs = get_file_storage();
         foreach ($cardids as $cardid) {
@@ -494,12 +494,12 @@ class provider implements
             'kanbanccead_card' => 'privacy:metadata:kanbanccead_card',
         ], 'privacy:metadata:kanbanccead_assignee');
 
-        $collection->add_database_table('kanbanccead_discussion_comment', [
+        $collection->add_database_table('kanbanccead_comment', [
             'userid' => 'privacy:metadata:userid',
             'kanbanccead_card' => 'privacy:metadata:kanbanccead_card',
             'content' => 'privacy:metadata:content',
             'timecreated' => 'privacy:metadata:timecreated',
-        ], 'privacy:metadata:kanbanccead_discussion_comment');
+        ], 'privacy:metadata:kanbanccead_comment');
 
         $collection->add_database_table('kanbanccead_history', [
             'userid' => 'privacy:metadata:userid',

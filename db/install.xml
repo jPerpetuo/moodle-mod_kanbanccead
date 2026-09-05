@@ -111,7 +111,7 @@
         <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="kanbanccead_discussion_comment" COMMENT="Discussion comments for cards">
+    <TABLE NAME="kanbanccead_comment" COMMENT="Discussion comments for cards">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="kanbanccead_card" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>

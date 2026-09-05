@@ -197,7 +197,7 @@ Esta tabela reproduz as chaves e traduções de [lang/pt_br/kanbanccead.php](../
 | `privacy:metadata:kanbanccead_board` | Quadro |
 | `privacy:metadata:kanbanccead_card` | Cartão |
 | `privacy:metadata:kanbanccead_column` | Coluna |
-| `privacy:metadata:kanbanccead_discussion_comment` | Comentário |
+| `privacy:metadata:kanbanccead_comment` | Comentário |
 | `privacy:metadata:kanbanccead_history` | Histórico |
 | `privacy:metadata:options` | Opções de configuração armazenadas |
 | `privacy:metadata:parameters` | Informações sobre a ação |

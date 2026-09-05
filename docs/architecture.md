@@ -32,7 +32,7 @@ kanbanccead activity
        -> history item(s)
 ```
 
-The main database tables are `kanbanccead`, `kanbanccead_board`, `kanbanccead_column`, `kanbanccead_card`, `kanbanccead_assignee`, `kanbanccead_discussion_comment`, and `kanbanccead_history`. Board and column sequences store ordering. JSON options fields hold display and behavioural options such as colours and automatic completion/hiding settings.
+The main database tables are `kanbanccead`, `kanbanccead_board`, `kanbanccead_column`, `kanbanccead_card`, `kanbanccead_assignee`, `kanbanccead_comment`, and `kanbanccead_history`. Board and column sequences store ordering. JSON options fields hold display and behavioural options such as colours and automatic completion/hiding settings.
 
 These plugin-owned tables are defined in [db/install.xml](../db/install.xml). They are separate from `mod_kanban` tables; both components refer to Moodle's shared users, courses and groups. Moodle adds the site's configured database prefix to table names.
 

@@ -112,6 +112,39 @@ final class upgrade_test extends \advanced_testcase {
     }
 
     /**
+     * Upgrade renames discussion comments without losing their data.
+     *
+     * @return void
+     */
+    public function test_upgrade_renames_discussion_comments_table(): void {
+        global $CFG, $DB;
+
+        $this->resetAfterTest();
+        $this->preventResetByRollback();
+
+        // The old table name could only exist on Moodle versions with the larger name limit.
+        if ($CFG->version < 2024042200) {
+            $this->markTestSkipped('The legacy table name cannot exist on this Moodle version.');
+        }
+
+        $dbman = $DB->get_manager();
+        $oldtable = new \xmldb_table('kanbanccead_discussion_comment');
+        $oldtable->addField('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $oldtable->addField('content', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+        $oldtable->addKey('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $dbman->create_table($oldtable);
+        $commentid = $DB->insert_record('kanbanccead_discussion_comment', ['content' => 'Legacy comment']);
+
+        $this->run_upgrade_from_version(2026051502);
+
+        $newtable = new \xmldb_table('kanbanccead_comment');
+        $this->assertFalse($dbman->table_exists($oldtable));
+        $this->assertTrue($dbman->table_exists($newtable));
+        $comment = $DB->get_record('kanbanccead_comment', ['id' => $commentid], '*', MUST_EXIST);
+        $this->assertEquals('Legacy comment', $comment->content);
+    }
+
+    /**
      * Run an upgrade while simulating the version installed before the upgrade.
      *
      * @param int $oldversion The version stored before the upgrade.

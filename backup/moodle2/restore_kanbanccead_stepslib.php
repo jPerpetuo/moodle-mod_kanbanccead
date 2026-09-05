@@ -248,7 +248,7 @@ class restore_kanbanccead_activity_structure_step extends restore_activity_struc
         $data->userid = $this->get_mappingid('user', $data->userid);
         $data->kanbanccead_card = $this->get_mappingid('kanbanccead_card_id', $data->kanbanccead_card);
 
-        $DB->insert_record('kanbanccead_discussion_comment', $data);
+        $DB->insert_record('kanbanccead_comment', $data);
     }
 
     /**

@@ -831,7 +831,7 @@ class get_kanbanccead_content extends external_api {
         $params['cardid'] = $cardid;
         $params['timestamp'] = $timestamp;
 
-        $discussions = $DB->get_records_select('kanbanccead_discussion_comment', $sql, $params);
+        $discussions = $DB->get_records_select('kanbanccead_comment', $sql, $params);
 
         $formatter = new updateformatter();
         foreach ($discussions as $discussion) {

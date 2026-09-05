@@ -863,7 +863,7 @@ class boardmanager {
         $fs = get_file_storage();
         try {
             $transaction = $DB->start_delegated_transaction();
-            $DB->delete_records('kanbanccead_discussion_comment', ['kanbanccead_card' => $cardid]);
+            $DB->delete_records('kanbanccead_comment', ['kanbanccead_card' => $cardid]);
             $DB->delete_records('kanbanccead_assignee', ['kanbanccead_card' => $cardid]);
             $context = context_module::instance($this->cmid, IGNORE_MISSING);
             $fs->delete_area_files($context->id, 'mod_kanbanccead', 'attachments', $cardid);
@@ -1440,7 +1440,7 @@ class boardmanager {
         global $DB, $USER;
         $card = $this->get_card($cardid);
         $update = ['kanbanccead_card' => $cardid, 'content' => $message, 'userid' => $USER->id, 'timecreated' => time()];
-        $update['id'] = $DB->insert_record('kanbanccead_discussion_comment', $update);
+        $update['id'] = $DB->insert_record('kanbanccead_comment', $update);
         $update['candelete'] = true;
         $update['username'] = fullname($USER);
         if (!empty($this->kanbanccead->usenumbers) && !empty($this->kanbanccead->linknumbers)) {
@@ -1477,10 +1477,10 @@ class boardmanager {
         global $DB;
         $card = $this->get_card($cardid);
         $update = ['id' => $messageid];
-        $DB->delete_records('kanbanccead_discussion_comment', $update);
+        $DB->delete_records('kanbanccead_comment', $update);
         $this->formatter->delete('discussions', $update);
         $this->write_history('deleted', constants::MOD_KANBANCCEAD_DISCUSSION, $update, $card->kanbanccead_column, $cardid);
-        if (!$DB->record_exists('kanbanccead_discussion_comment', ['kanbanccead_card' => $cardid])) {
+        if (!$DB->record_exists('kanbanccead_comment', ['kanbanccead_card' => $cardid])) {
             $update = ['id' => $cardid, 'discussion' => 0, 'timemodified' => time()];
             $DB->update_record('kanbanccead_card', $update);
             $this->formatter->put('cards', $update);
@@ -1866,7 +1866,7 @@ class boardmanager {
      */
     public function get_discussion_message(int $messageid): stdClass {
         global $DB;
-        return $DB->get_record('kanbanccead_discussion_comment', ['id' => $messageid], '*', MUST_EXIST);
+        return $DB->get_record('kanbanccead_comment', ['id' => $messageid], '*', MUST_EXIST);
     }
 
     /**

@@ -150,7 +150,7 @@ class backup_kanbanccead_activity_structure_step extends backup_activity_structu
             $assignee->annotate_ids('userid', 'userid');
             $assignee->annotate_ids('kanbanccead_card_id', 'kanbanccead_card');
             $card->annotate_ids('userid', 'createdby');
-            $discussion->set_source_table('kanbanccead_discussion_comment', ['kanbanccead_card' => backup::VAR_PARENTID]);
+            $discussion->set_source_table('kanbanccead_comment', ['kanbanccead_card' => backup::VAR_PARENTID]);
             $discussion->annotate_ids('userid', 'userid');
             $discussion->annotate_ids('kanbanccead_card_id', 'kanbanccead_card');
             $historyitem->set_source_table('kanbanccead_history', ['kanbanccead_board' => backup::VAR_PARENTID]);
