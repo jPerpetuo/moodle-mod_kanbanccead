@@ -129,9 +129,9 @@ final class upgrade_test extends \advanced_testcase {
 
         $dbman = $DB->get_manager();
         $oldtable = new \xmldb_table('kanbanccead_discussion_comment');
-        $oldtable->addField('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
-        $oldtable->addField('content', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
-        $oldtable->addKey('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $oldtable->addField(new \xmldb_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE));
+        $oldtable->addField(new \xmldb_field('content', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL));
+        $oldtable->addKey(new \xmldb_key('primary', XMLDB_KEY_PRIMARY, ['id']));
         $dbman->create_table($oldtable);
         $commentid = $DB->insert_record('kanbanccead_discussion_comment', ['content' => 'Legacy comment']);
 
