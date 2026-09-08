@@ -169,6 +169,12 @@ jobs:
       - name: Moodle PHPDoc Checker
         run: moodle-plugin-ci phpdoc --max-warnings 0
 
+      - name: Setup Node.js 20.11 for Moodle 4.2
+        if: matrix.moodle-branch == 'MOODLE_402_STABLE'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.11.1'
+
       - name: Validating
         run: moodle-plugin-ci validate
 
