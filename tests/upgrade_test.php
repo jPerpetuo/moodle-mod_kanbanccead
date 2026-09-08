@@ -128,6 +128,11 @@ final class upgrade_test extends \advanced_testcase {
         }
 
         $dbman = $DB->get_manager();
+        $newtable = new \xmldb_table('kanbanccead_comment');
+        if ($dbman->table_exists($newtable)) {
+            $dbman->drop_table($newtable);
+        }
+
         $oldtable = new \xmldb_table('kanbanccead_discussion_comment');
         $oldtable->addField(new \xmldb_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE));
         $oldtable->addField(new \xmldb_field('content', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL));
@@ -137,7 +142,6 @@ final class upgrade_test extends \advanced_testcase {
 
         $this->run_upgrade_from_version(2026051502);
 
-        $newtable = new \xmldb_table('kanbanccead_comment');
         $this->assertFalse($dbman->table_exists($oldtable));
         $this->assertTrue($dbman->table_exists($newtable));
         $comment = $DB->get_record('kanbanccead_comment', ['id' => $commentid], '*', MUST_EXIST);
