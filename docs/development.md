@@ -24,9 +24,9 @@ Run a local static preflight before pushing. At minimum, run PHP syntax checks, 
 GitHub Actions workflows are stored in [.github/workflows](../.github/workflows):
 
 * `moodle-preflight.yml`: fast static validation for pull requests and manual runs.
-* `moodle-ci.yml`: manually dispatched matrix validation for Moodle 4.1, 4.2, 4.3, 4.4, 4.5, 5.0, 5.1, 5.2 and main on MariaDB/PostgreSQL, including static checks, AMD build, PHPUnit, and Behat.
+* `moodle-ci.yml`: manually dispatched matrix validation for the declared Moodle range, 4.1 through 5.2, plus `main`, on MariaDB and PostgreSQL, including static checks, AMD build, PHPUnit, and Behat.
 
-The declared minimum in `version.php` is older than the earliest branch in this matrix. Coverage for that minimum remains to be established, or the declared support range must be revised before release. Do not infer full declared-range coverage from this matrix.
+The complete matrix covers the Moodle range declared in `version.php`. This is evidence for the automated scenarios listed in the workflow, not a production certification or a substitute for manual homologation.
 
 The matrix is intentionally broader than the development server. A change that works locally can still fail because of database portability, Moodle API changes, generated AMD output, or browser-level behaviour.
 

@@ -8,9 +8,9 @@ It is designed for installation alongside `mod_kanban`, using a separate plugin 
 
 ## Development status and declared compatibility
 
-This renamed variant passed static validation and a manual clean-installation and coexistence check in a Moodle 5.2 test environment. It remains beta and is not approved for production or Moodle Marketplace use. Passing CI results from the predecessor do not validate this component.
+This renamed variant passed static validation, a manual clean-installation and coexistence check in a Moodle 5.2 test environment, and the complete [Moodle Plugin CI matrix](https://github.com/jPerpetuo/moodle-mod_kanbanccead/actions/workflows/moodle-ci.yml). It remains beta and is not approved for production or Moodle Marketplace use. Automated CI coverage does not replace production homologation.
 
-[version.php](version.php) retains the inherited `0.4.0-beta` label and declares Moodle 4.1 through 5.2. Those declarations are not evidence of a published or tested release of `mod_kanbanccead`.
+[version.php](version.php) retains the inherited `0.4.0-beta` label and declares Moodle 4.1 through 5.2. These declarations describe the supported range of this beta source revision; they are not evidence of a published release or production certification.
 
 The source repository is [jPerpetuo/moodle-mod_kanbanccead](https://github.com/jPerpetuo/moodle-mod_kanbanccead). Use no predecessor repository as a substitute.
 
