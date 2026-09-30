@@ -330,12 +330,12 @@ a.mod_kanbanccead_attachment_item {
 .mod_kanbanccead_card:not(.mod_kanbanccead_canedit) .mod_kanbanccead_move_card,
 .mod_kanbanccead_board:not(.mod_kanbanccead_history) .mod_kanbanccead_card_view_history,
 .mod_kanbanccead_board:not(.mod_kanbanccead_usenumbers) .mod_kanbanccead_card_number,
-.mod_kanbanccead_board.mod_kanbanccead_manageassignedcards:not(.mod_kanbanccead_manageallcards) .mod_kanbanccead_card:not(.mod_kanbanccead_selfassigned)
-.mod_kanbanccead_complete_card,
-.mod_kanbanccead_board.mod_kanbanccead_manageassignedcards:not(.mod_kanbanccead_manageallcards) .mod_kanbanccead_card:not(.mod_kanbanccead_selfassigned)
-.mod_kanbanccead_uncomplete_card,
-.mod_kanbanccead_board.mod_kanbanccead_manageassignedcards:not(.mod_kanbanccead_manageallcards) .mod_kanbanccead_card:not(.mod_kanbanccead_selfassigned)
-.mod_kanbanccead_move_card,
+.mod_kanbanccead_board.mod_kanbanccead_manageassignedcards:not(.mod_kanbanccead_manageallcards)
+.mod_kanbanccead_card:not(.mod_kanbanccead_selfassigned) .mod_kanbanccead_complete_card,
+.mod_kanbanccead_board.mod_kanbanccead_manageassignedcards:not(.mod_kanbanccead_manageallcards)
+.mod_kanbanccead_card:not(.mod_kanbanccead_selfassigned) .mod_kanbanccead_uncomplete_card,
+.mod_kanbanccead_board.mod_kanbanccead_manageassignedcards:not(.mod_kanbanccead_manageallcards)
+.mod_kanbanccead_card:not(.mod_kanbanccead_selfassigned) .mod_kanbanccead_move_card,
 .mod_kanbanccead_board_locked .mod_kanbanccead_addcolumn_container,
 .mod_kanbanccead_board_locked_columns .mod_kanbanccead_addcolumn_container,
 .mod_kanbanccead_board_locked .mod_kanbanccead_lock_column,
@@ -373,7 +373,8 @@ a.mod_kanbanccead_attachment_item {
 }
 
 .mod_kanbanccead_column.mod_kanbanccead_locked_column,
-.mod_kanbanccead_board.mod_kanbanccead_manageassignedcards:not(.mod_kanbanccead_manageallcards) .mod_kanbanccead_card:not(.mod_kanbanccead_selfassigned) {
+.mod_kanbanccead_board.mod_kanbanccead_manageassignedcards:not(.mod_kanbanccead_manageallcards)
+.mod_kanbanccead_card:not(.mod_kanbanccead_selfassigned) {
     cursor: not-allowed;
 }
 
@@ -1062,7 +1063,8 @@ a.mod_kanbanccead_attachment_item {
     text-decoration: none;
 }
 
-.mod_kanbanccead_column:not(:last-of-type) > .mod_kanbanccead_addcolumn_container .mod_kanbanccead_addcolumn .mod_kanbanccead_addcolumn_label {
+.mod_kanbanccead_column:not(:last-of-type) > .mod_kanbanccead_addcolumn_container
+.mod_kanbanccead_addcolumn .mod_kanbanccead_addcolumn_label {
     display: none;
 }
 
@@ -1105,7 +1107,8 @@ a.mod_kanbanccead_attachment_item {
 .mod_kanbanccead_column:not(:last-of-type) > .mod_kanbanccead_addcolumn_container:hover .mod_kanbanccead_addcolumn,
 .mod_kanbanccead_column:not(:last-of-type) > .mod_kanbanccead_addcolumn_container:focus .mod_kanbanccead_addcolumn,
 .mod_kanbanccead_column:not(:last-of-type) > .mod_kanbanccead_addcolumn_container:focus-within .mod_kanbanccead_addcolumn,
-.mod_kanbanccead_column:not(:last-of-type) > .mod_kanbanccead_addcolumn_container.mod_kanbanccead_insert .mod_kanbanccead_addcolumn {
+.mod_kanbanccead_column:not(:last-of-type) > .mod_kanbanccead_addcolumn_container.mod_kanbanccead_insert
+.mod_kanbanccead_addcolumn {
     opacity: 1;
     pointer-events: auto;
 }
@@ -1346,7 +1349,7 @@ a.mod_kanbanccead_attachment_item {
 }
 
 .mod_kanbanccead_approval_seal[hidden] {
-    display: none !important;
+    display: none;
 }
 
 .mod_kanbanccead_approval_seal_picker {
@@ -1369,7 +1372,7 @@ a.mod_kanbanccead_attachment_item {
 }
 
 .mod_kanbanccead_approval_seal_menu[hidden] {
-    display: none !important;
+    display: none;
 }
 
 .mod_kanbanccead_approval_seal_picker.mod_kanbanccead_approval_seal_picker_reduced_motion,
@@ -1537,7 +1540,9 @@ a.mod_kanbanccead_attachment_item {
 }
 
 /* Reduce first-paint flicker before JS summary rendering runs. */
-.mod_kanbanccead_card .mod_kanbanccead_assignees:not(.mod_kanbanccead_assignees_enhanced) .mod_kanbanccead_assigned_user:nth-of-type(n+3) {
+.mod_kanbanccead_card
+.mod_kanbanccead_assignees:not(.mod_kanbanccead_assignees_enhanced)
+.mod_kanbanccead_assigned_user:nth-of-type(n+3) {
     display: none;
 }
 

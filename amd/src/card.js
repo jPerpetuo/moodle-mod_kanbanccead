@@ -752,9 +752,10 @@ export default class extends KanbanCceadComponent {
                 transform: isOpen ? 'translateY(0px)' : 'translateY(-4px)',
             };
         const duration = prefersReducedMotion ? 100 : 120;
+        const easing = prefersReducedMotion || isOpen ? 'ease-out' : 'ease-in';
         const animation = picker.animate([startFrame, endFrame], {
             duration: duration,
-            easing: prefersReducedMotion ? 'ease-out' : (isOpen ? 'ease-out' : 'ease-in'),
+            easing: easing,
             fill: 'both',
         });
         picker.__modKanbanApprovalSealAnimation = animation;
