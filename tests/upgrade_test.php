@@ -158,6 +158,11 @@ final class upgrade_test extends \advanced_testcase {
         $this->preventResetByRollback();
         $course = $this->getDataGenerator()->create_course();
         $activity = $this->getDataGenerator()->create_module('kanbanccead', ['course' => $course]);
+        $boardmanager = new boardmanager($activity->cmid);
+        $boardid = $boardmanager->create_board();
+        $boardmanager->load_board($boardid);
+        $columnid = $DB->get_field('kanbanccead_column', 'id', ['kanbanccead_board' => $boardid], IGNORE_MULTIPLE);
+        $cardid = $boardmanager->add_card($columnid, 0, ['title' => 'Card without a reaction']);
         $dbman = $DB->get_manager();
         $activitytable = new \xmldb_table('kanbanccead');
         $cardtable = new \xmldb_table('kanbanccead_card');
@@ -171,15 +176,17 @@ final class upgrade_test extends \advanced_testcase {
             '0',
             'linknumbers'
         );
-        $cardfield = new \xmldb_field('approval_seal', XMLDB_TYPE_CHAR, '32', null, XMLDB_NOTNULL, null, '', 'number');
+        $cardfield = new \xmldb_field('approval_seal', XMLDB_TYPE_CHAR, '32', null, null, null, null, 'number');
         $dbman->drop_field($activitytable, $activityfield);
         $dbman->drop_field($cardtable, $cardfield);
 
-        $this->run_upgrade_from_version(2026090400);
+        $this->run_upgrade_from_version(2026092900);
 
         $this->assertTrue($dbman->field_exists($activitytable, $activityfield));
         $this->assertTrue($dbman->field_exists($cardtable, $cardfield));
         $this->assertEquals(0, (int)$DB->get_field('kanbanccead', 'approval_seals', ['id' => $activity->id]));
+        $card = $DB->get_record('kanbanccead_card', ['id' => $cardid], '*', MUST_EXIST);
+        $this->assertEmpty($card->approval_seal);
     }
 
     /**

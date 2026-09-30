@@ -721,6 +721,7 @@ class get_kanbanccead_content extends external_api {
                     'clap' => ['icon' => '👏', 'label' => get_string('sealclap', 'mod_kanbanccead')],
                 ];
                 $currentseal = $card->approval_seal ?? '';
+                $card->approval_seal = $currentseal;
                 $card->approval_seal_icon = isset($sealdata[$currentseal]) ? $sealdata[$currentseal]['icon'] : '';
                 $card->approval_seal_label = isset($sealdata[$currentseal]) ? $sealdata[$currentseal]['label'] : '';
                 $card->hasdescription = !empty($card->description);
