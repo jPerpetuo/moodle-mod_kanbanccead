@@ -184,5 +184,21 @@ function xmldb_kanbanccead_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2026090400, 'kanbanccead');
     }
 
+    if ($oldversion < 2026092900) {
+        $table = new xmldb_table('kanbanccead');
+        $field = new xmldb_field('approval_seals', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0', 'linknumbers');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $table = new xmldb_table('kanbanccead_card');
+        $field = new xmldb_field('approval_seal', XMLDB_TYPE_CHAR, '32', null, XMLDB_NOTNULL, null, '', 'number');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2026092900, 'kanbanccead');
+    }
+
     return true;
 }

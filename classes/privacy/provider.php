@@ -201,7 +201,7 @@ class provider implements
             $params = ['instance' => $cm->instance, 'userid' => $user->id];
 
             $sql = "SELECT ca.id, ca.title, ca.description, ca.descriptionformat, ca.options,
-                           ca.duedate, ca.reminderdate, ca.completed, ca.timecreated, ca.timemodified,
+                           ca.duedate, ca.reminderdate, ca.completed, ca.approval_seal, ca.timecreated, ca.timemodified,
                            co.title AS columntitle, b.groupid
                       FROM {kanbanccead_card} ca
                       JOIN {kanbanccead_column} co ON co.id = ca.kanbanccead_column
@@ -210,7 +210,7 @@ class provider implements
                   ORDER BY ca.id";
             self::export_records($context, 'created_cards', $DB->get_records_sql($sql, $params));
 
-            $sql = "SELECT ca.id, ca.title, co.title AS columntitle, b.groupid, ca.timemodified
+            $sql = "SELECT ca.id, ca.title, ca.approval_seal, co.title AS columntitle, b.groupid, ca.timemodified
                       FROM {kanbanccead_assignee} a
                       JOIN {kanbanccead_card} ca ON ca.id = a.kanbanccead_card
                       JOIN {kanbanccead_column} co ON co.id = ca.kanbanccead_column
@@ -484,6 +484,7 @@ class provider implements
             'duedate' => 'privacy:metadata:duedate',
             'reminderdate' => 'privacy:metadata:reminderdate',
             'completed' => 'privacy:metadata:completed',
+            'approval_seal' => 'privacy:metadata:approval_seal',
             'timecreated' => 'privacy:metadata:timecreated',
             'timemodified' => 'privacy:metadata:timemodified',
             'createdby' => 'privacy:metadata:createdby',

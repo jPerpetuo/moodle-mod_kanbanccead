@@ -44,6 +44,7 @@ class backup_kanbanccead_activity_structure_step extends backup_activity_structu
                 'boardgroups',
                 'userboards',
                 'history',
+                'approval_seals',
                 'completioncreate',
                 'completioncomplete',
                 'repeat_enable',
@@ -93,6 +94,7 @@ class backup_kanbanccead_activity_structure_step extends backup_activity_structu
                 'discussion',
                 'reminder_sent',
                 'createdby',
+                'approval_seal',
             ]
         );
         $card->annotate_files('mod_kanbanccead', 'attachments', 'id');

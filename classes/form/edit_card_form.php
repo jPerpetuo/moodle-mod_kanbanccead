@@ -293,6 +293,19 @@ class edit_card_form extends dynamic_form {
         $formdata->description = $formdata->description_editor['text'];
         $formdata->descriptionformat = $formdata->description_editor['format'];
 
+        $fs = get_file_storage();
+        $existingfiles = $fs->get_area_files(
+            $context->id,
+            'mod_kanbanccead',
+            'attachments',
+            $formdata->id,
+            'filepath, filename',
+            false
+        );
+        $filesignature = [];
+        foreach ($existingfiles as $file) {
+            $filesignature[] = $file->get_filepath() . $file->get_filename() . $file->get_contenthash();
+        }
         $formdata->description = file_save_draft_area_files(
             $formdata->attachments,
             $context->id,
@@ -302,6 +315,22 @@ class edit_card_form extends dynamic_form {
             [],
             $formdata->description
         );
+
+        $updatedfiles = $fs->get_area_files(
+            $context->id,
+            'mod_kanbanccead',
+            'attachments',
+            $formdata->id,
+            'filepath, filename',
+            false
+        );
+        $updatedsignature = [];
+        foreach ($updatedfiles as $file) {
+            $updatedsignature[] = $file->get_filepath() . $file->get_filename() . $file->get_contenthash();
+        }
+        sort($filesignature);
+        sort($updatedsignature);
+        $formdata->approval_content_changed = ($filesignature !== $updatedsignature);
 
         $boardmanager = new boardmanager($cmid, $boardid);
 

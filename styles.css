@@ -1320,13 +1320,87 @@ a.mod_kanbanccead_attachment_item {
 }
 
 .mod_kanbanccead_card .mod_kanbanccead_card_number {
-    display: block;
-    margin: 0 0 .60rem;
+    display: inline-block;
+    margin: 0;
     color: #68717d;
     font-size: .82rem;
     font-weight: 400;
     line-height: 1.2;
     cursor: default;
+}
+
+.mod_kanbanccead_card_number_row {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    min-height: 1.35rem;
+    margin-bottom: .60rem;
+}
+
+.mod_kanbanccead_approval_seal {
+    display: inline-block;
+    font-size: 1.25rem;
+    line-height: 1;
+    transform: translateY(-2px);
+    cursor: help;
+}
+
+.mod_kanbanccead_approval_seal[hidden] {
+    display: none !important;
+}
+
+.mod_kanbanccead_approval_seal_picker {
+    display: flex;
+    gap: .25rem;
+    padding: 0 .75rem;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-4px);
+    pointer-events: none;
+}
+
+.mod_kanbanccead_approval_seal_picker.is-open {
+    max-height: 4rem;
+    padding: .35rem .75rem;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.mod_kanbanccead_approval_seal_menu[hidden] {
+    display: none !important;
+}
+
+.mod_kanbanccead_approval_seal_picker.mod_kanbanccead_approval_seal_picker_reduced_motion,
+.mod_kanbanccead_approval_seal_picker.mod_kanbanccead_approval_seal_picker_reduced_motion.is-open {
+    transform: none;
+}
+
+.mod_kanbanccead_approval_seal_menu > .dropdown-item > .icon {
+    width: 22px;
+    height: 22px;
+    margin-right: .125rem;
+    transform: translateX(-2px);
+}
+
+.mod_kanbanccead_approval_seal_menu > .dropdown-item:hover > .icon,
+.mod_kanbanccead_approval_seal_menu > .dropdown-item:focus > .icon {
+    filter: brightness(0) invert(1);
+}
+
+.mod_kanbanccead_approval_seal_picker button {
+    min-width: 2rem;
+    min-height: 2rem;
+    border: 1px solid #d9dee5;
+    border-radius: .25rem;
+    background: #fff;
+    font-size: 1.25rem;
+}
+
+.mod_kanbanccead_approval_seal_picker button:focus-visible {
+    outline: 2px solid #0f6cbf;
+    outline-offset: 2px;
 }
 
 .mod_kanbanccead_card_title .quickeditlink {

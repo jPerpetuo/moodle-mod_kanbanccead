@@ -126,6 +126,13 @@ export default class {
         }
         card.cardid = card.id;
         card.hasassignees = card.assignees.length > 0;
+        // Match the snake_case names consumed by the Mustache templates.
+        // eslint-disable-next-line dot-notation
+        card['approval_seal_enabled'] = Number(state.common.approval_seals) > 0 && Boolean(card.completed) &&
+            String(card.kanbanccead_column) === String(state.common.approvalcompletioncolumn);
+        // eslint-disable-next-line dot-notation
+        card['can_manage_approval_seal'] = Number(state.common.approval_seals) > 0 &&
+            Boolean(this.exportCapabilities(state).manageapprovalseals);
         let options = JSON.parse(card.options);
         if (card.hasassignees && typeof card.assignees[0] == 'number') {
             card.assignees = card.assignees.map((userid) => {

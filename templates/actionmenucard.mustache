@@ -54,6 +54,23 @@
         <li class="nav-item mod_kanbanccead_card_edit_details">
             <a class="dropdown-item" data-action="edit_details" data-id="{{id}}">{{#pix}} t/edit, core, {{#str}} editdetails, mod_kanbanccead {{/str}} {{/pix}}{{#str}} editdetails, mod_kanbanccead {{/str}}</a>
         </li>
+        {{#can_manage_approval_seal}}
+        <li class="nav-item mod_kanbanccead_approval_seal_menu" {{^approval_seal_enabled}}hidden{{/approval_seal_enabled}}>
+            <a class="dropdown-item" href="#" data-action="toggle_approval_seal" data-id="{{id}}" data-current-seal="{{approval_seal}}"
+                aria-expanded="false" aria-controls="mod_kanbanccead_approval_seal_picker_{{id}}"
+                data-apply-label="{{#str}} applyseal, mod_kanbanccead {{/str}}" data-change-label="{{#str}} changeseal, mod_kanbanccead {{/str}}">
+                {{#pix}} reaction, mod_kanbanccead, {{#str}} applyseal, mod_kanbanccead {{/str}} {{/pix}}
+                <span class="mod_kanbanccead_approval_seal_action_label">{{#approval_seal}}{{#str}} changeseal, mod_kanbanccead {{/str}}{{/approval_seal}}{{^approval_seal}}{{#str}} applyseal, mod_kanbanccead {{/str}}{{/approval_seal}}</span>
+            </a>
+            <div id="mod_kanbanccead_approval_seal_picker_{{id}}" class="mod_kanbanccead_approval_seal_picker" aria-hidden="true" inert>
+                <button type="button" tabindex="-1" data-action="approval_seal" data-id="{{id}}" data-seal="approved" title="{{#str}} sealapproved, mod_kanbanccead {{/str}}" aria-label="{{#str}} sealapproved, mod_kanbanccead {{/str}}">✅</button>
+                <button type="button" tabindex="-1" data-action="approval_seal" data-id="{{id}}" data-seal="clap" title="{{#str}} sealclap, mod_kanbanccead {{/str}}" aria-label="{{#str}} sealclap, mod_kanbanccead {{/str}}">👏</button>
+                <button type="button" tabindex="-1" data-action="approval_seal" data-id="{{id}}" data-seal="highlight" title="{{#str}} sealhighlight, mod_kanbanccead {{/str}}" aria-label="{{#str}} sealhighlight, mod_kanbanccead {{/str}}">⭐</button>
+                <button type="button" tabindex="-1" data-action="approval_seal" data-id="{{id}}" data-seal="reflect" title="{{#str}} sealreflect, mod_kanbanccead {{/str}}" aria-label="{{#str}} sealreflect, mod_kanbanccead {{/str}}">🤔</button>
+                <button type="button" tabindex="-1" class="mod_kanbanccead_approval_seal_remove" data-action="remove_approval_seal" data-id="{{id}}" title="{{#str}} removeseal, mod_kanbanccead {{/str}}" aria-label="{{#str}} removeseal, mod_kanbanccead {{/str}}" {{^approval_seal}}hidden{{/approval_seal}}>×</button>
+            </div>
+        </li>
+        {{/can_manage_approval_seal}}
         <li class="nav-item mod_kanbanccead_card_view_history">
             <a class="dropdown-item" data-action="show_history" data-id="{{id}}" data-bs-toggle="modal" data-toggle="modal" data-bs-target="#mod_kanbanccead_history_modal_{{id}}" data-target="#mod_kanbanccead_history_modal_{{id}}">{{#pix}} i/duration, core, {{#str}} history, mod_kanbanccead {{/str}} {{/pix}}{{#str}} history, mod_kanbanccead {{/str}}</a>
         </li>

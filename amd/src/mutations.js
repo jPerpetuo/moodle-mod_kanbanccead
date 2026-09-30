@@ -110,6 +110,16 @@ export default class {
     }
 
     /**
+     * Apply, change, or remove a teacher approval seal.
+     * @param {*} stateManager StateManager instance.
+     * @param {number} cardId Card id.
+     * @param {string} seal Stable seal key; empty removes the seal.
+     */
+    async setApprovalSeal(stateManager, cardId, seal) {
+        await this._sendChange('set_approval_seal', stateManager, {cardid: cardId, seal: seal});
+    }
+
+    /**
      * Remove assignment for a user to a card.
      * @param {*} stateManager StateManager instance.
      * @param {number} cardId Id of the card

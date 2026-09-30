@@ -668,6 +668,57 @@ class change_kanbanccead_content extends external_api {
     }
 
     /**
+     * Returns the parameters for changing a teacher approval seal.
+     * @return external_function_parameters
+     */
+    public static function set_approval_seal_parameters(): external_function_parameters {
+        return new external_function_parameters([
+            'cmid' => new external_value(PARAM_INT, 'course module id'),
+            'boardid' => new external_value(PARAM_INT, 'board id'),
+            'data' => new external_single_structure([
+                'cardid' => new external_value(PARAM_INT, 'card id'),
+                'seal' => new external_value(PARAM_ALPHANUMEXT, 'semantic approval seal key; empty removes it'),
+            ]),
+        ]);
+    }
+
+    /**
+     * Applies, changes, or removes the current teacher seal.
+     * @param int $cmid Course module id.
+     * @param int $boardid Board id.
+     * @param array $data Request data.
+     * @return array Board updates.
+     */
+    public static function set_approval_seal(int $cmid, int $boardid, array $data): array {
+        global $DB;
+        $params = self::validate_parameters(self::set_approval_seal_parameters(), [
+            'cmid' => $cmid,
+            'boardid' => $boardid,
+            'data' => $data,
+        ]);
+        [, $cminfo] = get_course_and_cm_from_cmid($params['cmid']);
+        $context = context_module::instance($params['cmid']);
+        self::validate_context($context);
+        require_capability('mod/kanbanccead:manageapprovalseals', $context);
+        $boardmanager = new boardmanager($params['cmid'], $params['boardid']);
+        helper::check_permissions_for_user_or_group($boardmanager->get_board(), $context, $cminfo);
+        $instance = $DB->get_record('kanbanccead', ['id' => $cminfo->instance], '*', MUST_EXIST);
+        if (empty($instance->approval_seals)) {
+            throw new moodle_exception('approval_seal_not_available', 'mod_kanbanccead');
+        }
+        $boardmanager->set_approval_seal($params['data']['cardid'], $params['data']['seal']);
+        return ['update' => $boardmanager->get_formatted_updates()];
+    }
+
+    /**
+     * Return values for changing an approval seal.
+     * @return external_single_structure
+     */
+    public static function set_approval_seal_returns(): external_single_structure {
+        return self::default_returns();
+    }
+
+    /**
      * Returns description of method parameters for the set_column_locked function.
      *
      * @return external_function_parameters

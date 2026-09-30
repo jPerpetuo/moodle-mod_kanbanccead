@@ -155,6 +155,8 @@ class get_kanbanccead_content extends external_api {
                         'history' => new external_value(PARAM_INT, 'history'),
                         'updatefails' => new external_value(PARAM_INT, 'updatefails', VALUE_OPTIONAL, 0),
                         'usenumbers' => new external_value(PARAM_INT, 'use numbers for the cards'),
+                        'approval_seals' => new external_value(PARAM_INT, 'whether approval seals are enabled'),
+                        'approvalcompletioncolumn' => new external_value(PARAM_INT, 'completion column for approval seals'),
                     ]),
                     'board' => new external_single_structure([
                         'id' => new external_value(PARAM_INT, 'board id'),
@@ -208,6 +210,36 @@ class get_kanbanccead_content extends external_api {
                                     'completion timestamp from history',
                                     VALUE_OPTIONAL,
                                     0
+                                ),
+                                'approval_seal_enabled' => new external_value(
+                                    PARAM_BOOL,
+                                    'whether this completed card can show a seal',
+                                    VALUE_OPTIONAL,
+                                    false
+                                ),
+                                'can_manage_approval_seal' => new external_value(
+                                    PARAM_BOOL,
+                                    'whether current user can set a seal',
+                                    VALUE_OPTIONAL,
+                                    false
+                                ),
+                                'approval_seal_icon' => new external_value(
+                                    PARAM_RAW,
+                                    'temporary approval seal glyph',
+                                    VALUE_OPTIONAL,
+                                    ''
+                                ),
+                                'approval_seal_label' => new external_value(
+                                    PARAM_TEXT,
+                                    'accessible approval seal label',
+                                    VALUE_OPTIONAL,
+                                    ''
+                                ),
+                                'approval_seal' => new external_value(
+                                    PARAM_ALPHANUMEXT,
+                                    'semantic approval seal key',
+                                    VALUE_OPTIONAL,
+                                    ''
                                 ),
                                 'hasdescription' => new external_value(
                                     PARAM_BOOL,
@@ -408,6 +440,7 @@ class get_kanbanccead_content extends external_api {
             'manageboard' => has_capability('mod/kanbanccead:manageboard', $context),
             'viewhistory' => has_capability('mod/kanbanccead:viewhistory', $context),
             'viewallboards' => has_capability('mod/kanbanccead:viewallboards', $context),
+            'manageapprovalseals' => has_capability('mod/kanbanccead:manageapprovalseals', $context),
         ];
 
         $params['board'] = $boardid;
@@ -574,6 +607,8 @@ class get_kanbanccead_content extends external_api {
         $common->updatefails = 0;
         $common->usenumbers = $kanbanccead->usenumbers;
         $common->linknumbers = $kanbanccead->linknumbers;
+        $common->approval_seals = $kanbanccead->approval_seals;
+        $common->approvalcompletioncolumn = $boardmanager->get_first_completion_column($boardid);
 
         if (!$asupdate) {
             $common->template = $DB->get_field_sql(
@@ -675,6 +710,19 @@ class get_kanbanccead_content extends external_api {
                 $card->assignees = $kanbancceadassignees[$card->id];
                 $card->selfassigned = in_array($USER->id, $card->assignees);
                 $card->canedit = $boardmanager->can_user_manage_specific_card($card->id);
+                $card->approval_seal_enabled = !empty($common->approval_seals) && !empty($card->completed) &&
+                    (int)$card->kanbanccead_column === (int)$common->approvalcompletioncolumn;
+                $card->can_manage_approval_seal = !empty($capabilities['manageapprovalseals']) &&
+                    !empty($common->approval_seals);
+                $sealdata = [
+                    'approved' => ['icon' => '✅', 'label' => get_string('sealapproved', 'mod_kanbanccead')],
+                    'highlight' => ['icon' => '⭐', 'label' => get_string('sealhighlight', 'mod_kanbanccead')],
+                    'reflect' => ['icon' => '🤔', 'label' => get_string('sealreflect', 'mod_kanbanccead')],
+                    'clap' => ['icon' => '👏', 'label' => get_string('sealclap', 'mod_kanbanccead')],
+                ];
+                $currentseal = $card->approval_seal ?? '';
+                $card->approval_seal_icon = isset($sealdata[$currentseal]) ? $sealdata[$currentseal]['icon'] : '';
+                $card->approval_seal_label = isset($sealdata[$currentseal]) ? $sealdata[$currentseal]['label'] : '';
                 $card->hasdescription = !empty($card->description);
                 $card->completedat = (!empty($card->completed) && !empty($completedtimestamps[$card->id])) ?
                     $completedtimestamps[$card->id] :
