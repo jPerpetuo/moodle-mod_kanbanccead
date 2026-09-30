@@ -543,4 +543,66 @@ final class change_kanbanccead_content_test extends \advanced_testcase {
         $this->assertEquals('cards', $update[0]['name']);
         $this->assertEquals(0, $update[0]['fields']['completed']);
     }
+
+    /**
+     * Setting a reaction persists it and returns the updated card fields.
+     * @return void
+     */
+    public function test_set_approval_seal(): void {
+        global $CFG, $DB;
+        require_once($CFG->dirroot . '/lib/externallib.php');
+
+        $this->resetAfterTest();
+        $this->setUser($this->users[2]);
+        $DB->set_field('kanbanccead', 'approval_seals', 1, ['id' => $this->kanbanccead->id]);
+
+        $boardmanager = new boardmanager($this->kanbanccead->cmid);
+        $boardid = $boardmanager->create_board();
+        $boardmanager->load_board($boardid);
+        $completioncolumnid = $boardmanager->get_first_completion_column($boardid);
+        $this->assertNotEmpty($completioncolumnid);
+        $cardid = $boardmanager->add_card($completioncolumnid, 0, ['title' => 'Finished work']);
+
+        $returnvalue = \mod_kanbanccead\external\change_kanbanccead_content::set_approval_seal(
+            $this->kanbanccead->cmid,
+            $boardid,
+            ['cardid' => $cardid, 'seal' => 'clap']
+        );
+        $returnvalue = \external_api::clean_returnvalue(
+            \mod_kanbanccead\external\change_kanbanccead_content::set_approval_seal_returns(),
+            $returnvalue
+        );
+        $update = json_decode($returnvalue['update'], true);
+
+        $this->assertSame('clap', $DB->get_field('kanbanccead_card', 'approval_seal', ['id' => $cardid]));
+        $this->assertCount(1, $update);
+        $this->assertSame('cards', $update[0]['name']);
+        $this->assertSame('clap', $update[0]['fields']['approval_seal']);
+        $this->assertSame('👏', $update[0]['fields']['approval_seal_icon']);
+    }
+
+    /**
+     * Students cannot set teacher reactions.
+     * @return void
+     */
+    public function test_set_approval_seal_requires_capability(): void {
+        global $CFG, $DB;
+        require_once($CFG->dirroot . '/lib/externallib.php');
+
+        $this->resetAfterTest();
+        $DB->set_field('kanbanccead', 'approval_seals', 1, ['id' => $this->kanbanccead->id]);
+        $boardmanager = new boardmanager($this->kanbanccead->cmid);
+        $boardid = $boardmanager->create_board();
+        $boardmanager->load_board($boardid);
+        $completioncolumnid = $boardmanager->get_first_completion_column($boardid);
+        $cardid = $boardmanager->add_card($completioncolumnid, 0, ['title' => 'Finished work']);
+        $this->setUser($this->users[0]);
+
+        $this->expectException(\required_capability_exception::class);
+        \mod_kanbanccead\external\change_kanbanccead_content::set_approval_seal(
+            $this->kanbanccead->cmid,
+            $boardid,
+            ['cardid' => $cardid, 'seal' => 'approved']
+        );
+    }
 }
