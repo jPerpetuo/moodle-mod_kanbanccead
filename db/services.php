@@ -138,6 +138,14 @@ $functions = [
         'ajax'        => true,
         'capabilities' => 'mod/kanbanccead:manageassignedcards, mod/kanbanccead:manageallcards',
     ],
+    'mod_kanbanccead_set_approval_seal' => [
+        'classname' => 'mod_kanbanccead\\external\\change_kanbanccead_content',
+        'methodname' => 'set_approval_seal',
+        'description' => 'Applies, changes, or removes a teacher approval seal',
+        'type' => 'write',
+        'ajax' => true,
+        'capabilities' => 'mod/kanbanccead:manageapprovalseals',
+    ],
     'mod_kanbanccead_set_board_columns_locked' => [
         'classname'   => 'mod_kanbanccead\external\change_kanbanccead_content',
         'methodname'  => 'set_board_columns_locked',

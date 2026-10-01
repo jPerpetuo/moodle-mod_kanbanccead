@@ -35,7 +35,12 @@
     <div class="card-body mod_kanbanccead_card_body">
             <div class="mod_kanbanccead_card_top">
             <div class="mod_kanbanccead_card_title card-title">
-                <span class="mod_kanbanccead_card_number">#{{number}}</span>
+                <div class="mod_kanbanccead_card_number_row">
+                    <span class="mod_kanbanccead_card_number">#{{number}}</span>
+                    {{#approval_seal_enabled}}{{#approval_seal}}
+                        <span class="mod_kanbanccead_approval_seal" role="img" title="{{approval_seal_label}}" aria-label="{{approval_seal_label}}">{{approval_seal_icon}}</span>
+                    {{/approval_seal}}{{/approval_seal_enabled}}
+                </div>
                 <span class="inplaceeditable inplaceeditable-text"{{#canedit}} {{^completed}}data-inplaceeditable="1" {{/completed}}data-component="mod_kanbanccead" data-itemtype="card" data-itemid="{{id}}"
                 data-value="{{{title}}}" data-type="text"{{/canedit}}>
                     <a class="quickeditlink aalink"{{#canedit}} data-inplaceeditablelink="1"{{/canedit}}>
@@ -483,7 +488,8 @@ require([], function() {
             return;
         }
 
-        if (state.openmenu && state.openmenu.contains(event.target) && event.target.closest('.dropdown-item')) {
+        const approvalSealToggle = event.target.closest('[data-action="toggle_approval_seal"]');
+        if (state.openmenu && state.openmenu.contains(event.target) && event.target.closest('.dropdown-item') && !approvalSealToggle) {
             window.setTimeout(function() {
                 closeMenu();
             }, 0);

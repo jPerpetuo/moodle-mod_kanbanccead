@@ -740,6 +740,7 @@ class boardmanager {
                 $newcard[$card->id]->timemodified = time();
                 $newcard[$card->id]->kanbanccead_column = $newcolumn[$card->kanbanccead_column]->id;
                 $newcard[$card->id]->originalid = $card->id;
+                $newcard[$card->id]->approval_seal = '';
                 unset($newcard[$card->id]->id);
                 // Remove user id of original creator.
                 unset($newcard[$card->id]->createdby);
@@ -1000,6 +1001,7 @@ class boardmanager {
             'sequence' => '',
         ];
         $data = array_merge($defaults, $data, $defaultsfixed);
+        $data['approval_seal'] = '';
 
         $data['number'] = self::get_next_card_number();
 
@@ -1347,6 +1349,9 @@ class boardmanager {
         global $DB, $USER;
         $card = $this->get_card($cardid);
         $update = ['id' => $cardid, 'completed' => $state, 'timemodified' => time(), 'repeat_enable' => 0];
+        if (empty($state) && !empty($card->approval_seal)) {
+            $update['approval_seal'] = '';
+        }
         $updateforfrontend = $update;
         $updateforfrontend['completedat'] = !empty($state) ? $update['timemodified'] : 0;
         $this->formatter->put('cards', $updateforfrontend);
@@ -1558,6 +1563,14 @@ class boardmanager {
         }
         $card = (array) $this->get_card($cardid);
         $cardupdate = [];
+        $contentchanged = (!empty($card['completed']) && (
+            (isset($data['title']) && $data['title'] != $card['title']) ||
+            (isset($data['description']) && $data['description'] != $card['description']) ||
+            !empty($data['approval_content_changed'])
+        ));
+        if ($contentchanged && !empty($card['approval_seal'])) {
+            $cardupdate['approval_seal'] = '';
+        }
         foreach ($cardkeys as $key) {
             if (!isset($data[$key])) {
                 continue;
@@ -1772,6 +1785,7 @@ class boardmanager {
         unset($card->kanbanccead_column);
         unset($card->completed);
         unset($card->discussion);
+        $card->approval_seal = '';
         $card->originalid = $cardid;
         $card->timemodified = time();
 
@@ -2143,9 +2157,52 @@ class boardmanager {
         $card = $this->get_card($cardid);
         $card->createdby = $USER->id;
         $card->discussion = 0;
+        $card->approval_seal = '';
         $newcardid = $this->add_card($card->kanbanccead_column, $card->id, (array) $card);
         $this->copy_attachment_files($this->cminfo->context->id, $cardid, $newcardid);
         return $newcardid;
+    }
+
+    /**
+     * Applies, changes, or removes a teacher approval seal on a completed card.
+     *
+     * @param int $cardid Card id.
+     * @param string $seal Stable semantic seal key, or empty to remove.
+     */
+    public function set_approval_seal(int $cardid, string $seal): void {
+        global $DB;
+        $allowedseals = ['approved', 'highlight', 'reflect', 'clap'];
+        if ($seal !== '' && !in_array($seal, $allowedseals, true)) {
+            throw new \invalid_parameter_exception('Invalid approval seal.');
+        }
+        $card = $this->get_card($cardid);
+        if ((int)$card->kanbanccead_board !== (int)$this->board->id) {
+            throw new \moodle_exception('approval_seal_not_available', 'mod_kanbanccead');
+        }
+        $column = $this->get_column($card->kanbanccead_column);
+        if (empty($this->kanbanccead->approval_seals) || empty($card->completed) || !$this->is_completion_column($column)) {
+            throw new \moodle_exception('approval_seal_not_available', 'mod_kanbanccead');
+        }
+        $DB->update_record('kanbanccead_card', [
+            'id' => $cardid,
+            'approval_seal' => $seal,
+            'timemodified' => time(),
+        ]);
+        $labels = [
+            'approved' => get_string('sealapproved', 'mod_kanbanccead'),
+            'highlight' => get_string('sealhighlight', 'mod_kanbanccead'),
+            'reflect' => get_string('sealreflect', 'mod_kanbanccead'),
+            'clap' => get_string('sealclap', 'mod_kanbanccead'),
+        ];
+        $icons = ['approved' => '✅', 'highlight' => '⭐', 'reflect' => '🤔', 'clap' => '👏'];
+        $this->formatter->put('cards', [
+            'id' => $cardid,
+            'approval_seal' => $seal,
+            'approval_seal_icon' => $icons[$seal] ?? '',
+            'approval_seal_label' => $labels[$seal] ?? '',
+            'timemodified' => time(),
+        ]);
+        helper::update_cached_timestamp($this->board->id, constants::MOD_KANBANCCEAD_CARD, time());
     }
 
     /**

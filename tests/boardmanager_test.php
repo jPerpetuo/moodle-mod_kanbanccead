@@ -163,6 +163,104 @@ final class boardmanager_test extends \advanced_testcase {
     }
 
     /**
+     * Approval seals are restricted to completed cards and are invalidated by content edits or reopening.
+     * @return void
+     */
+    public function test_approval_seal_lifecycle(): void {
+        global $DB;
+        $DB->set_field('kanbanccead', 'approval_seals', 1, ['id' => $this->kanbanccead->id]);
+        $boardmanager = new boardmanager($this->kanbanccead->cmid);
+        $boardid = $boardmanager->create_board();
+        $boardmanager->load_board($boardid);
+        $columnids = $DB->get_fieldset_select('kanbanccead_column', 'id', 'kanbanccead_board = :id', ['id' => $boardid]);
+        $completioncolumnid = end($columnids);
+        $DB->set_field('kanbanccead_column', 'options', json_encode(['autoclose' => true]), ['id' => $completioncolumnid]);
+        $cardid = $boardmanager->add_card($completioncolumnid, 0, ['title' => 'Finished work']);
+
+        $boardmanager->set_approval_seal($cardid, 'approved');
+        $this->assertSame('approved', $DB->get_field('kanbanccead_card', 'approval_seal', ['id' => $cardid]));
+        $boardmanager->update_card($cardid, ['repeat_interval' => 2]);
+        $this->assertSame('approved', $DB->get_field('kanbanccead_card', 'approval_seal', ['id' => $cardid]));
+        $copyid = $boardmanager->duplicate_card($cardid);
+        $this->assertSame('', $DB->get_field('kanbanccead_card', 'approval_seal', ['id' => $copyid]));
+        $boardmanager->update_card($cardid, ['description' => 'The work changed']);
+        $this->assertSame('', $DB->get_field('kanbanccead_card', 'approval_seal', ['id' => $cardid]));
+
+        // Keep every supported reaction key covered so accidental renames are caught.
+        foreach (['approved', 'clap', 'highlight', 'reflect'] as $seal) {
+            $boardmanager->set_approval_seal($cardid, $seal);
+            $this->assertSame($seal, $DB->get_field('kanbanccead_card', 'approval_seal', ['id' => $cardid]));
+        }
+
+        // An empty value removes the reaction.
+        $boardmanager->set_approval_seal($cardid, '');
+        $this->assertSame('', $DB->get_field('kanbanccead_card', 'approval_seal', ['id' => $cardid]));
+
+        $boardmanager->set_approval_seal($cardid, 'highlight');
+        $boardmanager->set_card_complete($cardid, 0);
+        $this->assertSame('', $DB->get_field('kanbanccead_card', 'approval_seal', ['id' => $cardid]));
+    }
+
+    /**
+     * Unsupported reaction keys must not be persisted.
+     * @return void
+     */
+    public function test_approval_seal_rejects_unknown_key(): void {
+        global $DB;
+
+        $DB->set_field('kanbanccead', 'approval_seals', 1, ['id' => $this->kanbanccead->id]);
+        $boardmanager = new boardmanager($this->kanbanccead->cmid);
+        $boardid = $boardmanager->create_board();
+        $boardmanager->load_board($boardid);
+        $columnids = $DB->get_fieldset_select('kanbanccead_column', 'id', 'kanbanccead_board = :id', ['id' => $boardid]);
+        $completioncolumnid = end($columnids);
+        $DB->set_field('kanbanccead_column', 'options', json_encode(['autoclose' => true]), ['id' => $completioncolumnid]);
+        $cardid = $boardmanager->add_card($completioncolumnid, 0, ['title' => 'Finished work']);
+
+        $this->expectException(\invalid_parameter_exception::class);
+        $boardmanager->set_approval_seal($cardid, 'not-a-reaction');
+    }
+
+    /**
+     * A reaction is unavailable when its activity setting is disabled.
+     * @return void
+     */
+    public function test_approval_seal_requires_enabled_activity(): void {
+        global $DB;
+
+        $boardmanager = new boardmanager($this->kanbanccead->cmid);
+        $boardid = $boardmanager->create_board();
+        $boardmanager->load_board($boardid);
+        $columnids = $DB->get_fieldset_select('kanbanccead_column', 'id', 'kanbanccead_board = :id', ['id' => $boardid]);
+        $completioncolumnid = end($columnids);
+        $DB->set_field('kanbanccead_column', 'options', json_encode(['autoclose' => true]), ['id' => $completioncolumnid]);
+        $cardid = $boardmanager->add_card($completioncolumnid, 0, ['title' => 'Finished work']);
+
+        $this->expectException(\moodle_exception::class);
+        $boardmanager->set_approval_seal($cardid, 'approved');
+    }
+
+    /**
+     * A reaction is unavailable for a card outside a completion column.
+     * @return void
+     */
+    public function test_approval_seal_requires_completion_column(): void {
+        global $DB;
+
+        $DB->set_field('kanbanccead', 'approval_seals', 1, ['id' => $this->kanbanccead->id]);
+        $boardmanager = new boardmanager($this->kanbanccead->cmid);
+        $boardid = $boardmanager->create_board();
+        $boardmanager->load_board($boardid);
+        $columnids = $DB->get_fieldset_select('kanbanccead_column', 'id', 'kanbanccead_board = :id', ['id' => $boardid]);
+        $normalcolumnid = reset($columnids);
+        $cardid = $boardmanager->add_card($normalcolumnid, 0, ['title' => 'Work in progress']);
+        $DB->set_field('kanbanccead_card', 'completed', 1, ['id' => $cardid]);
+
+        $this->expectException(\moodle_exception::class);
+        $boardmanager->set_approval_seal($cardid, 'approved');
+    }
+
+    /**
      * Card colors must be persisted in the card options.
      *
      * @return void

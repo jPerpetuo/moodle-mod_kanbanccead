@@ -330,12 +330,12 @@ a.mod_kanbanccead_attachment_item {
 .mod_kanbanccead_card:not(.mod_kanbanccead_canedit) .mod_kanbanccead_move_card,
 .mod_kanbanccead_board:not(.mod_kanbanccead_history) .mod_kanbanccead_card_view_history,
 .mod_kanbanccead_board:not(.mod_kanbanccead_usenumbers) .mod_kanbanccead_card_number,
-.mod_kanbanccead_board.mod_kanbanccead_manageassignedcards:not(.mod_kanbanccead_manageallcards) .mod_kanbanccead_card:not(.mod_kanbanccead_selfassigned)
-.mod_kanbanccead_complete_card,
-.mod_kanbanccead_board.mod_kanbanccead_manageassignedcards:not(.mod_kanbanccead_manageallcards) .mod_kanbanccead_card:not(.mod_kanbanccead_selfassigned)
-.mod_kanbanccead_uncomplete_card,
-.mod_kanbanccead_board.mod_kanbanccead_manageassignedcards:not(.mod_kanbanccead_manageallcards) .mod_kanbanccead_card:not(.mod_kanbanccead_selfassigned)
-.mod_kanbanccead_move_card,
+.mod_kanbanccead_board.mod_kanbanccead_manageassignedcards:not(.mod_kanbanccead_manageallcards)
+.mod_kanbanccead_card:not(.mod_kanbanccead_selfassigned) .mod_kanbanccead_complete_card,
+.mod_kanbanccead_board.mod_kanbanccead_manageassignedcards:not(.mod_kanbanccead_manageallcards)
+.mod_kanbanccead_card:not(.mod_kanbanccead_selfassigned) .mod_kanbanccead_uncomplete_card,
+.mod_kanbanccead_board.mod_kanbanccead_manageassignedcards:not(.mod_kanbanccead_manageallcards)
+.mod_kanbanccead_card:not(.mod_kanbanccead_selfassigned) .mod_kanbanccead_move_card,
 .mod_kanbanccead_board_locked .mod_kanbanccead_addcolumn_container,
 .mod_kanbanccead_board_locked_columns .mod_kanbanccead_addcolumn_container,
 .mod_kanbanccead_board_locked .mod_kanbanccead_lock_column,
@@ -373,7 +373,8 @@ a.mod_kanbanccead_attachment_item {
 }
 
 .mod_kanbanccead_column.mod_kanbanccead_locked_column,
-.mod_kanbanccead_board.mod_kanbanccead_manageassignedcards:not(.mod_kanbanccead_manageallcards) .mod_kanbanccead_card:not(.mod_kanbanccead_selfassigned) {
+.mod_kanbanccead_board.mod_kanbanccead_manageassignedcards:not(.mod_kanbanccead_manageallcards)
+.mod_kanbanccead_card:not(.mod_kanbanccead_selfassigned) {
     cursor: not-allowed;
 }
 
@@ -1062,7 +1063,8 @@ a.mod_kanbanccead_attachment_item {
     text-decoration: none;
 }
 
-.mod_kanbanccead_column:not(:last-of-type) > .mod_kanbanccead_addcolumn_container .mod_kanbanccead_addcolumn .mod_kanbanccead_addcolumn_label {
+.mod_kanbanccead_column:not(:last-of-type) > .mod_kanbanccead_addcolumn_container
+.mod_kanbanccead_addcolumn .mod_kanbanccead_addcolumn_label {
     display: none;
 }
 
@@ -1105,7 +1107,8 @@ a.mod_kanbanccead_attachment_item {
 .mod_kanbanccead_column:not(:last-of-type) > .mod_kanbanccead_addcolumn_container:hover .mod_kanbanccead_addcolumn,
 .mod_kanbanccead_column:not(:last-of-type) > .mod_kanbanccead_addcolumn_container:focus .mod_kanbanccead_addcolumn,
 .mod_kanbanccead_column:not(:last-of-type) > .mod_kanbanccead_addcolumn_container:focus-within .mod_kanbanccead_addcolumn,
-.mod_kanbanccead_column:not(:last-of-type) > .mod_kanbanccead_addcolumn_container.mod_kanbanccead_insert .mod_kanbanccead_addcolumn {
+.mod_kanbanccead_column:not(:last-of-type) > .mod_kanbanccead_addcolumn_container.mod_kanbanccead_insert
+.mod_kanbanccead_addcolumn {
     opacity: 1;
     pointer-events: auto;
 }
@@ -1320,13 +1323,87 @@ a.mod_kanbanccead_attachment_item {
 }
 
 .mod_kanbanccead_card .mod_kanbanccead_card_number {
-    display: block;
-    margin: 0 0 .60rem;
+    display: inline-block;
+    margin: 0;
     color: #68717d;
     font-size: .82rem;
     font-weight: 400;
     line-height: 1.2;
     cursor: default;
+}
+
+.mod_kanbanccead_card_number_row {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    min-height: 1.35rem;
+    margin-bottom: .60rem;
+}
+
+.mod_kanbanccead_approval_seal {
+    display: inline-block;
+    font-size: 1.25rem;
+    line-height: 1;
+    transform: translateY(-2px);
+    cursor: help;
+}
+
+.mod_kanbanccead_approval_seal[hidden] {
+    display: none;
+}
+
+.mod_kanbanccead_approval_seal_picker {
+    display: flex;
+    gap: .25rem;
+    padding: 0 .75rem;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-4px);
+    pointer-events: none;
+}
+
+.mod_kanbanccead_approval_seal_picker.is-open {
+    max-height: 4rem;
+    padding: .35rem .75rem;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.mod_kanbanccead_approval_seal_menu[hidden] {
+    display: none;
+}
+
+.mod_kanbanccead_approval_seal_picker.mod_kanbanccead_approval_seal_picker_reduced_motion,
+.mod_kanbanccead_approval_seal_picker.mod_kanbanccead_approval_seal_picker_reduced_motion.is-open {
+    transform: none;
+}
+
+.mod_kanbanccead_approval_seal_menu > .dropdown-item > .icon {
+    width: 22px;
+    height: 22px;
+    margin-right: .125rem;
+    transform: translateX(-2px);
+}
+
+.mod_kanbanccead_approval_seal_menu > .dropdown-item:hover > .icon,
+.mod_kanbanccead_approval_seal_menu > .dropdown-item:focus > .icon {
+    filter: brightness(0) invert(1);
+}
+
+.mod_kanbanccead_approval_seal_picker button {
+    min-width: 2rem;
+    min-height: 2rem;
+    border: 1px solid #d9dee5;
+    border-radius: .25rem;
+    background: #fff;
+    font-size: 1.25rem;
+}
+
+.mod_kanbanccead_approval_seal_picker button:focus-visible {
+    outline: 2px solid #0f6cbf;
+    outline-offset: 2px;
 }
 
 .mod_kanbanccead_card_title .quickeditlink {
@@ -1463,7 +1540,9 @@ a.mod_kanbanccead_attachment_item {
 }
 
 /* Reduce first-paint flicker before JS summary rendering runs. */
-.mod_kanbanccead_card .mod_kanbanccead_assignees:not(.mod_kanbanccead_assignees_enhanced) .mod_kanbanccead_assigned_user:nth-of-type(n+3) {
+.mod_kanbanccead_card
+.mod_kanbanccead_assignees:not(.mod_kanbanccead_assignees_enhanced)
+.mod_kanbanccead_assigned_user:nth-of-type(n+3) {
     display: none;
 }
 

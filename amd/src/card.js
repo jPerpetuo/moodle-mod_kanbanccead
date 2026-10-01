@@ -142,6 +142,11 @@ export default class extends KanbanCceadComponent {
             'click',
             this._editDetails
         );
+        this.addEventListener(this.getElement(selectors.APPROVALSEALTOGGLE, this.id), 'click', this._toggleApprovalSealPicker);
+        this.element.querySelectorAll(selectors.APPROVALSEAL).forEach((element) => {
+            this.addEventListener(element, 'click', this._setApprovalSeal);
+        });
+        this.addEventListener(this.getElement(selectors.APPROVALSEALREMOVE, this.id), 'click', this._setApprovalSeal);
         this.addEventListener(
             this.getElement(selectors.DISCUSSIONMODALTRIGGER),
             'click',
@@ -510,6 +515,10 @@ export default class extends KanbanCceadComponent {
         if (element.completedat !== undefined) {
             this.getElement().setAttribute('data-completedat', element.completedat);
         }
+        if (element.approval_seal !== undefined) {
+            this._renderApprovalSeal(element.approval_seal, element.approval_seal_label);
+        }
+        this._updateApprovalSealAvailability(element);
         this._updateCompletionIndicatorTooltip();
         // Update title (also in modals).
         if (element.title !== undefined) {
@@ -670,6 +679,187 @@ export default class extends KanbanCceadComponent {
         let target = event.target.closest(selectors.UNCOMPLETE);
         let data = Object.assign({}, target.dataset);
         this.reactive.dispatch('uncompleteCard', data.id);
+    }
+
+    /**
+     * Toggle the compact approval seal picker.
+     * @param {Event} event Click event.
+     */
+    _toggleApprovalSealPicker(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const picker = this.getElement().querySelector('.mod_kanbanccead_approval_seal_picker');
+        if (picker) {
+            const isOpen = picker.getAttribute('aria-hidden') !== 'true';
+            this._setApprovalSealPickerOpen(picker, !isOpen);
+        }
+    }
+
+    /**
+     * Set the compact approval seal picker visibility and accessibility state.
+     * @param {HTMLElement} picker Picker element.
+     * @param {boolean} isOpen Whether the picker is open.
+     */
+    _setApprovalSealPickerOpen(picker, isOpen) {
+        const currentlyOpen = picker.getAttribute('aria-hidden') !== 'true';
+        const previousAnimation = picker.__modKanbanApprovalSealAnimation;
+        if (currentlyOpen === isOpen && !previousAnimation) {
+            return;
+        }
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        picker.classList.toggle('mod_kanbanccead_approval_seal_picker_reduced_motion', prefersReducedMotion);
+        const computedStyle = window.getComputedStyle(picker);
+        const startFrame = prefersReducedMotion ?
+            {opacity: computedStyle.opacity} :
+            {
+                opacity: computedStyle.opacity,
+                maxHeight: computedStyle.maxHeight,
+                paddingTop: computedStyle.paddingTop,
+                paddingBottom: computedStyle.paddingBottom,
+                transform: computedStyle.transform,
+            };
+        previousAnimation?.cancel();
+
+        if (isOpen) {
+            picker.classList.add('is-open');
+        }
+        picker.setAttribute('aria-hidden', String(!isOpen));
+        if (isOpen) {
+            picker.removeAttribute('inert');
+        } else {
+            picker.setAttribute('inert', '');
+        }
+        picker.querySelectorAll('button:not([hidden])').forEach((button) => {
+            button.tabIndex = isOpen ? 0 : -1;
+        });
+        const trigger = this.getElement(selectors.APPROVALSEALTOGGLE, this.id);
+        trigger?.setAttribute('aria-expanded', String(isOpen));
+
+        if (typeof picker.animate !== 'function') {
+            picker.classList.toggle('is-open', isOpen);
+            picker.__modKanbanApprovalSealAnimation = null;
+            return;
+        }
+
+        const endFrame = prefersReducedMotion ?
+            {opacity: isOpen ? 1 : 0} :
+            {
+                opacity: isOpen ? 1 : 0,
+                maxHeight: isOpen ? '4rem' : '0px',
+                paddingTop: isOpen ? '.35rem' : '0px',
+                paddingBottom: isOpen ? '.35rem' : '0px',
+                transform: isOpen ? 'translateY(0px)' : 'translateY(-4px)',
+            };
+        const duration = prefersReducedMotion ? 100 : 120;
+        const easing = prefersReducedMotion || isOpen ? 'ease-out' : 'ease-in';
+        const animation = picker.animate([startFrame, endFrame], {
+            duration: duration,
+            easing: easing,
+            fill: 'both',
+        });
+        picker.__modKanbanApprovalSealAnimation = animation;
+        animation.onfinish = () => {
+            if (picker.__modKanbanApprovalSealAnimation !== animation) {
+                return;
+            }
+            picker.classList.toggle('is-open', isOpen);
+            picker.__modKanbanApprovalSealAnimation = null;
+            animation.cancel();
+        };
+    }
+
+    /**
+     * Send the selected approval seal to Moodle.
+     * @param {Event} event Click event.
+     */
+    _setApprovalSeal(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const target = event.target.closest('[data-action="approval_seal"], [data-action="remove_approval_seal"]');
+        if (!target) {
+            return;
+        }
+        const seal = target.dataset.action === 'remove_approval_seal' ? '' : target.dataset.seal;
+        this.reactive.dispatch('setApprovalSeal', this.id, seal);
+        const picker = this.getElement().querySelector('.mod_kanbanccead_approval_seal_picker');
+        if (picker) {
+            this._setApprovalSealPickerOpen(picker, false);
+            if (event.detail === 0) {
+                this.getElement(selectors.APPROVALSEALTOGGLE, this.id)?.focus();
+            }
+        }
+    }
+
+    /**
+     * Render the unobtrusive card-top seal from its stable semantic key.
+     * @param {string} seal Seal key.
+     * @param {string} labeltext Localized accessible label.
+     */
+    _renderApprovalSeal(seal, labeltext = '') {
+        const card = this.getElement();
+        const existing = card.querySelector('.mod_kanbanccead_approval_seal');
+        const definition = {
+            approved: ['✅', labeltext || card.querySelector('[data-seal="approved"]')?.title || 'Approved'],
+            highlight: ['⭐', labeltext || card.querySelector('[data-seal="highlight"]')?.title || 'Highlight'],
+            reflect: ['🤔', labeltext || card.querySelector('[data-seal="reflect"]')?.title || 'Worth reflecting on'],
+            clap: ['👏', labeltext || card.querySelector('[data-seal="clap"]')?.title || 'Good work'],
+        }[seal];
+        if (!definition) {
+            existing?.remove();
+        } else if (existing) {
+            existing.textContent = definition[0];
+            existing.title = definition[1];
+            existing.setAttribute('aria-label', definition[1]);
+        } else {
+            const badge = document.createElement('span');
+            badge.className = 'mod_kanbanccead_approval_seal';
+            badge.setAttribute('role', 'img');
+            badge.textContent = definition[0];
+            badge.title = definition[1];
+            badge.setAttribute('aria-label', definition[1]);
+            card.querySelector('.mod_kanbanccead_card_number')?.after(badge);
+        }
+        const menu = card.querySelector('[data-action="toggle_approval_seal"]');
+        if (menu) {
+            menu.dataset.currentSeal = seal;
+            const label = menu.querySelector('.mod_kanbanccead_approval_seal_action_label');
+            if (label) {
+                label.textContent = seal ? menu.dataset.changeLabel : menu.dataset.applyLabel;
+            }
+            const removebutton = card.querySelector('.mod_kanbanccead_approval_seal_remove');
+            if (removebutton) {
+                removebutton.hidden = !seal;
+            }
+        }
+    }
+
+    /**
+     * Keep the seal menu limited to cards completed in the configured completion column.
+     * @param {Object} update Card update.
+     */
+    _updateApprovalSealAvailability(update = {}) {
+        const state = this.reactive?.state;
+        const cardstate = Object.assign({}, state?.cards?.get(this.id), update);
+        const common = state?.common || {};
+        const capability = this.reactive?.state?.capabilities?.get('manageapprovalseals')?.value;
+        const available = Boolean(common.approval_seals) && Boolean(capability) && Boolean(cardstate.completed) &&
+            String(cardstate.kanbanccead_column) === String(common.approvalcompletioncolumn);
+        const menu = this.getElement().querySelector('.mod_kanbanccead_approval_seal_menu');
+        if (menu) {
+            menu.hidden = !available;
+            if (!available) {
+                const picker = menu.querySelector('.mod_kanbanccead_approval_seal_picker');
+                if (picker) {
+                    this._setApprovalSealPickerOpen(picker, false);
+                }
+            }
+        }
+        const seal = this.getElement().querySelector('.mod_kanbanccead_approval_seal');
+        if (seal) {
+            seal.hidden = Number(common.approval_seals) === 0 || !cardstate.completed ||
+                String(cardstate.kanbanccead_column) !== String(common.approvalcompletioncolumn);
+        }
     }
 
     /**

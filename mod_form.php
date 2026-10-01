@@ -81,6 +81,10 @@ class mod_kanbanccead_mod_form extends moodleform_mod {
         $mform->addHelpButton('history', 'enablehistory', 'mod_kanbanccead');
         $mform->setDefault('history', 1);
 
+        $mform->addElement('advcheckbox', 'approval_seals', get_string('approval_seals', 'mod_kanbanccead'));
+        $mform->addHelpButton('approval_seals', 'approval_seals', 'mod_kanbanccead');
+        $mform->setDefault('approval_seals', 0);
+
         $selectedgroupids = $this->get_initial_board_group_ids($groups);
         $availablegroups = array_filter($groups, function ($group) use ($selectedgroupids) {
             return !in_array((int)$group->id, $selectedgroupids, true);
